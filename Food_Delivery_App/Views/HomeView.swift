@@ -7,51 +7,102 @@
 
 import SwiftUI
 
+
 struct HomeView: View {
+    
+    @State private var searchText = ""
+    
+    let foods = ["Pizza", "Burger", "Pasta", "Sandwich", "Biryani"]
+    
+    var filteredFoods: [String] {
+        if searchText.isEmpty {
+            return foods
+        } else {
+            return foods.filter {
+                $0.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
     var body: some View {
         NavigationStack {
-            VStack {
-                
-                Text("Delicious Food \n For You")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding(20)
-                    .offset(x: -40, y: -250)
-               
-               
-                
-                HStack{
+            GeometryReader { geo in
+                ScrollView(.vertical){
+                    VStack {
+                        
+                        Text("Delicious Food \n For You")
+                            .font(.largeTitle)
+                            .bold()
+                            .padding(20)
+                            .offset(x: -50, y: -30)
+                        
+                        NavigationLink {
+                                           SearchView()
+                                       } label: {
+                                           HStack {
+                                               Image(systemName: "magnifyingglass")
+                                                   .foregroundColor(.gray)
+                                               
+                                               Text("Search")
+                                                   .foregroundColor(.gray)
+                                               
+                                               Spacer()
+                                           }
+                                           .padding()
+                                           .background(Color(.systemGray6))
+                                           .cornerRadius(15)
+                                       }
+                                       .padding(.horizontal)
+                        
+                    }.frame(width:geo.size.width,height:geo.size.height * 0.5)
                     
-                        HStack{
+                        .padding(.vertical)
+                    
+
+                    ScrollView(.horizontal){
+                        
+                        HStack(spacing:20){
+                            
                             NavigationLink{
                                 FoodView()
                                 
                             }label:{
                                 Text("Food")
-                                    .font(.title)
+                                    .font(.title2)
                                     .bold()
-                            }.offset(x: -100, y: -100)
+                                    .padding(10)
+                            }
                             
-                        }
-                        HStack{
+                            
                             NavigationLink{
                                 DrinksView()
                                 
                             }label:{
                                 Text("Drinks")
-                                    .font(.title)
+                                    .font(.title2)
                                     .bold()
-                            }.offset(x: -100, y: -100)
+                                    .padding(10)
+                            }
                             
-                        }
-                    
+                            NavigationLink{
+                                SnaksView()
+                            }label: {
+                                Text("Snacks")
+                                    .font(.title2)
+                                    .bold()
+                                    .padding(10)
+                            }
+                            
+                            
+                        }.padding(.horizontal)
                         
                     }
+                    
                 }
             }
         }
     }
-
+    
+}
 #Preview {
     HomeView()
 }

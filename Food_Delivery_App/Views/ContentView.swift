@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ContentView: View {
     //let header: String
@@ -15,7 +16,7 @@ struct ContentView: View {
             
             HStack{
                 
-            
+                
                 VStack(alignment: .leading){
                     
                     NavigationLink{
@@ -36,24 +37,20 @@ struct ContentView: View {
                         MoreView()
                         
                     }label: {
-                            Image(systemName: "ellipsis")
+                        Image(systemName: "ellipsis")
                             .font(.title)
                     }
                     .padding(6)
                     .offset(x: -195,y: 10)
                 }
-                }
-                
-            
-          
-            
-            
+             
+            }
+           
             
             TabView{
                 
                 Tab(Constants.homeString,systemImage:Constants.homeIconString){
-                    HomeView()
-                    
+                  HomeView()
                 }
                 Tab(Constants.likedString,systemImage:Constants.likedIconString){
                     LikedView()
