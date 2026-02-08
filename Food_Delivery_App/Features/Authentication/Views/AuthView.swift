@@ -1,11 +1,8 @@
-//
-//  AuthView.swift
-//  Food_Delivery_App
-//
-//  Created by rentamac on 2/7/26.
-//
-
 import SwiftUI
+
+enum AuthTab {
+    case login, signup
+}
 
 struct AuthView: View {
 
@@ -16,21 +13,14 @@ struct AuthView: View {
 
             Spacer()
 
-            
-            Image("logo")
-                .resizable()
-                .frame(width: 60, height: 60)
-
-        
             HStack {
-                tabButton(title: "Login", tab: .login)
-                tabButton(title: "Sign-up", tab: .signup)
+                tabButton("Login", .login)
+                tabButton("Sign up", .signup)
             }
             .padding()
             .background(Color.white)
             .cornerRadius(20)
             .padding()
-
 
             ZStack {
                 if selectedTab == .login {
@@ -48,18 +38,14 @@ struct AuthView: View {
         .background(Color(.systemGroupedBackground))
     }
 
-    func tabButton(title: String, tab: AuthTab) -> some View {
+    private func tabButton(_ title: String, _ tab: AuthTab) -> some View {
         Button {
             selectedTab = tab
         } label: {
             Text(title)
                 .fontWeight(selectedTab == tab ? .bold : .regular)
-                .foregroundColor(selectedTab == tab ? .orange : .black)
+                .foregroundColor(selectedTab == tab ? .orange : .gray)
                 .frame(maxWidth: .infinity)
         }
     }
-}
-
-enum AuthTab {
-    case login, signup
 }
