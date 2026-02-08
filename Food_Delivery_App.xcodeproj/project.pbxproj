@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2421F1792F38A9A1002D6CB7 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 2421F1782F38A9A1002D6CB7 /* Algorithms */; };
+		2421F17F2F38B26D002D6CB7 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 2421F17E2F38B26D002D6CB7 /* FirebaseAuth */; };
+		2421F1812F38B2D1002D6CB7 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2421F1802F38B2D1002D6CB7 /* FirebaseCore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		247816172F34643800B0FA3B /* Food_Delivery_App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Food_Delivery_App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,16 +29,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2421F1792F38A9A1002D6CB7 /* Algorithms in Frameworks */,
+				2421F1812F38B2D1002D6CB7 /* FirebaseCore in Frameworks */,
+				2421F17F2F38B26D002D6CB7 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2421F17D2F38B26D002D6CB7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		2478160E2F34643800B0FA3B = {
 			isa = PBXGroup;
 			children = (
 				247816192F34643800B0FA3B /* Food_Delivery_App */,
+				2421F17D2F38B26D002D6CB7 /* Frameworks */,
 				247816182F34643800B0FA3B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,6 +82,9 @@
 			);
 			name = Food_Delivery_App;
 			packageProductDependencies = (
+				2421F1782F38A9A1002D6CB7 /* Algorithms */,
+				2421F17E2F38B26D002D6CB7 /* FirebaseAuth */,
+				2421F1802F38B2D1002D6CB7 /* FirebaseCore */,
 			);
 			productName = Food_Delivery_App;
 			productReference = 247816172F34643800B0FA3B /* Food_Delivery_App.app */;
@@ -94,6 +114,10 @@
 			);
 			mainGroup = 2478160E2F34643800B0FA3B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2421F1772F38A9A1002D6CB7 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+				2421F17A2F38AA15002D6CB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 247816182F34643800B0FA3B /* Products */;
 			projectDirPath = "";
@@ -328,6 +352,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2421F1772F38A9A1002D6CB7 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
+		2421F17A2F38AA15002D6CB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2421F1782F38A9A1002D6CB7 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2421F1772F38A9A1002D6CB7 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+		2421F17E2F38B26D002D6CB7 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2421F17A2F38AA15002D6CB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		2421F1802F38B2D1002D6CB7 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2421F17A2F38AA15002D6CB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2478160F2F34643800B0FA3B /* Project object */;
 }
