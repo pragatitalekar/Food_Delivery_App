@@ -1,22 +1,22 @@
 //
-//  OffersView.swift
+//  PrivacyView.swift
 //  Food_Delivery_App
 //
-//  Created by rentamac on 2/6/26.
+//  Created by rentamac on 2/8/26.
 //
 
 import SwiftUI
 
-struct OffersView: View {
+struct PrivacyView: View {
     
     var body: some View {
         
-        Text("Offers Screen")
+        Text("Privacy Screen")
             .font(.largeTitle)
         
     }
 }
 
 #Preview {
-    OffersView()
+    PrivacyView()
 }
