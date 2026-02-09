@@ -6,8 +6,16 @@
 //
 
 import SwiftUI
+import Combine
 
 struct HomeView: View {
+    @StateObject var vm = HomeViewModel()
+      @StateObject var cart = CartManager()
+      @State private var selected: CategoryType = .meals
+
+      var filtered: [FoodItems] {
+          vm.allItems.filter { $0.category == selected }
+      }
     
     @EnvironmentObject var navigationManager: NavigationManager
     
@@ -43,45 +51,42 @@ struct HomeView: View {
                         // MARK: - Search Bar
                         
                        
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(AppColors.textSecondary)
-                            
-                            Text("Search")
-                                .foregroundColor(AppColors.textSecondary)
-                            
-                            Spacer()
-                        }
-                        .padding()
-                        .background(Color(UIColor.secondarySystemFill))  
-                        .cornerRadius(12)
+                        NavigationLink {
+                                           SearchView()
+                                       } label: {
+                                           HStack {
+                                               Image(systemName: "magnifyingglass")
+                                                   .foregroundColor(.gray)
+                                               
+                                               Text("Search")
+                                                   .foregroundColor(.gray)
+                                               
+                                               Spacer()
+                                           }
+                                           .padding()
+                                           .background(Color(.systemGray6))
+                                           .cornerRadius(15)
+                                           .offset(x: -5,y:-0)
+                                       }
                         
                         
                         // MARK: - Categories
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             
-                            HStack(spacing: 25) {
+                            HStack {
                                 
-                                Text("Food")
-                                    .font(.title3)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(AppColors.textPrimary)
-                                
-                                
-                                Text("Drinks")
-                                    .font(.title3)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(AppColors.textPrimary)
-                                
-                                
-                                Text("Snacks")
-                                    .font(.title3)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(AppColors.textPrimary)
-                                
+                                ForEach(CategoryType.allCases, id: \.self) { cat in
+                                    Button(cat.rawValue) {
+                                        selected = cat
+                                    }
+                                    .padding()
+                                    .background(selected == cat ? .orange : .gray.opacity(0.2))
+                                    .cornerRadius(12)
+                                    
+                                }
                             }
-                            
+                            .padding(.horizontal)
                         }
                         
                     }
