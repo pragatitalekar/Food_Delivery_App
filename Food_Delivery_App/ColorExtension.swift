@@ -28,4 +28,6 @@ extension Color {
             blue: Double(b) / 255
         )
     }
+    static let primaryOrange = Color("#FF4B3A")
+    static let lightBackground = Color("#F2F2F2")
 }

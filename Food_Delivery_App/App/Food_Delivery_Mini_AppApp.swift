@@ -10,26 +10,16 @@ import FirebaseCore
 
 @main
 struct Food_Delivery_Mini_AppApp: App {
-<<<<<<< Updated upstream:Food_Delivery_App/App/Food_Delivery_Mini_AppApp.swift
 
-=======
     init() {
-            FirebaseApp.configure()
-        }
->>>>>>> Stashed changes:Food_Delivery_App/Food_Delivery_Mini_AppApp.swift
-    var body: some Scene {
-
-        WindowGroup {
-<<<<<<< Updated upstream:Food_Delivery_App/App/Food_Delivery_Mini_AppApp.swift
-
-            MainTabView()
-
-=======
-            SplashView()
->>>>>>> Stashed changes:Food_Delivery_App/Food_Delivery_Mini_AppApp.swift
-        }
-
+        FirebaseApp.configure()
     }
 
+    var body: some Scene {
+        WindowGroup {
+            SplashView()
+        }
+    }
 }
+
 
