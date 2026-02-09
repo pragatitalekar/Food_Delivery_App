@@ -14,20 +14,21 @@ struct MealResponse: Codable {
 }
 
 struct Meal: Codable {
-    let idMeal: UUID
+    let idMeal: String
     let strMeal: String
     let strMealThumb: String
-    let strInstructions: String
+  
 }
 
 struct DrinkResponse: Codable {
     let drinks: [Drink]
 }
+
 struct Drink: Codable {
-    let idDrink: UUID
+    let idDrink: String
     let strDrink: String
     let strDrinkThumb: String
-    let strInstructions: String
+   
 }
 
 struct CategoryMealResponse: Codable {
@@ -35,13 +36,11 @@ struct CategoryMealResponse: Codable {
 }
 
 struct CategoryMeal: Codable {
-    let idMeal: UUID
+    let idMeal: String
     let strMeal: String
     let strMealThumb: String
 }
 
-struct LookUpRespone: Codable {
+struct LookupResponse: Codable {
     let meals: [Meal]
-    let drinks: [Drink]
-    let mealsCategories: [CategoryMeal]
 }

@@ -11,38 +11,7 @@ struct DashboardView: View {
     var body: some View {
         NavigationStack{
            
-            
-            HStack{
-                
-                
-                VStack(alignment: .leading){
-                    
-                    NavigationLink{
-                        CartView()
-                        
-                    }label: {
-                        Image(systemName: "cart")
-                            .font(.title)
-                    }
-                    
-                    .padding(6)
-                    .offset(x: 195,y: 10)
-                    
-                }
-                
-                VStack{
-                    NavigationLink{
-                        SideMenuView()
-        
-                    }label: {
-                        Image(systemName: "ellipsis")
-                            .font(.title)
-                    }
-                    .padding(6)
-                    .offset(x: -195,y: 10)
-                }
-             
-            }
+         
            
             
             TabView{
