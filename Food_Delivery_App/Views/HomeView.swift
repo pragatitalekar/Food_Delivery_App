@@ -29,11 +29,11 @@ struct HomeView: View {
                 ScrollView(.vertical){
                     VStack {
                         
-                        Text("Delicious Food \n For You")
+                        Text("Delicious\nFood For You")
                             .font(.largeTitle)
                             .bold()
                             .padding(20)
-                            .offset(x: -50, y: -30)
+                            .offset(x: -60, y: -60)
                         
                         NavigationLink {
                                            SearchView()
@@ -50,6 +50,7 @@ struct HomeView: View {
                                            .padding()
                                            .background(Color(.systemGray6))
                                            .cornerRadius(15)
+                                           .offset(x: -5,y:-40)
                                        }
                                        .padding(.horizontal)
                         
@@ -94,8 +95,9 @@ struct HomeView: View {
                             
                             
                         }.padding(.horizontal)
+                            
                         
-                    }
+                    }.offset(x: 0, y: -120)
                     
                 }
             }
