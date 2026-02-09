@@ -52,7 +52,9 @@ struct HomeView: View {
                         
                        
                         NavigationLink {
-                                           SearchView()
+                            SearchView(
+                                    vm: SearchViewModel(items: vm.allItems)
+                                )
                                        } label: {
                                            HStack {
                                                Image(systemName: "magnifyingglass")
