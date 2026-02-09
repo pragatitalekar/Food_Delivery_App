@@ -73,7 +73,9 @@ struct HomeView: View {
                         // MARK: - Categories
                         
                         ScrollView(.horizontal, showsIndicators: false) {
+                            
                             HStack {
+                                
                                 ForEach(CategoryType.allCases, id: \.self) { cat in
                                     Button(cat.rawValue) {
                                         selected = cat
@@ -90,7 +92,10 @@ struct HomeView: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
-                   
+                    .frame(
+                        width: geo.size.width,
+                        alignment: .leading
+                    )
                     
                     
                     Spacer()
