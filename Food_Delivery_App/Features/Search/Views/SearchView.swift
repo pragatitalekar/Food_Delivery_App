@@ -1,60 +1,105 @@
-//
-//  SearchView.swift
-//  Food_Delivery_App
-//
-//  Created by rentamac on 2/6/26.
-//
-
-
 import SwiftUI
 
 struct SearchView: View {
-    
-    @State private var searchText = ""
-    
-    let foods = ["Pizza", "Burger", "Pasta", "Sandwich", "Biryani"]
-    
-    var filteredFoods: [String] {
-        if searchText.isEmpty {
-            return foods
-        } else {
-            return foods.filter {
-                $0.lowercased().contains(searchText.lowercased())
-            }
-        }
-    }
+
+    @StateObject var vm: SearchViewModel
+    @Environment(\.dismiss) private var dismiss
+
+    private let columns = [
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16)
+    ]
+
     var body: some View {
-        HStack{
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
-            TextField("Search", text: $searchText)
-                .autocorrectionDisabled()
-            if !searchText.isEmpty {
+        VStack(spacing: 0) {
+
+            // MARK: - Top Bar
+            HStack(spacing: 12) {
+
                 Button {
-                    searchText = ""
+                    dismiss()
                 } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.gray)
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.black)
                 }
-                
+
+                TextField("Search", text: $vm.searchText)
+                    .padding(10)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
             }
-        }.padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(30)
-            .offset(x: 6, y: -280)
-        if !searchText.isEmpty {
-            ForEach(filteredFoods,id: \.self){food in
-                Text(food)
-                    .padding(.vertical)
-                    .offset(x: -120,y:-200)
-                
+            .padding()
+
+            // MARK: - Result Count
+            if !vm.searchText.isEmpty {
+                Text("Found \(vm.results.count) results")
+                    .font(.headline)
+                    .padding(.vertical, 8)
             }
-            
-            
+
+            // MARK: - Grid Results
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(vm.results) { item in
+                        NavigationLink {
+                            ProductDetailedView()
+                        } label: {
+                            SearchGridCard(item: item)
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 20)
+            }
+
+            Spacer()
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
 #Preview {
-    SearchView()
+    NavigationStack {
+        SearchView(
+            vm: SearchViewModel(items: mockFoodItems)
+        )
+    }
 }
+
+let mockFoodItems: [FoodItems] = [
+    FoodItems(
+        id: UUID(),
+        name: "Veggie tomato mix",
+        image: "https://bing.com/th?id=OSK.d1eb0a0ed71228fccb9c47a8d2ce6e71",
+        description: "Healthy veggie meal",
+        price: 1900,
+        category: .meals
+    ),
+    FoodItems(
+        id: UUID(),
+        name: "Egg and cucumber",
+        image: "https://img.freepik.com/premium-photo/fresh-cucumber-boiled-egg-salad-with-parsley-garnish-cucumber-breakfast-salad-with-jammy-eggs_616001-38276.jpg",
+        description: "Egg with cucumber",
+        price: 1900,
+        category: .meals
+    ),
+    FoodItems(
+        id: UUID(),
+        name: "Fried chicken mix",
+        image: "https://bing.com/th?id=OSK.5676db5685a63501f8400b42a872d251",
+        description: "Crispy fried chicken",
+        price: 1900,
+        category: .meals
+    ),
+    FoodItems(
+        id: UUID(),
+        name: "fried egg",
+        image: "https://bing.com/th?id=OSK.b9774e6819b03146e48e213bbae3f14f",
+        description: "Traditional meal",
+        price: 1900,
+        category: .meals
+    )
+]
