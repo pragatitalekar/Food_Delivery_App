@@ -67,6 +67,7 @@ struct HomeView: View {
                             .foregroundColor(AppColors.textPrimary)
                         
                         NavigationLink {
+<<<<<<< HEAD
                             SearchView()
                         } label: {
                             HStack {
@@ -82,6 +83,29 @@ struct HomeView: View {
                             .background(Color(.white))
                             .cornerRadius(15)
                         }
+=======
+                            SearchView(
+                                    vm: SearchViewModel(items: vm.allItems)
+                                )
+                                       } label: {
+                                           HStack {
+                                               Image(systemName: "magnifyingglass")
+                                                   .foregroundColor(.gray)
+                                               
+                                               Text("Search")
+                                                   .foregroundColor(.gray)
+                                               
+                                               Spacer()
+                                           }
+                                           .padding()
+                                           .background(Color(.systemGray6))
+                                           .cornerRadius(15)
+                                           .offset(x: -5,y:-0)
+                                       }
+                        
+                        
+                        // MARK: - Categories
+>>>>>>> 4236f19d79426be2d05d344ccad8d3fb30ec0896
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 24) {
