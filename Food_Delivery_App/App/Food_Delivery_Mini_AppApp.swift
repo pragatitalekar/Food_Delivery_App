@@ -10,21 +10,16 @@ import FirebaseCore
 @main
 struct Food_Delivery_Mini_AppApp: App {
     
-    @StateObject var navigationManager = NavigationManager.shared
-    @StateObject var cartManager = CartManager()   // GLOBAL CART
+    @StateObject var cartManager = CartManager()
+    
     init() {
-           FirebaseApp.configure()
-       }
+        FirebaseApp.configure()
+    }
     
     var body: some Scene {
         WindowGroup {
             SplashView()
-                .environmentObject(navigationManager)
-                .environmentObject(cartManager)   // INJECT HERE
+                .environmentObject(cartManager)
         }
     }
 }
-
-
-
-
