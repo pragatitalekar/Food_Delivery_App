@@ -17,6 +17,7 @@ struct SearchGridCard: View {
             Text(item.name)
                 .font(.headline)
                 .lineLimit(1)
+                .foregroundColor(.black)
 
             Text("₹\(item.price, specifier: "%.0f")")
                 .foregroundColor(.orange)

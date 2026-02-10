@@ -129,3 +129,4 @@ struct ProductDetailedView: View {
         ProductDetailedView()
     }
 }
+

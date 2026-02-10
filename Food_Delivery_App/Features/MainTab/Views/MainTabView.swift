@@ -30,7 +30,7 @@ struct MainTabView: View {
                         .ignoresSafeArea()
 
                 NavigationStack(path: $navigationManager.path) {
-                    HomeView()
+                    DashboardView()
                         .environmentObject(navigationManager)
                         .navigationDestination(for: SideMenuOption.self) { option in
                             switch option {
