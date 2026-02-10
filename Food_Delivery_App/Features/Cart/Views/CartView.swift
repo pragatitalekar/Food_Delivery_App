@@ -4,15 +4,46 @@
 //
 //  Created by rentamac on 2/8/26.
 //
-
 import SwiftUI
 
 struct CartView: View {
+    
+    @EnvironmentObject var cart: CartManager
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        
+        VStack {
+            
+            ScrollView {
+                VStack(spacing: 16) {
+                    
+                    ForEach(cart.items) { item in
+                        CartItemCard(item: item)
+                       
+                    }
+                }
+                .padding()
+            }
+            
+            Divider()
+            
+            HStack {
+                Text("Total")
+                    .font(.headline)
+                Spacer()
+                Text("₹\(cart.total, specifier: "%.0f")")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .foregroundColor(.orange)
+            }
+            .padding()
+        }
+        .navigationTitle("Cart")
     }
 }
 
 #Preview {
     CartView()
+        .environmentObject(CartManager())
 }
+

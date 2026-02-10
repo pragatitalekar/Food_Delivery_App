@@ -11,18 +11,17 @@ import SwiftUI
 struct Food_Delivery_Mini_AppApp: App {
     
     @StateObject var navigationManager = NavigationManager.shared
+    @StateObject var cartManager = CartManager()   // GLOBAL CART
     
     var body: some Scene {
-        
         WindowGroup {
-            
             MainTabView()
                 .environmentObject(navigationManager)
-            
+                .environmentObject(cartManager)   // INJECT HERE
         }
-        
     }
 }
+
 
 
 

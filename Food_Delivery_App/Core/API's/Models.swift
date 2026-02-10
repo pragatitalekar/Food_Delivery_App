@@ -13,12 +13,11 @@ enum CategoryType: String, CaseIterable {
     case desserts = "Desserts"
 }
 
-struct FoodItems: Identifiable{
-    let id: UUID
+struct FoodItems: Identifiable {
+    let id: String
     let name: String
     let image: String
-    let description: String
     let price: Double
     let category: CategoryType
-    
 }
+
