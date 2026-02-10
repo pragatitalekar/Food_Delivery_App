@@ -45,20 +45,20 @@ struct HomeView: View {
                                 .font(.title)
                                 .foregroundColor(AppColors.textPrimary)
                         }
-                   
+                        
+                        
+                        NavigationLink{
+                            CartView()
                             
-                            NavigationLink{
-                                CartView()
-                                
-                            }label: {
-                                Image(systemName: "cart")
-                                    .font(.title)
-                                    .foregroundStyle(AppColors.textPrimary)
-                            }
-                            
-                            .padding(6)
-                            .offset(x:300,y: -50)
-                            
+                        }label: {
+                            Image(systemName: "cart")
+                                .font(.title)
+                                .foregroundStyle(AppColors.textPrimary)
+                        }
+                        
+                        .padding(6)
+                        .offset(x:300,y: -50)
+                        
                         
                         
                         Text("Delicious Food\nFor You")
@@ -67,45 +67,19 @@ struct HomeView: View {
                             .foregroundColor(AppColors.textPrimary)
                         
                         NavigationLink {
-<<<<<<< HEAD
-                            SearchView()
+                            SearchView(homeVM: vm)
                         } label: {
                             HStack {
                                 Image(systemName: "magnifyingglass")
-                                    .foregroundColor(.gray)
-                                
                                 Text("Search")
-                                    .foregroundColor(.gray)
-                                
                                 Spacer()
                             }
                             .padding()
-                            .background(Color(.white))
+                            .background(Color(.systemGray6))
                             .cornerRadius(15)
                         }
-=======
-                            SearchView(
-                                    vm: SearchViewModel(items: vm.allItems)
-                                )
-                                       } label: {
-                                           HStack {
-                                               Image(systemName: "magnifyingglass")
-                                                   .foregroundColor(.gray)
-                                               
-                                               Text("Search")
-                                                   .foregroundColor(.gray)
-                                               
-                                               Spacer()
-                                           }
-                                           .padding()
-                                           .background(Color(.systemGray6))
-                                           .cornerRadius(15)
-                                           .offset(x: -5,y:-0)
-                                       }
                         
-                        
-                        // MARK: - Categories
->>>>>>> 4236f19d79426be2d05d344ccad8d3fb30ec0896
+                    
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 24) {
@@ -142,8 +116,8 @@ struct HomeView: View {
                                 }
                             }
                         }
-
-
+                        
+                        
                         NavigationLink("see more") {
                             CategoryListView(items: filtered)
                         }.frame(maxWidth: .infinity, alignment: .trailing)
@@ -175,10 +149,11 @@ struct HomeView: View {
                 
                 
             }
-           
+            
             
         }
     }
+    
 }
 
 #Preview {
