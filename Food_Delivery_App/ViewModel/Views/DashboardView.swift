@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 struct DashboardView: View {
+    @State private var showSideMenu: Bool = false
     var body: some View {
         NavigationStack{
            
@@ -17,7 +18,7 @@ struct DashboardView: View {
             TabView{
                 
                 Tab(Constants.homeString,systemImage:Constants.homeIconString){
-                  HomeView()
+                  HomeView(showSideMenu: $showSideMenu)
                 }
                 Tab(Constants.likedString,systemImage:Constants.likedIconString){
                     FavouriteView()
