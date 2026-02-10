@@ -12,6 +12,7 @@ import SwiftUI
 
 struct PaymentView: View {
     
+    @State private var deliveryNote = false
     
     @State private var selectedDelivery: DeliveryType = .door
     
@@ -27,8 +28,7 @@ struct PaymentView: View {
         case door
         case pickup
     }
-    
-    
+
     
     var body: some View {
         NavigationStack {
@@ -49,14 +49,16 @@ struct PaymentView: View {
                                      
                     CardView {
                         VStack(spacing: 16) {
-                            paymentRow(title: "Door delivery",
-                                       
+                            paymentRow(title: "Card",
+                                       icon: "creditcard",
+                                       iconColor: .orange,
                                        type: .card)
                             
                             Divider()
                             
-                            paymentRow(title: "Pick up",
-                                     
+                            paymentRow(title: "Bank Account",
+                                       icon: "building.columns",
+                                       iconColor: .pink,
                                        type: .bankAccount)
                         }
                         .padding(6)
@@ -74,11 +76,11 @@ struct PaymentView: View {
                     
                     CardView {
                         VStack(spacing: 16) {
-                            deliveryRow(title: "Card", type: .door)
+                            deliveryRow(title: "Door delivery", type: .door)
                             
                             Divider()
                             
-                            deliveryRow(title: "Bank Account", type: .pickup)
+                            deliveryRow(title: "Pick up", type: .pickup)
                         }
                         .padding(6)
                     }
@@ -96,13 +98,13 @@ struct PaymentView: View {
                     
                     Spacer()
                     
-                    Text("23,000")
+                        
                         .font(.headline)
                 }
                 
                 
-                NavigationLink {
-                    CheckoutView()
+                Button {
+                    deliveryNote = true
                     
                 } label: {
                     Text("Checkout")
@@ -119,8 +121,30 @@ struct PaymentView: View {
             .background(Color(.systemGray6))
             .navigationTitle("Checkout")
             .navigationBarTitleDisplayMode(.inline)
+            
+//            if deliveryNote {
+//                Color.black.opacity(0.4)
+//                    .ignoresSafeArea()
+//                    .onTapGesture {
+//                        deliveryNote = false
+//                    }
+//                
+//                CheckoutView(
+//                    onCancel: {
+//                        deliveryNote = false
+//                    },
+//                    
+//                    onProceed: {
+//                        deliveryNote = false
+//                    }
+//                )
+//                .transition(.move(edge: .bottom))
+//            }
         }
+//        .animation(.easeInOut, value: selectedDelivery)
     }
+    
+    
     
     private func deliveryRow(title: String, type: DeliveryType) -> some View {
         HStack {
@@ -140,12 +164,22 @@ struct PaymentView: View {
         }
     }
     
-    private func paymentRow(title: String, type: PaymentType) -> some View {
+    
+    
+    private func paymentRow(title: String, icon: String, iconColor: Color, type: PaymentType) -> some View {
         HStack {
             Image(systemName: selectPayment == type
                   ? "largecircle.fill.circle"
                   : "circle")
             .foregroundColor(.orange)
+            
+            Image(systemName: icon)
+                .foregroundStyle(.white)
+                .font(Font.system(size: 22))
+                .background(Color(iconColor))
+                .padding(4)
+                .cornerRadius(12)
+        
             
             Text(title)
                 .font(.footnote)
@@ -158,6 +192,7 @@ struct PaymentView: View {
         }
     }
 }
+    
 
 
 #Preview {
