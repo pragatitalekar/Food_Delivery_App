@@ -2,8 +2,6 @@
 //  HomeView.swift
 //  Food_Delivery_App
 //
-//  Created by rentamac on 2/6/26.
-//
 
 import SwiftUI
 import Combine
@@ -20,6 +18,7 @@ struct HomeView: View {
     
     @State private var selected: CategoryType = .meals
     
+    
     var filtered: [FoodItems] {
         vm.allItems.filter { $0.category == selected }
     }
@@ -31,21 +30,23 @@ struct HomeView: View {
             
             VStack(alignment: .leading, spacing: 20) {
                 
-                // MARK: - HEADER
+                // MARK: HEADER
+                
                 HStack {
                     
                     Button {
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                             showSideMenu = true
                         }
-                    }
-                    label: {
+                    } label: {
                         Image(systemName: "line.3.horizontal")
                             .font(.title2)
                             .foregroundColor(AppColors.textPrimary)
                     }
                     
+                    
                     Spacer()
+                    
                     
                     NavigationLink {
                         CartView()
@@ -57,29 +58,36 @@ struct HomeView: View {
                 }
                 
                 
-                // MARK: - TITLE
+                // MARK: TITLE
+                
                 Text("Delicious Food\nFor You")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(AppColors.textPrimary)
                 
                 
-                // MARK: - SEARCH BAR
+                // MARK: SEARCH
+                
                 NavigationLink {
                     SearchView(homeVM: vm)
                 } label: {
+                    
                     HStack {
+                        
                         Image(systemName: "magnifyingglass")
+                        
                         Text("Search")
+                        
                         Spacer()
                     }
                     .padding()
-                    .background(Color(.systemGray6))
+                    .background(Color(.secondarySystemBackground))
                     .cornerRadius(15)
                 }
                 
                 
-                // MARK: - CATEGORY SELECTOR
+                // MARK: CATEGORY
+                
                 ScrollView(.horizontal, showsIndicators: false) {
                     
                     HStack(spacing: 24) {
@@ -93,14 +101,21 @@ struct HomeView: View {
                                         selected = category
                                     }
                                 } label: {
+                                    
                                     Text(category.rawValue)
-                                        .foregroundColor(selected == category ? .orange : .gray)
+                                        .foregroundColor(
+                                            selected == category
+                                            ? .orange
+                                            : .gray
+                                        )
                                         .fontWeight(.medium)
                                 }
+                                
                                 
                                 ZStack {
                                     
                                     if selected == category {
+                                        
                                         Rectangle()
                                             .fill(Color.orange)
                                             .frame(height: 3)
@@ -109,21 +124,22 @@ struct HomeView: View {
                                                 in: underlineAnimation
                                             )
                                     }
+                                    
                                     else {
+                                        
                                         Rectangle()
                                             .fill(Color.clear)
                                             .frame(height: 3)
                                     }
                                 }
                             }
-                            .navigationBarBackButtonHidden(true)
-
                         }
                     }
                 }
                 
                 
-                // MARK: - SEE MORE
+                // MARK: SEE MORE
+                
                 NavigationLink("see more") {
                     CategoryListView(items: filtered)
                 }
@@ -131,7 +147,8 @@ struct HomeView: View {
                 .foregroundColor(.orange)
                 
                 
-                // MARK: - FOOD LIST
+                // MARK: FOOD LIST
+                
                 ScrollView(.horizontal, showsIndicators: false) {
                     
                     HStack(spacing: 30) {
@@ -139,23 +156,27 @@ struct HomeView: View {
                         ForEach(filtered.prefix(6)) { item in
                             
                             NavigationLink {
+                                
                                 DetailView(item: item)
+                                
                             } label: {
+                                
                                 ItemCard(item: item)
                             }
                         }
                     }
                     .padding(.vertical, 10)
                 }
-                
             }
+            
             .padding(.horizontal, 20)
             .padding(.top, 10)
             .frame(maxWidth: .infinity, alignment: .leading)
-            
         }
+        
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppColors.background)
+        .background(Color(.systemBackground))
+        
         .onAppear {
             vm.fetchAll()
         }
@@ -165,7 +186,9 @@ struct HomeView: View {
 
 
 #Preview {
+    
     NavigationStack {
+        
         HomeView(showSideMenu: .constant(false))
             .environmentObject(CartManager())
     }

@@ -17,14 +17,7 @@ struct SearchView: View {
             
             HStack(spacing: 12) {
 
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.black)
-                }
-
+             
                 TextField("Search food or drink", text: $vm.searchText)
                     .padding(10)
                     .background(Color(.systemGray6))
@@ -53,13 +46,12 @@ struct SearchView: View {
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 20)
+                
             }
 
             Spacer()
         }
        
-
-      
         .onAppear {
             vm.updateItems(homeVM.allItems)
         }
