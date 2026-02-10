@@ -6,16 +6,19 @@
 //
 
 import SwiftUI
-
+import FirebaseCore
 @main
 struct Food_Delivery_Mini_AppApp: App {
     
     @StateObject var navigationManager = NavigationManager.shared
     @StateObject var cartManager = CartManager()   // GLOBAL CART
+    init() {
+           FirebaseApp.configure()
+       }
     
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+            SplashView()
                 .environmentObject(navigationManager)
                 .environmentObject(cartManager)   // INJECT HERE
         }
