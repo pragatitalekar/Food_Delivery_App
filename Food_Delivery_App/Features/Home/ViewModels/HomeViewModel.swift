@@ -22,7 +22,7 @@ class HomeViewModel: ObservableObject {
     
     
     func fetchMeals() {
-        guard let url = URL(string: "https://www.themealdb.com/api/json/v1/1/search.php?s=") else { return }
+        guard let url = URL(string: APIConstants.mealSearch) else { return }
         
         URLSession.shared.dataTask(with: url) { data, _, _ in
             guard let data,
@@ -46,7 +46,8 @@ class HomeViewModel: ObservableObject {
     
     
     func fetchDrinks() {
-        guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=Drink") else { return }
+        guard let url = URL(string: APIConstants.drinkSearch) else { return }
+
         
         URLSession.shared.dataTask(with: url) { data, _, _ in
             guard let data,
@@ -70,7 +71,8 @@ class HomeViewModel: ObservableObject {
     
     
     func fetchSnacks() {
-        guard let url = URL(string: "https://www.themealdb.com/api/json/v1/1/filter.php?c=Side") else { return }
+        guard let url = URL(string: APIConstants.snackCategory) else { return }
+
         
         URLSession.shared.dataTask(with: url) { data, _, _ in
             guard let data,
@@ -84,7 +86,8 @@ class HomeViewModel: ObservableObject {
     
     
     func fetchDesserts() {
-        guard let url = URL(string: "https://www.themealdb.com/api/json/v1/1/filter.php?c=Dessert") else { return }
+        guard let url = URL(string: APIConstants.dessertCategory) else { return }
+
         
         URLSession.shared.dataTask(with: url) { data, _, _ in
             guard let data,
@@ -96,9 +99,10 @@ class HomeViewModel: ObservableObject {
         }.resume()
     }
     
-    // MARK: Lookup Detail
+
     func lookupDetail(id: String, category: CategoryType) {
-        guard let url = URL(string: "https://www.themealdb.com/api/json/v1/1/lookup.php?i=\(id)") else { return }
+        guard let url = URL(string: APIConstants.lookupMeal + id) else { return }
+
         
         URLSession.shared.dataTask(with: url) { data, _, _ in
             guard let data,
