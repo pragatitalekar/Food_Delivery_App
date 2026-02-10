@@ -60,7 +60,6 @@ struct HomeView: View {
                         .offset(x:300,y: -50)
                         
                         
-                        
                         Text("Delicious Food\nFor You")
                             .font(.largeTitle)
                             .fontWeight(.bold)
@@ -72,11 +71,13 @@ struct HomeView: View {
                             HStack {
                                 Image(systemName: "magnifyingglass")
                                 Text("Search")
+                            
                                 Spacer()
                             }
                             .padding()
-                            .background(Color(.systemGray6))
+                            .background(Color(.white))
                             .cornerRadius(15)
+                            .foregroundStyle(AppColors.textPrimary)
                         }
                         
                     
@@ -145,12 +146,12 @@ struct HomeView: View {
                 .onAppear {
                     vm.fetchAll()
                 }
-                .background(Color(.systemGray6))
+               
                 
                 
             }
             
-            
+            .background(Color(.systemGray6))
         }
     }
     

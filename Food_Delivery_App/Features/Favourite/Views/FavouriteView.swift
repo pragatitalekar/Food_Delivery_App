@@ -8,11 +8,35 @@
 import SwiftUI
 
 struct FavouriteView: View {
+  
+    @EnvironmentObject var cart: CartManager
+    let allItems: [FoodItems]
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                
+                ForEach(favouriteItems, id: \.id) { item in
+                    VStack {
+                        ItemCard(item: item)
+
+                        Button("Remove") {
+                            cart.removeFavourite(item)
+                        }
+                        .foregroundColor(.red)
+                    }
+                }
+            }
+            .padding()
+        }
+        .navigationTitle("Favourites")
+    }
+
+    // FILTERED ARRAY
+    var favouriteItems: [FoodItems] {
+        allItems.filter { cart.isFavourite($0) }
     }
 }
 
-#Preview {
-    FavouriteView()
-}
+
+

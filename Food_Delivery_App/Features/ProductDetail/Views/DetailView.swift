@@ -1,9 +1,3 @@
-//
-//  DetailView.swift
-//  Food_Delivery_App
-//
-//  Created by rentamac on 2/8/26.
-//
 import SwiftUI
 
 struct DetailView: View {
@@ -13,7 +7,6 @@ struct DetailView: View {
     
     @State private var selectedIndex = 0
 
-  
     var images: [String] {
         [item.image, item.image, item.image]
     }
@@ -43,7 +36,7 @@ struct DetailView: View {
                     .tabViewStyle(.page(indexDisplayMode: .never))
                     .padding(.top, 20)
 
-                  
+                    
                     HStack(spacing: 6) {
                         ForEach(images.indices, id: \.self) { index in
                             Circle()
@@ -53,7 +46,7 @@ struct DetailView: View {
                     }
                     .padding(.top, 8)
 
-                 
+                  
                     VStack(spacing: 8) {
                         Text(item.name)
                             .font(.title2)
@@ -66,7 +59,7 @@ struct DetailView: View {
                     }
                     .padding(.top, 30)
 
-                   
+             
                     VStack(alignment: .leading, spacing: 20) {
 
                         VStack(alignment: .leading, spacing: 6) {
@@ -81,10 +74,12 @@ struct DetailView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("About food")
                                 .font(.headline)
-
+                            
                             Text("Fresh and tasty food prepared with quality ingredients.")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
+
+                         
                         }
                     }
                     .padding(.horizontal)
@@ -94,7 +89,7 @@ struct DetailView: View {
                 }
             }
 
-        
+           
             Button {
                 cart.add(item)
             } label: {
@@ -110,15 +105,18 @@ struct DetailView: View {
             .padding(.bottom)
         }
         .navigationBarTitleDisplayMode(.inline)
+
+        
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    print("Favorite tapped")
+                    cart.toggleFavourite(item)
                 } label: {
-                    Image(systemName: "heart")
-                        .foregroundColor(.black)
+                    Image(systemName: cart.isFavourite(item) ? "heart.fill" : "heart")
+                        .foregroundColor(.red)
                 }
             }
         }
     }
 }
+
