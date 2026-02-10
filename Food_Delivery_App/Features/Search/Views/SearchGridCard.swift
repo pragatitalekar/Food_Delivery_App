@@ -1,55 +1,29 @@
 import SwiftUI
 
 struct SearchGridCard: View {
-
     let item: FoodItems
 
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(alignment: .leading) {
 
-            // MARK: - Circular Image
-            AsyncImage(url: URL(string: item.image)) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
-
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-
-                case .failure:
-                    Image(systemName: "photo")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(20)
-                        .foregroundColor(.gray)
-
-                @unknown default:
-                    EmptyView()
-                }
+            AsyncImage(url: URL(string: item.image)) { img in
+                img.resizable().scaledToFill()
+            } placeholder: {
+                ProgressView()
             }
-            .frame(width: 110, height: 110)
-            .clipShape(Circle())
+            .frame(height: 120)
+            .cornerRadius(12)
 
-            // MARK: - Title
             Text(item.name)
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .multilineTextAlignment(.center)
-                .lineLimit(2)
-                .frame(height: 40)
+                .font(.headline)
+                .lineLimit(1)
 
-            // MARK: - Price
-            Text("₦\(Int(item.price))")
-                .font(.footnote)
-                .fontWeight(.bold)
+            Text("₹\(item.price, specifier: "%.0f")")
                 .foregroundColor(.orange)
         }
         .padding()
-        .frame(maxWidth: .infinity)
-        .background(Color.white)
-        .cornerRadius(20)
-        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 4)
+        .background(.white)
+        .cornerRadius(16)
+        .shadow(radius: 3)
     }
 }
