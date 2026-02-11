@@ -19,7 +19,7 @@ struct CartView: View {
                     
                     HStack(spacing: 12) {
                         
-                        // IMAGE
+                       
                         AsyncImage(url: URL(string: item.image)) { img in
                             img.resizable().scaledToFill()
                         } placeholder: {
@@ -28,7 +28,7 @@ struct CartView: View {
                         .frame(width: 60, height: 60)
                         .cornerRadius(10)
                         
-                        // NAME + PRICE
+                       
                         VStack(alignment: .leading) {
                             Text(item.name)
                                 .font(.headline)
@@ -39,7 +39,7 @@ struct CartView: View {
                         
                         Spacer()
                         
-                        // QUANTITY CONTROL
+                       
                         HStack {
                             Button {
                                 cart.decrement(item)
@@ -59,7 +59,7 @@ struct CartView: View {
                         .foregroundColor(.orange)
                     }
                     
-                    // SWIPE RIGHT → FAVOURITE
+                 
                     .swipeActions(edge: .leading, allowsFullSwipe: false) {
                         Button {
                             cart.toggleFavourite(item)
@@ -72,7 +72,7 @@ struct CartView: View {
                         .tint(.pink)
                     }
                     
-                    // SWIPE LEFT → DELETE ALL
+                   
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button(role: .destructive) {
                             cart.remove(item)
@@ -83,12 +83,12 @@ struct CartView: View {
                 }
             }
 
-            // TOTAL
+         
             Text("Total ₹\(cart.total, specifier: "%.0f")")
                 .font(.title2)
                 .padding()
 
-            // CHECKOUT
+          
             Button("Checkout") { }
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -100,7 +100,6 @@ struct CartView: View {
         .navigationTitle("Cart")
     }
     
-    // UNIQUE ITEMS FOR DISPLAY
     var uniqueItems: [FoodItems] {
         Array(Dictionary(grouping: cart.items, by: { $0.id }).values.compactMap { $0.first })
     }
