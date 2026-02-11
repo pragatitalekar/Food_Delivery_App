@@ -56,7 +56,6 @@ struct LoginView: View {
         .padding(.bottom, 30)
     }
 
-    // MARK: - Floating Field
     private func floatingField(
         title: String,
         text: Binding<String>,
