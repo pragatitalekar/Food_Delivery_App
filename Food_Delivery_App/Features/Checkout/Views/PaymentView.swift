@@ -12,7 +12,7 @@ import SwiftUI
 
 struct PaymentView: View {
     
-    @State private var deliveryNote = false
+    @State private var orderNote = false
     
     @State private var selectedDelivery: DeliveryType = .door
     
@@ -32,6 +32,7 @@ struct PaymentView: View {
     
     var body: some View {
         NavigationStack {
+            ZStack {
             VStack(spacing: 32) {
                 
                 Text("Payment")
@@ -104,10 +105,10 @@ struct PaymentView: View {
                 
                 
                 Button {
-                    deliveryNote = true
+                    orderNote = true
                     
                 } label: {
-                    Text("Checkout")
+                    Text("Proceed to payment")
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -122,26 +123,26 @@ struct PaymentView: View {
             .navigationTitle("Checkout")
             .navigationBarTitleDisplayMode(.inline)
             
-//            if deliveryNote {
-//                Color.black.opacity(0.4)
-//                    .ignoresSafeArea()
-//                    .onTapGesture {
-//                        deliveryNote = false
-//                    }
-//                
-//                CheckoutView(
-//                    onCancel: {
-//                        deliveryNote = false
-//                    },
-//                    
-//                    onProceed: {
-//                        deliveryNote = false
-//                    }
-//                )
-//                .transition(.move(edge: .bottom))
-//            }
+                if orderNote {
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            orderNote = false
+                        }
+                    
+                    CheckoutView(
+                        onCancel: {
+                            orderNote = false
+                        },
+                        
+                        onProceed: {
+                            orderNote = false
+                        }
+                    )
+                }
+            }
         }
-//        .animation(.easeInOut, value: selectedDelivery)
+        
     }
     
     

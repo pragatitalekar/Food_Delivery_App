@@ -9,66 +9,58 @@ import SwiftUI
 
 struct CheckoutView: View {
 
-    let onCancel: () -> Void
-    let onProceed: () -> Void
+    var onCancel: () -> Void
+    var onProceed: () -> Void
 
     var body: some View {
         VStack(spacing: 20) {
 
             Text("Please note")
                 .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             VStack(spacing: 12) {
-                noteRow(
-                    title: "DELIVERY TO MAINLAND",
-                    price: "1000 - 2000"
-                )
-
-                Divider()
-
-                noteRow(
-                    title: "DELIVERY TO ISLAND",
-                    price: "1000 - 3000"
-                )
+                noteRow(title: "DELIVERY TO Encora", price: "1000 – 2000")
+                
             }
 
-            HStack(spacing: 16) {
-
+            HStack {
                 Button("Cancel") {
                     onCancel()
                 }
                 .foregroundColor(.gray)
-                .frame(maxWidth: .infinity)
 
-                Button("Proceed") {
+                Spacer()
+
+                Button {
                     onProceed()
+                } label: {
+                    Text("Proceed")
+                        .fontWeight(.semibold)
+                        .padding(.horizontal, 28)
+                        .padding(.vertical, 12)
+                        .background(Color.orange)
+                        .foregroundColor(.white)
+                        .cornerRadius(20)
                 }
-                .fontWeight(.semibold)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 12)
-                .background(Color.orange)
-                .foregroundColor(.white)
-                .cornerRadius(24)
             }
         }
-        .padding()
-        .frame(maxWidth: .infinity)
+        .padding(20)
         .background(Color.white)
-        .cornerRadius(28)
-        .padding(.horizontal, 24)
-        .padding(.bottom, 30)
-        .frame(maxHeight: .infinity, alignment: .bottom)
+        .cornerRadius(20)
+        .padding(.horizontal, 40)
     }
 
     private func noteRow(title: String, price: String) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(.gray)
 
             Text(price)
                 .font(.subheadline)
                 .fontWeight(.medium)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
