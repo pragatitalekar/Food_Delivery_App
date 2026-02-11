@@ -2,38 +2,58 @@
 //  HomeView.swift
 //  Food_Delivery_App
 //
-
 import SwiftUI
 import Combine
 
 struct HomeView: View {
-    
+
     @Binding var showSideMenu: Bool
-    
     @Namespace private var underlineAnimation
-    
     @StateObject private var vm = HomeViewModel()
-    
     @EnvironmentObject var cart: CartManager
-    
-    @State private var selected: CategoryType = .meals
-    
-    
+    @State private var selectedCategory: CategoryType = .meals
+
     var filtered: [FoodItems] {
-        vm.allItems.filter { $0.category == selected }
+        vm.allItems.filter { $0.category == selectedCategory }
     }
-    
-    
+
     var body: some View {
-        
+        NavigationStack {
+            TabView {
+
+                homeMainContent
+                    .tabItem {
+                        Label(Constants.homeString, systemImage: Constants.homeIconString)
+                    }
+
+                FavouriteView(allItems: vm.allItems)
+                    .tabItem {
+                        Label(Constants.likedString, systemImage: Constants.likedIconString)
+                    }
+
+                ProfileView()
+                    .tabItem {
+                        Label(Constants.profileString, systemImage: Constants.profileIconString)
+                    }
+
+                OrdersView()
+                    .tabItem {
+                        Label(Constants.historyString, systemImage: Constants.historyIconString)
+                    }
+                
+            }
+           
+        }
+        .onAppear {
+            vm.fetchAll()
+        }
+    }
+
+    private var homeMainContent: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            
             VStack(alignment: .leading, spacing: 20) {
-                
-                // MARK: HEADER
-                
+
                 HStack {
-                    
                     Button {
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                             showSideMenu = true
@@ -43,11 +63,9 @@ struct HomeView: View {
                             .font(.title2)
                             .foregroundColor(AppColors.textPrimary)
                     }
-                    
-                    
+
                     Spacer()
-                    
-                    
+
                     NavigationLink {
                         CartView()
                     } label: {
@@ -56,77 +74,48 @@ struct HomeView: View {
                             .foregroundColor(AppColors.textPrimary)
                     }
                 }
-                
-                
-                // MARK: TITLE
-                
+
                 Text("Delicious Food\nFor You")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(AppColors.textPrimary)
-                
-                
-                // MARK: SEARCH
-                
+
                 NavigationLink {
                     SearchView(homeVM: vm)
                 } label: {
-                    
                     HStack {
-                        
                         Image(systemName: "magnifyingglass")
-                        
+                        .foregroundStyle(Color.black)
                         Text("Search")
-                        
                         Spacer()
                     }
                     .padding()
-                    .background(Color(.secondarySystemBackground))
+                    .background(Color(.white))
                     .cornerRadius(15)
-                }
-                
-                
-                // MARK: CATEGORY
-                
-                ScrollView(.horizontal, showsIndicators: false) {
                     
+                }
+
+                ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 24) {
-                        
                         ForEach(CategoryType.allCases, id: \.self) { category in
-                            
                             VStack(spacing: 6) {
-                                
                                 Button {
                                     withAnimation(.easeInOut(duration: 0.25)) {
-                                        selected = category
+                                        selectedCategory = category
                                     }
                                 } label: {
-                                    
                                     Text(category.rawValue)
-                                        .foregroundColor(
-                                            selected == category
-                                            ? .orange
-                                            : .gray
-                                        )
+                                        .foregroundColor(selectedCategory == category ? .orange : .gray)
                                         .fontWeight(.medium)
                                 }
-                                
-                                
+
                                 ZStack {
-                                    
-                                    if selected == category {
-                                        
+                                    if selectedCategory == category {
                                         Rectangle()
                                             .fill(Color.orange)
                                             .frame(height: 3)
-                                            .matchedGeometryEffect(
-                                                id: "underline",
-                                                in: underlineAnimation
-                                            )
-                                    }
-                                    
-                                    else {
-                                        
+                                            .matchedGeometryEffect(id: "underline", in: underlineAnimation)
+                                    } else {
                                         Rectangle()
                                             .fill(Color.clear)
                                             .frame(height: 3)
@@ -136,60 +125,36 @@ struct HomeView: View {
                         }
                     }
                 }
-                
-                
-                // MARK: SEE MORE
-                
+
+
                 NavigationLink("see more") {
                     CategoryListView(items: filtered)
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .foregroundColor(.orange)
-                
-                
-                // MARK: FOOD LIST
-                
+
                 ScrollView(.horizontal, showsIndicators: false) {
-                    
                     HStack(spacing: 30) {
-                        
                         ForEach(filtered.prefix(6)) { item in
-                            
                             NavigationLink {
-                                
                                 DetailView(item: item)
-                                
                             } label: {
-                                
                                 ItemCard(item: item)
                             }
                         }
                     }
-                    .padding(.vertical, 10)
+                    .padding(.vertical, 50)
                 }
             }
-            
             .padding(.horizontal, 20)
-            .padding(.top, 10)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 20)
         }
-        
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemBackground))
-        
-        .onAppear {
-            vm.fetchAll()
-        }
+        .background(Color(.systemGray6))
     }
 }
-
-
 
 #Preview {
-    
-    NavigationStack {
-        
-        HomeView(showSideMenu: .constant(false))
-            .environmentObject(CartManager())
-    }
+    HomeView(showSideMenu: .constant(false))
+        .environmentObject(CartManager())
 }
+
