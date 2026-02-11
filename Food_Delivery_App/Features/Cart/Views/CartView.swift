@@ -89,13 +89,16 @@ struct CartView: View {
                 .padding()
 
           
-            Button("Checkout") { }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(.orange)
-                .foregroundColor(.white)
-                .cornerRadius(12)
-                .padding(.horizontal)
+            NavigationLink {
+                AddressView()
+            } label: {
+                Text("Complete Order")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(.orange)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
         }
         .navigationTitle("Cart")
     }
@@ -107,9 +110,7 @@ struct CartView: View {
 
 
 
-#Preview {
-    CartView()
-}
+
 
 
 

@@ -13,7 +13,9 @@ struct FavouriteView: View {
     let allItems: [FoodItems]
 
     var body: some View {
+        
         ScrollView {
+          
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                 
                 ForEach(favouriteItems, id: \.id) { item in
