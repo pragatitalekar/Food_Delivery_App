@@ -10,7 +10,8 @@ import SwiftUI
 struct DashboardView: View {
     
     @EnvironmentObject var cart: CartManager
-    @StateObject var homeVM = HomeViewModel()
+    @State private var showSideMenu: Bool = false
+    @StateObject private var homeVM = HomeViewModel()
 
     var body: some View {
         NavigationStack {
@@ -19,7 +20,7 @@ struct DashboardView: View {
                 
                 Tab(Constants.homeString, systemImage: Constants.homeIconString) {
                     
-                        HomeView(vm: homeVM)
+                        HomeView(showSideMenu: $showSideMenu)
                    
                 }
                 
