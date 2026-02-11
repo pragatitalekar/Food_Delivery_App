@@ -4,123 +4,49 @@
 //
 //  Created by rentamac on 2/7/26.
 //
-
 import Foundation
-import SwiftUI
 import Combine
 
 class HomeViewModel: ObservableObject {
-    
+
     @Published var allItems: [FoodItems] = []
-    
+
+    private let service = FoodService.shared
+
     func fetchAll() {
         fetchMeals()
         fetchDrinks()
         fetchSnacks()
         fetchDesserts()
     }
-    
-    
-    func fetchMeals() {
-        guard let url = URL(string: APIConstants.mealSearch) else { return }
-        
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            guard let data,
-                  let decoded = try? JSONDecoder().decode(MealResponse.self, from: data) else { return }
-            
-            let items = decoded.meals.map {
-                FoodItems(
-                    id: $0.idMeal,
-                    name: $0.strMeal,
-                    image: $0.strMealThumb,
-                    price: Double.random(in: 150...350),
-                    category: .meals
-                )
-            }
-            
-            DispatchQueue.main.async {
-                self.allItems += items
-            }
-        }.resume()
+
+    private func fetchMeals() {
+        service.fetchMeals { items in
+            self.allItems += items
+        }
     }
-    
-    
-    func fetchDrinks() {
-        guard let url = URL(string: APIConstants.drinkSearch) else { return }
 
-        
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            guard let data,
-                  let decoded = try? JSONDecoder().decode(DrinkResponse.self, from: data) else { return }
-            
-            let items = decoded.drinks.map {
-                FoodItems(
-                    id: $0.idDrink,
-                    name: $0.strDrink,
-                    image: $0.strDrinkThumb,
-                    price: Double.random(in: 50...200),
-                    category: .drinks
-                )
-            }
-            
-            DispatchQueue.main.async {
-                self.allItems += items
-            }
-        }.resume()
+    private func fetchDrinks() {
+        service.fetchDrinks { items in
+            self.allItems += items
+        }
     }
-    
-    
-    func fetchSnacks() {
-        guard let url = URL(string: APIConstants.snackCategory) else { return }
 
-        
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            guard let data,
-                  let decoded = try? JSONDecoder().decode(CategoryMealResponse.self, from: data) else { return }
-            
-            decoded.meals.prefix(10).forEach { meal in
-                self.lookupDetail(id: meal.idMeal, category: .snacks)
-            }
-        }.resume()
+    private func fetchSnacks() {
+        service.fetchCategoryMeals(
+            urlString: APIConstants.snackCategory,
+            category: .snacks
+        ) { items in
+            self.allItems += items
+        }
     }
-    
-    
-    func fetchDesserts() {
-        guard let url = URL(string: APIConstants.dessertCategory) else { return }
 
-        
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            guard let data,
-                  let decoded = try? JSONDecoder().decode(CategoryMealResponse.self, from: data) else { return }
-            
-            decoded.meals.prefix(10).forEach { meal in
-                self.lookupDetail(id: meal.idMeal, category: .desserts)
-            }
-        }.resume()
-    }
-    
-
-    func lookupDetail(id: String, category: CategoryType) {
-        guard let url = URL(string: APIConstants.lookupMeal + id) else { return }
-
-        
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            guard let data,
-                  let decoded = try? JSONDecoder().decode(LookupResponse.self, from: data),
-                  let meal = decoded.meals.first else { return }
-            
-            let item = FoodItems(
-                id: meal.idMeal,
-                name: meal.strMeal,
-                image: meal.strMealThumb,
-               
-                price: Double.random(in: 70...180),
-                category: category
-            )
-            
-            DispatchQueue.main.async {
-                self.allItems.append(item)
-            }
-        }.resume()
+    private func fetchDesserts() {
+        service.fetchCategoryMeals(
+            urlString: APIConstants.dessertCategory,
+            category: .desserts
+        ) { items in
+            self.allItems += items
+        }
     }
 }

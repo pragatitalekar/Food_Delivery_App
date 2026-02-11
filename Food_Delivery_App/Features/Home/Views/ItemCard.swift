@@ -34,7 +34,7 @@ struct ItemCard: View {
                     .foregroundColor(.orange)
             }
             .padding()
-            .frame(width: 180, height: 220)
+            .frame(width: 190, height: 230)
             .background(Color.white).opacity(0.85)
             .cornerRadius(30)
             .shadow(color: Color.gray.opacity(0.20), radius: 8, x: 0, y: 6)

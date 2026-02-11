@@ -32,7 +32,7 @@ struct FavouriteView: View {
         .navigationTitle("Favourites")
     }
 
-    // FILTERED ARRAY
+   
     var favouriteItems: [FoodItems] {
         allItems.filter { cart.isFavourite($0) }
     }

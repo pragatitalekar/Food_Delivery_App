@@ -19,6 +19,7 @@ struct LoginView: View {
             floatingField(title: "Password", text: $vm.password, secure: true)
 
             HStack {
+                
                 Spacer()
                 Button {
                     vm.resetPassword()
@@ -50,6 +51,7 @@ struct LoginView: View {
             NavigationLink(
                 destination: MainTabView(),
                 isActive: $vm.isLoggedIn
+                
             ) { EmptyView() }
         }
         .padding(.horizontal, 30)
@@ -76,4 +78,6 @@ struct LoginView: View {
             Divider()
         }
     }
+    
 }
+

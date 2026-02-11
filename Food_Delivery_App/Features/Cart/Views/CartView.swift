@@ -105,9 +105,6 @@ struct CartView: View {
     }
 }
 
-#Preview {
-    CartView()
-}
 
 
 #Preview {
