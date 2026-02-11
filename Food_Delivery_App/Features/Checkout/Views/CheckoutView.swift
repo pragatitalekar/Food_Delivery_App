@@ -5,7 +5,7 @@
 //  Created by rentamac on 2/6/26.
 //
 
-<<<<<<< HEAD
+
 import SwiftUI
 
 struct CheckoutView: View {
@@ -65,6 +65,3 @@ struct CheckoutView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
-=======
-
->>>>>>> origin/main
