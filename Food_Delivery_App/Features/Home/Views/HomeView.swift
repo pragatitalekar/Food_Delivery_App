@@ -42,8 +42,11 @@ struct HomeView: View {
                     }
                 
             }
+                
            
-        }
+        } .tint(.orange)
+            .background(Color(.systemGray6))
+          
         .onAppear {
             vm.fetchAll()
         }
@@ -85,13 +88,13 @@ struct HomeView: View {
                 } label: {
                     HStack {
                         Image(systemName: "magnifyingglass")
-                        .foregroundStyle(Color.black)
                         Text("Search")
                         Spacer()
                     }
                     .padding()
                     .background(Color(.white))
                     .cornerRadius(15)
+                    .foregroundStyle(Color.black)
                     
                 }
 

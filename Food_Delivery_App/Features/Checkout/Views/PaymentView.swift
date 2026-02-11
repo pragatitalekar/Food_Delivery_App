@@ -5,10 +5,8 @@
 //  Created by rentamac on 2/6/26.
 //
 
-
-
-
 import SwiftUI
+import Combine
 
 struct PaymentView: View {
     
@@ -17,6 +15,7 @@ struct PaymentView: View {
     @State private var selectedDelivery: DeliveryType = .door
     
     @State private var selectPayment: PaymentType = .card
+    @EnvironmentObject var cart: CartManager
     
     
     enum PaymentType {
@@ -94,13 +93,9 @@ struct PaymentView: View {
                 
                 
                 HStack {
-                    Text("Total")
-                        .font(.subheadline)
-                    
-                    Spacer()
-                    
-                        
-                        .font(.headline)
+                    Text("Total ₹\(cart.total, specifier: "%.0f")")
+                        .font(.title2)
+                        .padding()
                 }
                 
                 

@@ -14,6 +14,7 @@ import Combine
 struct AddressView: View {
     
     @State private var selectedDelivery: DeliveryType = .door
+    @EnvironmentObject var cart: CartManager
     
     enum DeliveryType {
         case door
@@ -59,7 +60,7 @@ struct AddressView: View {
                         }
                     }
                 }
-                //.frame(maxWidth: .infinity, alignment: .leading)
+                
                 
                 
                 VStack(alignment: .leading, spacing: 12) {
@@ -85,13 +86,9 @@ struct AddressView: View {
                 
                 
                 HStack {
-                    Text("Total")
-                        .font(.subheadline)
-                    
-                    Spacer()
-                    
-                    Text("23,000")
-                        .font(.headline)
+                    Text("Total ₹\(cart.total, specifier: "%.0f")")
+                        .font(.title2)
+                        .padding()
                 }
                 
                 
