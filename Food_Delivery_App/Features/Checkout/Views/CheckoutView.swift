@@ -6,33 +6,48 @@
 //
 
 
+
 import SwiftUI
 
 struct CheckoutView: View {
-
+    
+    var address: String
+    var deliveryType: String
+    var paymentType: String
+    
     var onCancel: () -> Void
     var onProceed: () -> Void
-
+    
     var body: some View {
         VStack(spacing: 20) {
-
+            
             Text("Please note")
                 .font(.headline)
                 .frame(maxWidth: .infinity, alignment: .leading)
-
+            
             VStack(spacing: 12) {
-                noteRow(title: "DELIVERY TO Encora", price: "1000 – 2000")
                 
+                noteRow(
+                    title: "DELIVERY TO \(address)",
+                    price: deliveryType == "door" ? "250" : "Free"
+                )
+                
+                Divider()
+                
+                noteRow(
+                    title: "Payment Method",
+                    price: paymentType.capitalized
+                )
             }
-
+            
             HStack {
                 Button("Cancel") {
                     onCancel()
                 }
                 .foregroundColor(.gray)
-
+                
                 Spacer()
-
+                
                 Button {
                     onProceed()
                 } label: {
@@ -51,13 +66,13 @@ struct CheckoutView: View {
         .cornerRadius(20)
         .padding(.horizontal, 40)
     }
-
+    
     private func noteRow(title: String, price: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.caption)
                 .foregroundColor(.gray)
-
+            
             Text(price)
                 .font(.subheadline)
                 .fontWeight(.medium)

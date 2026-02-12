@@ -8,15 +8,20 @@
 
 
 import SwiftUI
-import Combine
 
 
 struct AddressView: View {
     
-    @State private var selectedDelivery: DeliveryType = .door
+    
     @EnvironmentObject var cart: CartManager
     
-    enum DeliveryType {
+    @StateObject private var viewModel = AddressViewModel()
+    @State private var showEditSheet = false
+    
+    @State private var selectedDelivery: DeliveryType =
+        DeliveryType(rawValue: PersistenceService.shared.loadDelivery()) ?? .door
+    
+    enum DeliveryType: String {
         case door
         case pickup
     }
@@ -30,8 +35,9 @@ struct AddressView: View {
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
-                
+             
                 VStack(alignment: .leading, spacing: 15) {
+                    
                     HStack {
                         Text("Address details")
                             .font(.subheadline)
@@ -40,29 +46,41 @@ struct AddressView: View {
                         Spacer()
                         
                         Button("change") {
+                            showEditSheet = true
                         }
                         .font(.footnote)
                         .foregroundColor(.orange)
                     }
                     
                     CardView {
-                        VStack(alignment: .leading, spacing: 16) {
-                            Text("Encora")
-                                .font(.headline)
-                            
-                            Text("Brigade South Parade 10 Mahatma Gandhi RdYellappa Garden Yellappa Chetty Layout Sivanchetti Gardens Bengaluru Karnataka 560001")
-                                .font(.footnote)
-                                .foregroundColor(.secondary)
-                            
-                            Text("+91 9011039271")
-                                .font(.footnote)
-                                .foregroundColor(.secondary)
+                        
+                        if viewModel.isEmpty {
+                            VStack(alignment: .leading) {
+                                Text("No address added")
+                                    .font(.headline)
+                                
+                                Text("Tap change to add address")
+                                    .font(.footnote)
+                                    .foregroundColor(.secondary)
+                            }
+                        } else {
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text(viewModel.name)
+                                    .font(.headline)
+                                
+                                Text(viewModel.street)
+                                    .font(.footnote)
+                                    .foregroundColor(.secondary)
+                                
+                                Text(viewModel.phone)
+                                    .font(.footnote)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                 }
                 
-                
-                
+          
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Delivery method")
                         .font(.subheadline)
@@ -71,30 +89,21 @@ struct AddressView: View {
                     CardView {
                         VStack(spacing: 16) {
                             deliveryRow(title: "Door delivery", type: .door)
-                            
                             Divider()
-                            
                             deliveryRow(title: "Pick up", type: .pickup)
                         }
                     }
-                    
                 }
                 
-                
-                
                 Spacer()
-                
-                
                 HStack {
                     Text("Total ₹\(cart.total, specifier: "%.0f")")
                         .font(.title2)
-                        .padding()
+
                 }
-                
                 
                 NavigationLink {
                     PaymentView()
-                    
                 } label: {
                     Text("Proceed to payment")
                         .fontWeight(.semibold)
@@ -110,6 +119,9 @@ struct AddressView: View {
             .background(Color(.systemGray6))
             .navigationTitle("Checkout")
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $showEditSheet) {
+                EditAddressView(viewModel: viewModel)
+            }
         }
     }
     
@@ -128,10 +140,9 @@ struct AddressView: View {
         .contentShape(Rectangle())
         .onTapGesture {
             selectedDelivery = type
+            PersistenceService.shared.saveDelivery(type.rawValue)
         }
     }
 }
 
-#Preview {
-    AddressView()
-}
+
