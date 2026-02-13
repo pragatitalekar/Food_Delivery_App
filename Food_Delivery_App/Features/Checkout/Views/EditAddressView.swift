@@ -40,10 +40,16 @@ struct EditAddressView: View {
                     .padding()
                     .background(Color.orange)
                     .foregroundColor(.white)
-                    .cornerRadius(12)
+                    .cornerRadius(30)
             }
             
         }
         .padding()
     }
 }
+
+
+//#Preview {
+//    EditAddressView()
+//        .environmentObject(<#T##object: ObservableObject##ObservableObject#>)
+//}

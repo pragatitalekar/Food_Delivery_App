@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CardView<Content: View> : View {
+    
     let content: Content
     
     init(@ViewBuilder content: () -> Content) {
@@ -17,8 +18,9 @@ struct CardView<Content: View> : View {
     var body: some View {
         content
             .padding()
-            .background(Color(.white))
+            .background(AppColors.background)
             .cornerRadius(16)
-            .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
+            .shadow(color: AppColors.shadow
+                    , radius: 8, x: 0, y: 4)
     }
 }

@@ -22,9 +22,9 @@ struct PrimaryButton: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 56)
                 .background(AppColors.primary)
-                .clipShape(Capsule()) // perfect pill shape
+                .clipShape(Capsule())
         }
-        .buttonStyle(.plain) // removes default tint
+        .buttonStyle(.plain) 
     }
 }
 
