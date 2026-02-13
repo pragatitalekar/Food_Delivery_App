@@ -66,10 +66,14 @@ struct PaymentView: View {
                     Spacer()
                     
                     HStack {
-                        Text("Total ₹\(cart.total, specifier: "%.0f")")
-                            .font(.title2)
-                    
+                        Text("Total")
+
+                        Spacer()
+
+                        Text("₹\(cart.total, specifier: "%.0f")")
+                       
                     }
+                    .font(.title2)
                     
                     Button {
                         orderNote = true
@@ -139,3 +143,7 @@ struct PaymentView: View {
 }
 
 
+#Preview {
+    PaymentView()
+        .environmentObject(CartManager())
+}

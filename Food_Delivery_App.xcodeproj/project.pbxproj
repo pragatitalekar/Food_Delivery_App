@@ -10,6 +10,7 @@
 		2421FF922F3B2A4E002D6CB7 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 2421FF912F3B2A4E002D6CB7 /* FirebaseAuth */; };
 		2421FF942F3B2A56002D6CB7 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 2421FF932F3B2A56002D6CB7 /* FirebaseFirestore */; };
 		2421FF962F3B2A62002D6CB7 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2421FF952F3B2A62002D6CB7 /* FirebaseCore */; };
+		24F4D5E02F3E456B0076DF36 /* RazorpayCheckout in Frameworks */ = {isa = PBXBuildFile; productRef = 24F4D5DF2F3E456B0076DF36 /* RazorpayCheckout */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 			files = (
 				2421FF922F3B2A4E002D6CB7 /* FirebaseAuth in Frameworks */,
 				2421FF962F3B2A62002D6CB7 /* FirebaseCore in Frameworks */,
+				24F4D5E02F3E456B0076DF36 /* RazorpayCheckout in Frameworks */,
 				2421FF942F3B2A56002D6CB7 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,6 +87,7 @@
 				2421FF912F3B2A4E002D6CB7 /* FirebaseAuth */,
 				2421FF932F3B2A56002D6CB7 /* FirebaseFirestore */,
 				2421FF952F3B2A62002D6CB7 /* FirebaseCore */,
+				24F4D5DF2F3E456B0076DF36 /* RazorpayCheckout */,
 			);
 			productName = Food_Delivery_App;
 			productReference = 247816172F34643800B0FA3B /* Food_Delivery_App.app */;
@@ -116,6 +119,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				2421FF8F2F3B2A3C002D6CB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				24F4D5DE2F3E456B0076DF36 /* XCRemoteSwiftPackageReference "razorpay-pod" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 247816182F34643800B0FA3B /* Products */;
@@ -361,6 +365,14 @@
 				minimumVersion = 12.9.0;
 			};
 		};
+		24F4D5DE2F3E456B0076DF36 /* XCRemoteSwiftPackageReference "razorpay-pod" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/razorpay/razorpay-pod";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -378,6 +390,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2421FF8F2F3B2A3C002D6CB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCore;
+		};
+		24F4D5DF2F3E456B0076DF36 /* RazorpayCheckout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 24F4D5DE2F3E456B0076DF36 /* XCRemoteSwiftPackageReference "razorpay-pod" */;
+			productName = RazorpayCheckout;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
