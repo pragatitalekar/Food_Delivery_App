@@ -37,7 +37,7 @@ struct AddressView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
              
-                VStack(alignment: .leading, spacing: 15) {
+                VStack(alignment: .leading, spacing: 16) {
                     
                     HStack {
                         Text("Address details")
@@ -53,17 +53,22 @@ struct AddressView: View {
                         .foregroundColor(.orange)
                     }
                     
+                    
                     CardView {
                         
                         if viewModel.isEmpty {
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 16) {
                                 Text("No address added")
                                     .font(.headline)
+                                    .foregroundStyle(AppColors.textPrimary)
                                 
                                 Text("Tap change to add address")
                                     .font(.footnote)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(AppColors.textSecondary)
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            
                         } else {
                             VStack(alignment: .leading, spacing: 16) {
                                 Text(viewModel.name)
@@ -71,12 +76,13 @@ struct AddressView: View {
                                 
                                 Text(viewModel.street)
                                     .font(.footnote)
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(AppColors.textPrimary)
                                 
                                 Text(viewModel.phone)
                                     .font(.footnote)
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(AppColors.textPrimary)
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
                 }
@@ -86,11 +92,13 @@ struct AddressView: View {
                     Text("Delivery method")
                         .font(.subheadline)
                         .fontWeight(.medium)
+                        .foregroundStyle(AppColors.textPrimary)
                     
                     CardView {
                         VStack(spacing: 16) {
                             deliveryRow(title: "Door delivery", type: .door)
                             Divider()
+                                .background(AppColors.divider)
                             deliveryRow(title: "Pick up", type: .pickup)
                         }
                     }
@@ -98,10 +106,17 @@ struct AddressView: View {
                 
                 Spacer()
                 HStack {
-                    Text("Total ₹\(cart.total, specifier: "%.0f")")
-                        .font(.title2)
-
+                    Text("Total")
+                        
+                        .foregroundStyle(AppColors.textPrimary)
+                    
+                    Spacer()
+                    
+                    Text("₹\(cart.total, specifier: "%.0f")")
+                        .foregroundStyle(AppColors.textPrimary)
                 }
+                .font(.title2)
+
                 
                 NavigationLink {
                     PaymentView()
@@ -133,6 +148,7 @@ struct AddressView: View {
         }
     }
     
+    
     private func deliveryRow(title: String, type: DeliveryType) -> some View {
         HStack {
             Image(systemName: selectedDelivery == type
@@ -142,6 +158,7 @@ struct AddressView: View {
             
             Text(title)
                 .font(.footnote)
+                .foregroundStyle(AppColors.textPrimary)
             
             Spacer()
         }
@@ -154,3 +171,8 @@ struct AddressView: View {
 }
 
 
+
+#Preview {
+    AddressView()
+        .environmentObject(CartManager())
+}
