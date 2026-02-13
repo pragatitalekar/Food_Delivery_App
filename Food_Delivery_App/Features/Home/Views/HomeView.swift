@@ -11,6 +11,7 @@ struct HomeView: View {
     @Namespace private var underlineAnimation
     @StateObject private var vm = HomeViewModel()
     @EnvironmentObject var cart: CartManager
+    @EnvironmentObject var Order: OrderManager
     @State private var selectedCategory: CategoryType = .meals
 
     var filtered: [FoodItems] {
@@ -36,7 +37,7 @@ struct HomeView: View {
                         Label(Constants.profileString, systemImage: Constants.profileIconString)
                     }
 
-                OrdersView()
+                HistoryView()
                     .tabItem {
                         Label(Constants.historyString, systemImage: Constants.historyIconString)
                     }

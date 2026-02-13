@@ -15,6 +15,7 @@ struct AddressView: View {
     
     @State private var selectedDelivery: DeliveryType = .door
     @EnvironmentObject var cart: CartManager
+    @EnvironmentObject var orders: OrderManager
     
     enum DeliveryType {
         case door
@@ -62,7 +63,6 @@ struct AddressView: View {
                 }
                 
                 
-                
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Delivery method")
                         .font(.subheadline)
@@ -103,6 +103,13 @@ struct AddressView: View {
                         .background(Color.orange)
                         .foregroundColor(.white)
                         .cornerRadius(30)
+                }
+                
+               
+
+                Button("Checkout") {
+                    orders.placeOrder(items: cart.items, total: cart.total)
+                    cart.items.removeAll()
                 }
             }
             .padding(.horizontal, 26)

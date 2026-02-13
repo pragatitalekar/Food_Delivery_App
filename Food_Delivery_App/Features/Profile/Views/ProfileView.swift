@@ -35,7 +35,7 @@ struct ProfileView: View {
                             ProfileMenuRow(title: "Payment method", icon: "creditcard.fill")
                         }
                         
-                        NavigationLink(destination: Text("Orders View")) {
+                        NavigationLink(destination: OrdersView()) {
                             ProfileMenuRow(title: "Orders", icon: "bag.fill")
                         }
                         
