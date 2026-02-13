@@ -32,7 +32,7 @@ struct CustomBottomBar: View {
         } label: {
             Image(systemName: icon)
                 .font(.title3)
-                .foregroundColor(selectedTab == tab ? .orange : .gray)
+                .foregroundColor(selectedTab == tab ? AppColors.primary : .gray)
         }
     }
 }

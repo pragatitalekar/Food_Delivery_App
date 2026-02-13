@@ -107,10 +107,22 @@ struct HomeView: View {
                     NavigationLink {
                         CartView()
                     } label: {
-                        Image(systemName: "cart")
-                            .font(.title2)
-                            .foregroundColor(AppColors.textPrimary)
+                        
+                        ZStack(alignment: .topTrailing) {
+                            
+                            Image(systemName: "cart")
+                                .font(.title2)
+                                .foregroundColor(AppColors.textPrimary)
+                            
+                            if cart.cartCount > 0 {
+                                BadgeView(count: cart.cartCount)
+                                    .offset(x: 10, y: -10)
+                            }
+                            
+                        }
+                        
                     }
+
                     
                 }
                 
@@ -170,7 +182,7 @@ struct HomeView: View {
                                     if selectedCategory == category {
                                         
                                         Rectangle()
-                                            .fill(Color.orange)
+                                            .fill(AppColors.primary)
                                             .frame(height: 3)
                                             .matchedGeometryEffect(id: "underline", in: underlineAnimation)
                                         

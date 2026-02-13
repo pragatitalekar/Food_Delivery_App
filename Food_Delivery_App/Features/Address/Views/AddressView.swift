@@ -161,7 +161,7 @@ struct AddressView: View {
                     }
                     
                     orders.placeOrder(
-                        items: cart.items,
+                        items: cart.items.values.map { $0.item },
                         total: cart.total
                     )
                     
@@ -214,3 +214,4 @@ struct AddressView: View {
         .environmentObject(OrderManager())
     
 }
+

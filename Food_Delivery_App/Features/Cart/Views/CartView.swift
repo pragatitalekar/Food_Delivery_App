@@ -7,49 +7,48 @@
 import SwiftUI
 
 struct CartView: View {
-    
+
     @EnvironmentObject var cart: CartManager
 
     var body: some View {
         VStack {
-            
+
             List {
-                
                 ForEach(uniqueItems, id: \.id) { item in
-                    
+
                     HStack(spacing: 12) {
-                        
-                       
+
                         AsyncImage(url: URL(string: item.image)) { img in
                             img.resizable().scaledToFill()
                         } placeholder: {
                             ProgressView()
                         }
                         .frame(width: 60, height: 60)
-                        .cornerRadius(10)
-                        
-                       
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle().stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                        )
+
                         VStack(alignment: .leading) {
                             Text(item.name)
                                 .font(.headline)
-                            
+
                             Text("₹\(item.price, specifier: "%.0f")")
                                 .foregroundColor(.orange)
                         }
-                        
+
                         Spacer()
-                        
-                       
+
                         HStack {
                             Button {
                                 cart.decrement(item)
                             } label: {
                                 Image(systemName: "minus.circle.fill")
                             }
-                            
+
                             Text("\(cart.quantity(of: item))")
                                 .frame(width: 24)
-                            
+
                             Button {
                                 cart.increment(item)
                             } label: {
@@ -58,8 +57,6 @@ struct CartView: View {
                         }
                         .foregroundColor(.orange)
                     }
-                    
-                 
                     .swipeActions(edge: .leading, allowsFullSwipe: false) {
                         Button {
                             cart.toggleFavourite(item)
@@ -71,8 +68,6 @@ struct CartView: View {
                         }
                         .tint(.pink)
                     }
-                    
-                   
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button(role: .destructive) {
                             cart.remove(item)
@@ -82,13 +77,12 @@ struct CartView: View {
                     }
                 }
             }
+            .id(cart.items.count)   // 🔥 forces UI refresh
 
-         
             Text("Total ₹\(cart.total, specifier: "%.0f")")
                 .font(.title2)
                 .padding()
 
-          
             NavigationLink {
                 AddressView()
             } label: {
@@ -102,13 +96,11 @@ struct CartView: View {
         }
         .navigationTitle("Cart")
     }
-    
+
     var uniqueItems: [FoodItems] {
-        Array(Dictionary(grouping: cart.items, by: { $0.id }).values.compactMap { $0.first })
+        cart.items.values.map { $0.item }
     }
 }
-
-
 
 
 
