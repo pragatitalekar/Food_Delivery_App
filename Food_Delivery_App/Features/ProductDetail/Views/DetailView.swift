@@ -162,5 +162,3 @@ struct DetailView: View {
 }
 
 
-
-

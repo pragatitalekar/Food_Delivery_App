@@ -49,5 +49,3 @@ struct FavouriteView: View {
     }
 }
 
-
-
