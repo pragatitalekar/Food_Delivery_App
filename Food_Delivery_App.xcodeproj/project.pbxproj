@@ -55,6 +55,7 @@
 				247816182F34643800B0FA3B /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 0;
 		};
 		247816182F34643800B0FA3B /* Products */ = {
 			isa = PBXGroup;

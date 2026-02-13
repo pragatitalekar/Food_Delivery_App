@@ -6,14 +6,14 @@
 //
 
 import Foundation
-enum CategoryType: String, CaseIterable {
+enum CategoryType: String, CaseIterable, Codable {
     case meals = "Meals"
     case drinks = "Drinks"
     case snacks = "Snacks"
     case desserts = "Desserts"
 }
 
-struct FoodItems: Identifiable {
+struct FoodItems: Identifiable , Codable{
     let id: String
     let name: String
     let image: String

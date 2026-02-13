@@ -11,6 +11,7 @@ import FirebaseCore
 struct Food_Delivery_Mini_AppApp: App {
     
     @StateObject var cartManager = CartManager()
+    @StateObject var Orders = OrderManager()
     
     init() {
         FirebaseApp.configure()
@@ -20,6 +21,7 @@ struct Food_Delivery_Mini_AppApp: App {
         WindowGroup {
             SplashView()
                 .environmentObject(cartManager)
+                .environmentObject(Orders)
         }
     }
 }
