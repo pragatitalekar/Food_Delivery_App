@@ -7,6 +7,7 @@
 
 import FirebaseAuth
 import FirebaseFirestore
+import Combine
 
 final class AuthService {
 

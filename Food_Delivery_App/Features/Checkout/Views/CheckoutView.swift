@@ -28,9 +28,10 @@ struct CheckoutView: View {
             VStack(spacing: 12) {
                 
                 noteRow(
-                    title: "DELIVERY TO \(address)",
-                    price: deliveryType == "door" ? "250" : "Free"
+                    title: "DELIVERY TO",
+                    price: address
                 )
+
                 
                 Divider()
                 
@@ -44,7 +45,8 @@ struct CheckoutView: View {
                 Button("Cancel") {
                     onCancel()
                 }
-                .foregroundColor(.gray)
+                .foregroundColor(.secondary)
+
                 
                 Spacer()
                 
@@ -62,7 +64,8 @@ struct CheckoutView: View {
             }
         }
         .padding(20)
-        .background(Color.white)
+        .background(Color(.systemBackground))
+
         .cornerRadius(20)
         .padding(.horizontal, 40)
     }
@@ -76,6 +79,8 @@ struct CheckoutView: View {
             Text(price)
                 .font(.subheadline)
                 .fontWeight(.medium)
+                .foregroundColor(.primary)
+
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
