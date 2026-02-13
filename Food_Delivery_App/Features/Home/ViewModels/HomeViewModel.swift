@@ -14,6 +14,7 @@ class HomeViewModel: ObservableObject {
     private let service = FoodService.shared
 
     func fetchAll() {
+        allItems.removeAll() 
         fetchMeals()
         fetchDrinks()
         fetchSnacks()

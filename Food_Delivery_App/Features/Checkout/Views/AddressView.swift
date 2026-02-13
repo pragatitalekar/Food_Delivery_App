@@ -133,8 +133,9 @@ struct AddressView: View {
                
 
                 Button("Checkout") {
-                    orders.placeOrder(items: cart.items, total: cart.total)
-                    cart.items.removeAll()
+                    let orderItems = cart.items.values.map { $0.item }
+                        orders.placeOrder(items: orderItems, total: cart.total)
+                        cart.items.removeAll()
                 }
             }
             .padding(.horizontal, 26)

@@ -49,7 +49,9 @@ struct HomeView: View {
             .background(Color(.systemGray6))
           
         .onAppear {
-            vm.fetchAll()
+            if vm.allItems.isEmpty {
+                  vm.fetchAll()
+              }
         }
     }
 
