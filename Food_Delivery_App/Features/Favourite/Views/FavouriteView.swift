@@ -14,11 +14,21 @@ struct FavouriteView: View {
 
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                
+            LazyVGrid(
+                columns: [
+                    GridItem(.flexible(), spacing: 40),
+                    GridItem(.flexible(), spacing: 40)
+                ],
+                spacing: 40
+            ) {
                 ForEach(favouriteItems, id: \.id) { item in
-                    VStack {
-                        ItemCard(item: item)
+                    VStack(spacing: 8) {
+                        NavigationLink {
+                                  DetailView(item: item)
+                              } label: {
+                                  ItemCard(item: item)
+                              }
+                              .buttonStyle(.plain)
 
                         Button("Remove") {
                             cart.removeFavourite(item)
@@ -28,6 +38,7 @@ struct FavouriteView: View {
                 }
             }
             .padding()
+
         }
         .navigationTitle("Favourites")
     }
@@ -37,6 +48,4 @@ struct FavouriteView: View {
         allItems.filter { cart.isFavourite($0) }
     }
 }
-
-
 

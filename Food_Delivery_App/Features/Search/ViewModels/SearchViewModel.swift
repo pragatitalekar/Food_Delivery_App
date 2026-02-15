@@ -4,6 +4,7 @@ import Combine
 class SearchViewModel: ObservableObject {
 
     @Published var searchText: String = ""
+    @Published var selectedCategory: CategoryType? = nil
     @Published var results: [FoodItems] = []
 
     private var allItems: [FoodItems] = []
@@ -18,18 +19,20 @@ class SearchViewModel: ObservableObject {
     }
 
     private func setupSearch() {
-        $searchText
+        Publishers.CombineLatest($searchText, $selectedCategory)
             .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
-            .removeDuplicates()
-            .sink { [weak self] text in
+            .sink { [weak self] text, category in
                 guard let self else { return }
 
-                if text.isEmpty {
-                    self.results = []
-                } else {
-                    self.results = self.allItems.filter {
-                        $0.name.lowercased().contains(text.lowercased())
-                    }
+                self.results = self.allItems.filter { item in
+                    let matchesText =
+                        text.isEmpty ||
+                        item.name.lowercased().contains(text.lowercased())
+
+                    let matchesCategory =
+                        category == nil || item.category == category
+
+                    return matchesText && matchesCategory
                 }
             }
             .store(in: &cancellables)

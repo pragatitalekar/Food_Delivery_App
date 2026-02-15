@@ -22,7 +22,7 @@ struct SideMenuView: View {
                 Group {
                     MenuRow(icon: "person.crop.circle.fill", title: "Profile", destination: ProfileView(), showSideMenu: $showSideMenu)
                     MenuDivider()
-                    MenuRow(icon: "bag.fill", title: "orders", destination: OrdersView(), showSideMenu: $showSideMenu)
+                    MenuRow(icon: "clock.arrow.circlepath", title: "Order History", destination: HistoryView(), showSideMenu: $showSideMenu)
                     MenuDivider()
                     MenuRow(icon: "percent", title: "offer and promo", destination: OffersView(), showSideMenu: $showSideMenu)
                     MenuDivider()

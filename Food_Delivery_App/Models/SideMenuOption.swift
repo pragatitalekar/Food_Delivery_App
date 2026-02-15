@@ -5,11 +5,11 @@
 //  Created by Bhaswanth on 2/6/26.
 //
 
-import Foundation
+// Food_Delivery_App/Models/SideMenuOption.swift
 
 enum SideMenuOption: String, CaseIterable, Hashable {
     case profile = "Profile"
-    case orders = "orders"
+    case history = "Order History"
     case offers = "offer and promo"
     case privacy = "Privacy policy"
     case security = "Security"
@@ -17,11 +17,10 @@ enum SideMenuOption: String, CaseIterable, Hashable {
     var icon: String {
         switch self {
         case .profile: return "person.crop.circle.fill"
-        case .orders: return "cart.fill"
+        case .history: return "clock.arrow.circlepath" 
         case .offers: return "tag.fill"
         case .privacy: return "doc.text.fill"
         case .security: return "shield.fill"
         }
     }
 }
-

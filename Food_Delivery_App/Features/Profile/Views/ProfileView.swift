@@ -5,143 +5,185 @@
 //  Created by Bhaswanth on 2/6/26.
 //
 
-
-import SwiftUI
-
 import SwiftUI
 
 struct ProfileView: View {
-    @State private var name = "Bhaswanth"
-    @State private var email = "bhaswanth@gmail.com"
-    @State private var phone = "+91 9876543210"
-    @State private var address = "MG Road Bangalore 560016"
+    
+    @StateObject private var vm = ProfileViewModel()
     @State private var showEditSheet = false
     
     var body: some View {
+        
         VStack(spacing: 0) {
+            
             ScrollView {
-                VStack(spacing: 16) {
-                    PersonalDetailsCard(
-                        name: name,
-                        email: email,
-                        phone: phone,
-                        address: address,
-                        onChangeTap: { showEditSheet = true }
-                    )
+                
+                VStack(spacing: 20) {
+                    
+                    PersonalDetailsCard(vm: vm) {
+                        showEditSheet = true
+                    }
                     
                     VStack(spacing: 12) {
                         
-                        NavigationLink(destination: PaymentMethodView()) {
-                            ProfileMenuRow(title: "Payment method", icon: "creditcard.fill")
+                        NavigationLink {
+                            PaymentMethodView()
+                        } label: {
+                            ProfileMenuRow(
+                                title: "Payment method",
+                                icon: "creditcard.fill"
+                            )
                         }
                         
-                        NavigationLink(destination: OrdersView()) {
-                            ProfileMenuRow(title: "Orders", icon: "bag.fill")
+                    
+                        NavigationLink {
+                            HistoryView()
+                        } label: {
+                            ProfileMenuRow(
+                                title: "Order History",
+                                icon: "clock.fill"       
+                            )
                         }
                         
-                        ProfileMenuRow(title: "Pending reviews", icon: "star.fill")
+                        ProfileMenuRow(
+                            title: "Pending reviews",
+                            icon: "star.fill"
+                        )
                         
-                        
-                        NavigationLink(destination: FAQView()) {
-                            ProfileMenuRow(title: "Faq", icon: "questionmark.circle.fill")
+                        NavigationLink {
+                            FAQView()
+                        } label: {
+                            ProfileMenuRow(
+                                title: "FAQ",
+                                icon: "questionmark.circle.fill"
+                            )
                         }
                         
-                        NavigationLink(destination: HelpView()) {
-                            ProfileMenuRow(title: "Help", icon: "headphones.circle.fill")
+                        NavigationLink {
+                            HelpView()
+                        } label: {
+                            ProfileMenuRow(
+                                title: "Help",
+                                icon: "headphones.circle.fill"
+                            )
                         }
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 12)
+                .padding(.top, 16)
+                .padding(.bottom, 20)
             }
             
-            PrimaryButton(title: "Update")
-                .padding(.horizontal, 20)
-                .padding(.bottom, 30)
+            
+            VStack {
+                
+                Button {
+                    vm.saveProfile()
+                } label: {
+                    
+                    Text("Update")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(AppColors.primary)
+                        .cornerRadius(14)
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
+            .background(AppColors.background)
         }
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("My profile")
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showEditSheet) {
-            EditProfileSheet(name: $name, email: $email, phone: $phone, address: $address)
+            EditProfileSheet(vm: vm)
+        }
+        .alert(vm.alertMessage, isPresented: $vm.showAlert) {
+            Button("OK", role: .cancel) { }
         }
     }
 }
 
+
+
 struct PersonalDetailsCard: View {
     
-    let name: String
-    let email: String
-    let phone: String
-    let address: String
+    @ObservedObject var vm: ProfileViewModel
     let onChangeTap: () -> Void
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 18) {
             
             HStack {
                 
                 Text("Personal details")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 17, weight: .semibold))
                     .foregroundColor(AppColors.textPrimary)
                 
                 Spacer()
                 
-                Button("change") {
+                Button("Change") {
                     onChangeTap()
                 }
-                .font(.system(size: 14, weight: .medium))
+                .font(.system(size: 15, weight: .medium))
                 .foregroundColor(AppColors.primary)
             }
             
-            HStack(spacing: 14) {
+            
+            HStack(alignment: .center, spacing: 16) {
                 
                 ZStack {
                     
-                    Circle()
-                        .fill(AppColors.primary.opacity(0.15))
-                        .frame(width: 64, height: 64)
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(AppColors.primary.opacity(0.1))
+                        .frame(width: 80, height: 80)
                     
                     Image(systemName: "person.fill")
-                        .font(.system(size: 28))
+                        .font(.system(size: 34))
                         .foregroundColor(AppColors.primary)
                 }
                 
-                VStack(alignment: .leading, spacing: 4) {
+                
+                VStack(alignment: .leading, spacing: 6) {
                     
-                    Text(name)
-                        .font(.system(size: 17, weight: .semibold))
+                    Text(vm.name.isEmpty ? "No name added" : vm.name)
+                        .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(AppColors.textPrimary)
                     
-                    Text(email)
-                        .font(.system(size: 13))
+                    Text(vm.email)
+                        .font(.system(size: 14))
                         .foregroundColor(AppColors.textSecondary)
                     
-                    Text(phone)
-                        .font(.system(size: 13))
+                    Text(vm.phone.isEmpty ? "No phone added" : vm.phone)
+                        .font(.system(size: 14))
                         .foregroundColor(AppColors.textSecondary)
                     
-                    Text(address)
-                        .font(.system(size: 13))
+                    Text(vm.address.isEmpty ? "No address added" : vm.address)
+                        .font(.system(size: 14))
                         .foregroundColor(AppColors.textSecondary)
                         .lineLimit(2)
                 }
                 
                 Spacer()
             }
-            .padding(14)
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(Color(.systemBackground))
-            )
         }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color(.secondarySystemBackground))
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.systemBackground))
+        .cornerRadius(18)
+        .shadow(
+            color: Color.black.opacity(0.05),
+            radius: 8,
+            x: 0,
+            y: 4
         )
     }
 }
+
+
 
 struct ProfileMenuRow: View {
     
@@ -153,37 +195,37 @@ struct ProfileMenuRow: View {
         HStack(spacing: 14) {
             
             Image(systemName: icon)
-                .font(.system(size: 18))
+                .font(.system(size: 17))
                 .foregroundColor(AppColors.primary)
-                .frame(width: 24)
+                .frame(width: 24, alignment: .center)
+            
             
             Text(title)
                 .font(.system(size: 15, weight: .medium))
                 .foregroundColor(AppColors.textPrimary)
             
+            
             Spacer()
             
+            
             Image(systemName: "chevron.right")
-                .font(.system(size: 14, weight: .semibold))
+                .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(AppColors.textSecondary.opacity(0.6))
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 16)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color(.systemBackground))
-        )
+        .frame(height: 52)
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemBackground))
+        .cornerRadius(14)
     }
 }
 
+
+
 struct EditProfileSheet: View {
     
-    @Binding var name: String
-    @Binding var email: String
-    @Binding var phone: String
-    @Binding var address: String
-    
-    @Environment(\.dismiss) var dismiss
+    @ObservedObject var vm: ProfileViewModel
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         
@@ -193,32 +235,36 @@ struct EditProfileSheet: View {
                 
                 Section("Personal Information") {
                     
-                    TextField("Name", text: $name)
+                    TextField("Name", text: $vm.name)
                     
-                    TextField("Email", text: $email)
+                    TextField("Email", text: $vm.email)
                         .keyboardType(.emailAddress)
+                        .disabled(true)
+                        .foregroundColor(.gray)
                     
-                    TextField("Phone", text: $phone)
+                    TextField("Phone", text: $vm.phone)
                         .keyboardType(.phonePad)
                     
-                    TextField("Address", text: $address, axis: .vertical)
+                    TextField("Address", text: $vm.address, axis: .vertical)
                         .lineLimit(3...5)
                 }
             }
             .navigationTitle("Edit Profile")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
-                
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { dismiss() }
+                    
+                    Button("Done") {
+                        dismiss()
+                    }
                 }
             }
         }
     }
 }
+
+
 
 #Preview {
     
