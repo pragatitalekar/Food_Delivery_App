@@ -107,13 +107,10 @@ struct AddressView: View {
                 Spacer()
                 HStack {
                     Text("Total")
-                        
-                        .foregroundStyle(AppColors.textPrimary)
-                    
                     Spacer()
                     
                     Text("₹\(cart.total, specifier: "%.0f")")
-                        .foregroundStyle(AppColors.textPrimary)
+                   
                 }
                 .font(.title2)
 

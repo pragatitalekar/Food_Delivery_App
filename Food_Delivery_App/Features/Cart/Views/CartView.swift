@@ -84,9 +84,13 @@ struct CartView: View {
             }
 
          
-            Text("Total ₹\(cart.total, specifier: "%.0f")")
-                .font(.title2)
-                .padding()
+            HStack {
+                Text("Total")
+                Spacer()
+                Text("₹\(cart.total, specifier: "%.0f")")
+            }
+            .font(.title2)
+            .padding()
 
           
             NavigationLink {
@@ -97,7 +101,7 @@ struct CartView: View {
                     .frame(maxWidth: .infinity)
                     .background(.orange)
                     .foregroundColor(.white)
-                    .cornerRadius(12)
+                    .cornerRadius(20)
             }
         }
         .navigationTitle("Cart")
@@ -110,8 +114,9 @@ struct CartView: View {
 
 
 
-
-
-
+#Preview {
+    CartView()
+        .environmentObject(CartManager())
+}
 
 
