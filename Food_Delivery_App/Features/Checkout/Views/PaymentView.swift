@@ -88,6 +88,7 @@ struct PaymentView: View {
                         
                         Spacer()
                         
+
                         Text("₹\(cart.total, specifier: "%.0f")")
                     }
                     .font(.title2)

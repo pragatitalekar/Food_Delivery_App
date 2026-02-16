@@ -10,35 +10,34 @@ import FirebaseAuth
 import Combine
 
 final class ProfileViewModel: ObservableObject {
-    
+
     @Published var name = ""
     @Published var email = ""
     @Published var phone = ""
     @Published var address = ""
-    
+
     @Published var isLoading = false
     @Published var alertMessage = ""
     @Published var showAlert = false
-    
+
     private let service = ProfileService.shared
-    
-    
+
+    
     init() {
         loadProfile()
     }
-    
-    
+
+    
     // MARK: Load Profile
-    
+
     func loadProfile() {
-        
-        guard let uid = Auth.auth().currentUser?.uid else {
-            print("No UID")
-            return
-        }
-        
-        email = Auth.auth().currentUser?.email ?? ""
-        
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("No UID")
+            return
+        }
+        email = Auth.auth().currentUser?.email ?? ""
+        
         service.fetchProfile(uid: uid) { result in
             
             DispatchQueue.main.async {
@@ -59,8 +58,7 @@ final class ProfileViewModel: ObservableObject {
             }
         }
     }
-    
-    
+    
     // MARK: Save Profile
     
     func saveProfile() {
