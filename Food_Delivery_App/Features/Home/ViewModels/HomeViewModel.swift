@@ -9,12 +9,22 @@ import Combine
 
 class HomeViewModel: ObservableObject {
 
+    @Published var showNoInternet = false
     @Published var allItems: [FoodItems] = []
 
     private let service = FoodService.shared
+    
+    private let networkMonitor = NetworkMonitor.shared
 
     func fetchAll() {
-        allItems.removeAll() 
+        allItems.removeAll()
+        guard networkMonitor.isConnected else {
+                showNoInternet = true
+                return
+            }
+        showNoInternet = false
+
+
         fetchMeals()
         fetchDrinks()
         fetchSnacks()
