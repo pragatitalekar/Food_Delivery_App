@@ -95,6 +95,7 @@ struct CartView: View {
             }
         }
         .navigationTitle("Cart")
+        .background(Color(.systemGray6))
     }
 
     var uniqueItems: [FoodItems] {

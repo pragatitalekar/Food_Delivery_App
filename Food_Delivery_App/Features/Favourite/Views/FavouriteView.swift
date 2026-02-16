@@ -27,6 +27,7 @@ struct FavouriteView: View {
                                   DetailView(item: item)
                               } label: {
                                   ItemCard(item: item)
+                                      .frame(width: 165, height: 250)
                               }
                               .buttonStyle(.plain)
 
@@ -38,10 +39,13 @@ struct FavouriteView: View {
                 }
             }
             .padding()
+          
 
         }
         .navigationTitle("Favourites")
+        .background(Color(.systemGray6))
     }
+      
 
    
     var favouriteItems: [FoodItems] {

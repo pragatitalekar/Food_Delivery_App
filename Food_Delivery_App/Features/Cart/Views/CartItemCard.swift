@@ -64,5 +64,6 @@ struct CartItemCard: View {
         .background(.white)
         .cornerRadius(15)
         .shadow(radius: 3)
+        .background(Color(.systemGray6))
     }
 }

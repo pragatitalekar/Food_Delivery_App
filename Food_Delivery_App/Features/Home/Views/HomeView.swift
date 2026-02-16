@@ -18,66 +18,73 @@ struct HomeView: View {
     
     var body: some View {
         
-        TabView {
-
-
-            NavigationStack {
-                homeMainContent
-                    .overlay(
-                        OrderSuccessPopup(show: $showSuccessPopup)
-                    )
-            }
-            .tabItem {
-                Image(systemName: Constants.homeIconString)
-            }
-
-            NavigationStack {
-                FavouriteView(allItems: vm.allItems)
-            }
-            .tabItem {
-                Image(systemName: Constants.likedIconString)
-            }
-
-            NavigationStack {
-                ProfileView()
-            }
-            .tabItem {
-                Image(systemName: Constants.profileIconString)
-            }
-
-            NavigationStack {
-                OrdersView()
-            }
-            .tabItem {
-                Image(systemName: Constants.ordersIconString)
-            }
+        ZStack {
             
+            TabView {
+                
+                NavigationStack {
+                    homeMainContent
+                }
+                .tabItem {
+                    Label("", systemImage: "house")
+                }
+                
+                NavigationStack {
+                    FavouriteView(allItems: vm.allItems)
+                }
+                .tabItem {
+                    Label("", systemImage: "heart")
+                }
+                
+                NavigationStack {
+                    ProfileView()
+                }
+                .tabItem {
+                    Label("", systemImage: "person")
+                }
+                
+                NavigationStack {
+                    OrdersView()
+                }
+                .tabItem {
+                    Label("", systemImage: "bag")
+                }
+            }
+            .tint(.orange)
+            .background(Color(.systemGray6).ignoresSafeArea())
+           
         }
-        .tint(.orange)
-        .background(Color(.systemGray6).ignoresSafeArea())
-        .overlay{
+        
+        // INTERNET OVERLAY
+        .overlay {
             if vm.showNoInternet {
                 NoInternetView {
                     vm.fetchAll()
                 }
             }
         }
-        .onAppear {
-            
-            let appearance = UITabBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = UIColor(Color(.systemGray6))
-            appearance.shadowColor = .clear
-            
-            UITabBar.appearance().standardAppearance = appearance
-            if #available(iOS 15.0, *) {
-                UITabBar.appearance().scrollEdgeAppearance = appearance
+        
+        // SUCCESS POPUP
+        .overlay {
+            if showSuccessPopup {
+                OrderSuccessPopup(show: $showSuccessPopup)
             }
-            
-            vm.fetchAll()
+        }
+        
+        // ACTIVE ORDER STRIP
+        .overlay(alignment: .bottom) {
+            if !orderManager.activeOrders.isEmpty {
+                ActiveOrderCard(order: orderManager.activeOrders.first!)
+                    .padding(.bottom, 55)
+            }
+        }
+        
+        .onAppear {
+            if vm.allItems.isEmpty {
+                vm.fetchAll()
+            }
         }
     }
-    
     
     // MARK: HOME CONTENT
     private var homeMainContent: some View {
@@ -86,23 +93,16 @@ struct HomeView: View {
             
             VStack(alignment: .leading, spacing: 20) {
                 
-                // ACTIVE ORDER CARD
-                if !orderManager.activeOrders.isEmpty {
-                    ActiveOrderCard(order: orderManager.activeOrders.first!)
-                        .padding(.top, 10)
-                }
-                
                 // TOP BAR
                 HStack {
-                    
                     Button {
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                        withAnimation(.spring()) {
                             showSideMenu = true
                         }
                     } label: {
                         Image(systemName: "line.3.horizontal")
                             .font(.title2)
-                            .foregroundColor(AppColors.textPrimary)
+                            .foregroundColor(.black)
                     }
                     
                     Spacer()
@@ -111,10 +111,9 @@ struct HomeView: View {
                         CartView()
                     } label: {
                         ZStack(alignment: .topTrailing) {
-                            
                             Image(systemName: "cart")
                                 .font(.title2)
-                                .foregroundColor(AppColors.textPrimary)
+                                .foregroundColor(.black)
                             
                             if cart.cartCount > 0 {
                                 BadgeView(count: cart.cartCount)
@@ -124,11 +123,10 @@ struct HomeView: View {
                     }
                 }
                 
-                
-                Text("Delicious Food\nFor You")
+                // TITLE
+                Text("Delicious \n Food For You")
                     .font(.largeTitle)
-                    .fontWeight(.bold)
-                
+                    .bold()
                 
                 // SEARCH
                 NavigationLink {
@@ -142,18 +140,16 @@ struct HomeView: View {
                     .padding()
                     .background(Color.white)
                     .cornerRadius(15)
-                    .foregroundStyle(Color.black)
+                    .foregroundColor(.black)
                 }
-                
                 
                 // CATEGORY TABS
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 24) {
                         ForEach(CategoryType.allCases, id: \.self) { category in
-                            
                             VStack(spacing: 6) {
                                 Button {
-                                    withAnimation {
+                                    withAnimation(.easeInOut(duration: 0.25)) {
                                         selectedCategory = category
                                     }
                                 } label: {
@@ -161,28 +157,21 @@ struct HomeView: View {
                                         .foregroundColor(selectedCategory == category ? .orange : .gray)
                                 }
                                 
-                                if selectedCategory == category {
-                                    Rectangle()
-                                        .fill(Color.orange)
-                                        .frame(height: 3)
-                                        .matchedGeometryEffect(id: "underline", in: underlineAnimation)
-                                } else {
-                                    Rectangle()
-                                        .fill(Color.clear)
-                                        .frame(height: 3)
-                                }
+                                Rectangle()
+                                    .fill(selectedCategory == category ? Color.orange : .clear)
+                                    .frame(height: 3)
+                                    .matchedGeometryEffect(id: "underline", in: underlineAnimation)
                             }
                         }
                     }
                 }
                 
-                
+                // SEE MORE
                 NavigationLink("See more") {
                     CategoryListView(items: filtered)
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .foregroundColor(.orange)
-                
                 
                 // FOOD CARDS
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -195,12 +184,13 @@ struct HomeView: View {
                             }
                         }
                     }
-                    .padding(.top, 30)
-                    .padding(.bottom, 20)
+                    .padding(.vertical, 20)
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 120)
+            .padding(.top, 20)
+            .padding(.bottom, orderManager.activeOrders.isEmpty ? 90 : 100)
         }
+        .background(Color(.systemGray6))
     }
 }

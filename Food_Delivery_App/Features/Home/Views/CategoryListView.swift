@@ -24,6 +24,7 @@ struct CategoryListView: View {
             }
             .padding()
         }
+        .background(Color(.systemGray6))
     }
 }
 
