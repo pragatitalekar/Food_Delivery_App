@@ -1,10 +1,3 @@
-//
-//  AuthView.swift
-//  Food_Delivery_App
-//
-//  Created by rentamac on 2/10/26.
-//
-
 import SwiftUI
 import Combine
 
@@ -18,47 +11,47 @@ struct AuthView: View {
 
     var body: some View {
         ZStack {
-            Color.lightBackground.ignoresSafeArea()
 
-            VStack {
-                Spacer()
+            AppColors.lightBackground
+                .ignoresSafeArea()
 
-                
-                VStack(spacing: 20) {
+            VStack(spacing: 0) {
 
-                    
+                VStack(spacing: 0) {
+
                     Image("logo")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 70, height: 70)
-                        .padding(.top, 25)
+                        .frame(width: 150, height: 150)
+                        .padding(.top, 150)
 
-                
-                    HStack (spacing: 80){
+                    Spacer()
+
+                    HStack(spacing: 80) {
                         tabItem(title: "Login", tab: .login)
-                        
                         tabItem(title: "Sign-up", tab: .signup)
                     }
-                    .padding(.horizontal, 50)
-
-                
-                    if selectedTab == .login {
-                        LoginView()
-                    } else {
-                        SignupView()
-                    }
+                    .padding(.bottom, 20)
                 }
-                .background(Color.white)
-                .cornerRadius(30)
-                .padding(.horizontal, 20)
-                .shadow(color: .black.opacity(0.1), radius: 10)
+                .frame(maxWidth: .infinity)
+                .frame(height: 450)
+                .background(AppColors.white)
+                .clipShape(
+                    RoundedCorner(radius: 40, corners: [.bottomLeft, .bottomRight])
+                )
+                .ignoresSafeArea(edges: .top)
+
+                if selectedTab == .login {
+                    LoginView()
+                } else {
+                    SignupView()
+                }
 
                 Spacer()
             }
         }
     }
 
-    
     private func tabItem(title: String, tab: Tab) -> some View {
         VStack(spacing: 6) {
             Button {
@@ -67,12 +60,12 @@ struct AuthView: View {
                 }
             } label: {
                 Text(title)
-                    .foregroundColor(.black)
+                    .foregroundColor(AppColors.textPrimary)
                     .font(.headline)
             }
 
             Rectangle()
-                .fill(selectedTab == tab ? Color.primaryOrange : Color.clear)
+                .fill(selectedTab == tab ? AppColors.primary : Color.clear)
                 .frame(width: 50, height: 3)
         }
     }

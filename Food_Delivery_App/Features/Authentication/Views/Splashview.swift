@@ -1,10 +1,3 @@
-//
-//  Splashview.swift
-//  Food_Delivery_App
-//
-//  Created by rentamac on 2/10/26.
-//
-
 import SwiftUI
 import Combine
 
@@ -18,7 +11,7 @@ struct SplashView: View {
             
             ZStack {
                 
-                Color("#FF4B3A")
+                AppColors.primary
                     .ignoresSafeArea()
                 
                 VStack {
@@ -28,26 +21,25 @@ struct SplashView: View {
                     VStack(alignment: .leading, spacing: 20) {
                         
                         ZStack {
-                               Circle()
-                                   .fill(Color.white)
-                                   .frame(width: 64, height: 64)
+                            Circle()
+                                .fill(AppColors.white)
+                                .frame(width: 64, height: 64)
 
-                               Image("logo")
-                                   .resizable()
-                                   .scaledToFit()
-                                   .frame(width: 36, height: 36)
-                           }
+                            Image("logo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 36, height: 36)
+                        }
                         
                         Text("Food for\nEveryone")
                             .font(.system(size: 65, weight: .heavy, design: .rounded))
                             .kerning(-2)
-                            .foregroundColor(.white)
+                            .foregroundColor(AppColors.white)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 30)
                     
                     Spacer()
-                    
                     
                     ZStack {
                         
@@ -58,7 +50,6 @@ struct SplashView: View {
                             .rotationEffect(.degrees(8.57))
                             .offset(x: 100, y: 40)
                         
-                        
                         Image("characterfront")
                             .resizable()
                             .scaledToFit()
@@ -66,12 +57,11 @@ struct SplashView: View {
                             .rotationEffect(.degrees(-3.1))
                             .offset(x: -82)
                         
-                        
                         LinearGradient(
                             gradient: Gradient(stops: [
                                 .init(color: Color.clear, location: 0.0),
-                                .init(color: Color("#FF4B3A").opacity(0.4), location: 0.35),
-                                .init(color: Color("#FF4B3A"), location: 1.0)
+                                .init(color: AppColors.primary.opacity(0.4), location: 0.35),
+                                .init(color: AppColors.primary, location: 1.0)
                             ]),
                             startPoint: .top,
                             endPoint: .bottom
@@ -80,30 +70,27 @@ struct SplashView: View {
                         .offset(y: 70)
                     }
 
-                    
                     Spacer()
-                    
                     
                     Button(action: {
                         navigate = true
                     }) {
                         Text("Get started")
-                            .foregroundColor(Color("#FF4B3A"))
+                            .foregroundColor(AppColors.primary)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.white.opacity(0.95))
+                            .background(AppColors.white.opacity(0.95))
                             .cornerRadius(30)
                     }
                     .padding(.horizontal, 40)
                     
                     Spacer()
                 }
-                .background(Color("#FF4B3A").ignoresSafeArea())
+                .background(AppColors.primary.ignoresSafeArea())
                 .navigationDestination(isPresented: $navigate) {
                     AuthView()
                 }
             }
-
         }
     }
 }
