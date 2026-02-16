@@ -18,41 +18,35 @@ struct SearchView: View {
             HStack {
                 TextField("Search food or drink", text: $vm.searchText)
                     .padding(10)
-                    .background(Color(.systemGray6))
+                    .background(AppColors.divider.opacity(0.2))
                     .cornerRadius(10)
+                    .foregroundColor(AppColors.textPrimary)
             }
             .padding()
 
-            // MARK: - Category Filter (No "All")
+            // MARK: - Category Filter
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(CategoryType.allCases, id: \.self) { category in
+                        
+                        let isSelected = vm.selectedCategory == category
+                        let backgroundColor = isSelected ? AppColors.primary : AppColors.background
+                        let textColor = isSelected ? AppColors.white : AppColors.textPrimary
+                        let borderColor = AppColors.primary.opacity(0.35)
+
                         Button {
-                            // Toggle category
-                            vm.selectedCategory =
-                            vm.selectedCategory == category ? nil : category
+                            vm.selectedCategory = isSelected ? nil : category
                         } label: {
                             Text(category.rawValue)
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
-                                .background(
-                                    vm.selectedCategory == category
-                                    ? Color.primaryOrange
-                                    : Color(.systemBackground)
-                                )
-                                .foregroundColor(
-                                    vm.selectedCategory == category
-                                    ? .white
-                                    : .primary
-                                )
+                                .background(backgroundColor)
+                                .foregroundColor(textColor)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 20)
-                                        .stroke(
-                                            Color.primaryOrange.opacity(0.35),
-                                            lineWidth: 1
-                                        )
+                                        .stroke(borderColor, lineWidth: 1)
                                 )
                                 .cornerRadius(20)
                         }
@@ -66,6 +60,7 @@ struct SearchView: View {
             if !vm.searchText.isEmpty || vm.selectedCategory != nil {
                 Text("Found \(vm.results.count) results")
                     .font(.headline)
+                    .foregroundColor(AppColors.textPrimary)
                     .padding(.vertical, 8)
             }
 
@@ -87,6 +82,7 @@ struct SearchView: View {
 
             Spacer()
         }
+        .background(AppColors.background)
         .onAppear {
             vm.updateItems(homeVM.allItems)
         }

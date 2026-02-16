@@ -33,7 +33,7 @@ struct NoInternetView: View {
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.primaryOrange)
+                    .background(AppColors.primaryOrange)
                     .foregroundColor(.white)
                     .cornerRadius(28)
             }
