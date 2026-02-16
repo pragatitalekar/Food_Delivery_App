@@ -13,11 +13,13 @@ enum OrderStatus: String, Codable {
 }
 
 struct Order: Identifiable, Codable {
-    let id: String
-    let items: [FoodItems]
-    let total: Double
-    let createdAt: Date
+    var id: String
+    var items: [FoodItems]
+    var total: Double
+    var createdAt: Date
     var status: OrderStatus
 }
+
+
 
 
