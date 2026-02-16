@@ -19,7 +19,8 @@ struct HomeView: View {
     var body: some View {
         
         TabView {
-            
+
+
             NavigationStack {
                 homeMainContent
                     .overlay(
@@ -29,21 +30,21 @@ struct HomeView: View {
             .tabItem {
                 Image(systemName: Constants.homeIconString)
             }
-            
+
             NavigationStack {
                 FavouriteView(allItems: vm.allItems)
             }
             .tabItem {
                 Image(systemName: Constants.likedIconString)
             }
-            
+
             NavigationStack {
                 ProfileView()
             }
             .tabItem {
                 Image(systemName: Constants.profileIconString)
             }
-            
+
             NavigationStack {
                 OrdersView()
             }
@@ -54,6 +55,13 @@ struct HomeView: View {
         }
         .tint(.orange)
         .background(Color(.systemGray6).ignoresSafeArea())
+        .overlay{
+            if vm.showNoInternet {
+                NoInternetView {
+                    vm.fetchAll()
+                }
+            }
+        }
         .onAppear {
             
             let appearance = UITabBarAppearance()
