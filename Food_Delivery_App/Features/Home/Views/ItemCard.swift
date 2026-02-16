@@ -1,10 +1,3 @@
-//
-//  ItemCard.swift
-//  Food_Delivery_App
-//
-//  Created by rentamac on 2/8/26.
-//
-
 import SwiftUI
 
 struct ItemCard: View {
@@ -13,19 +6,20 @@ struct ItemCard: View {
     
     var body: some View {
         
-        ZStack(alignment: .top) {
+        ZStack {
             
-            VStack(spacing: 12) {
+            // CARD
+            VStack(spacing: 10) {
                 
-                Spacer().frame(height: 55)
+                Spacer().frame(height: 60) // space for image
                 
                 Text(item.name)
-                    .font(.title3)
+                    .font(.headline)
                     .fontWeight(.medium)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                     .frame(maxWidth: 130)
-                    .foregroundStyle(.black)
+                    .foregroundColor(.black)
                 
                 Text("₹\(item.price, specifier: "%.0f")")
                     .font(.title3)
@@ -33,13 +27,14 @@ struct ItemCard: View {
                     .foregroundColor(AppColors.primary)
             }
             .padding(.horizontal, 12)
-            .padding(.bottom, 18)
-            .frame(width: 180, height: 210)
-            .background(Color.white.opacity(0.7))
-            .cornerRadius(28)
-            .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 6)
+            .padding(.bottom, 14)
+            .frame(width: 165, height: 210)   // Slightly bigger
+            .background(Color.white)          // solid white
+            .cornerRadius(24)
+            .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 5)
             
             
+            // IMAGE
             AsyncImage(url: URL(string: item.image)) { img in
                 img
                     .resizable()
@@ -49,10 +44,12 @@ struct ItemCard: View {
             }
             .frame(width: 110, height: 110)
             .clipShape(Circle())
-            .offset(y: -30)
-            
+            .background(
+                Circle().fill(Color.white)
+            )
+            .shadow(radius: 4)
+            .offset(y: -75)   // balanced offset
         }
-        
+        .frame(width: 165, height: 230)
     }
 }
-

@@ -261,7 +261,9 @@ struct EditProfileSheet: View {
                 }
             }
         }
+        .background(Color(.systemGray6))
     }
+        
 }
 
 
