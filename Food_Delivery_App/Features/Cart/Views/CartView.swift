@@ -77,9 +77,9 @@ struct CartView: View {
                     }
                 }
             }
-            .id(cart.items.count)   // 🔥 forces UI refresh
+            .id(cart.items.count)
 
-<<<<<<< HEAD
+
          
             HStack {
                 Text("Total")
@@ -88,11 +88,8 @@ struct CartView: View {
             }
             .font(.title2)
             .padding()
-=======
-            Text("Total ₹\(cart.total, specifier: "%.0f")")
-                .font(.title2)
-                .padding()
->>>>>>> 87e46065e2c8ce2b2a8882799c64ab5c91a47b1a
+
+            
 
             NavigationLink {
                 AddressView()
@@ -115,13 +112,11 @@ struct CartView: View {
 
 
 
-<<<<<<< HEAD
+
 #Preview {
     CartView()
         .environmentObject(CartManager())
 }
-=======
 
->>>>>>> 87e46065e2c8ce2b2a8882799c64ab5c91a47b1a
 
 

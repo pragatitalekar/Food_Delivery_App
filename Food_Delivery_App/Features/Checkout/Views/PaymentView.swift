@@ -85,13 +85,10 @@ struct PaymentView: View {
                     HStack {
                         
                         Text("Total")
-<<<<<<< HEAD
-                        Spacer()
-=======
                         
                         Spacer()
                         
->>>>>>> 87e46065e2c8ce2b2a8882799c64ab5c91a47b1a
+
                         Text("₹\(cart.total, specifier: "%.0f")")
                     }
                     .font(.title2)

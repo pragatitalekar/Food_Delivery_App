@@ -132,17 +132,13 @@ struct AddressView: View {
                 HStack {
                     
                     Text("Total")
-<<<<<<< HEAD:Food_Delivery_App/Features/Checkout/Views/AddressView.swift
-                    Spacer()
-                    
-                    Text("₹\(cart.total, specifier: "%.0f")")
-                   
-=======
+
+                
                     
                     Spacer()
                     
                     Text("₹\(cart.total, specifier: "%.0f")")
->>>>>>> 87e46065e2c8ce2b2a8882799c64ab5c91a47b1a:Food_Delivery_App/Features/Address/Views/AddressView.swift
+
                 }
                 .font(.title2)
                 
