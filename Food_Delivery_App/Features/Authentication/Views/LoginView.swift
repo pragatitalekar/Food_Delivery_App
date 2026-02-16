@@ -48,7 +48,7 @@ struct LoginView: View {
             }
         }
         .padding(.horizontal, 30)
-        .padding(.top, 40)     // better spacing from top card
+        .padding(.top, 40)    
         .padding(.bottom, 30)
     }
 
@@ -62,7 +62,7 @@ struct LoginView: View {
 
             Text(title)
                 .font(.system(size: 16, weight: .medium))
-                .foregroundColor(.gray)   // matches your design
+                .foregroundColor(.gray)
 
             if secure {
                 SecureField("", text: text)

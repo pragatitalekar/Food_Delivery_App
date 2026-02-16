@@ -44,7 +44,7 @@ struct SignupView: View {
             }
         }
         .padding(.horizontal, 30)
-        .padding(.top, 40)     // added spacing from top white card
+        .padding(.top, 40)
         .padding(.bottom, 30)
     }
 
@@ -58,7 +58,7 @@ struct SignupView: View {
 
             Text(title)
                 .font(.system(size: 16, weight: .medium))
-                .foregroundColor(.gray)   // matches your design
+                .foregroundColor(.gray)   
 
             if secure {
                 SecureField("", text: text)
