@@ -20,7 +20,7 @@ class CartManager: ObservableObject {
         } else {
             newItems[item.id] = (item, 1)
         }
-        items = newItems   // 🔥 important
+        items = newItems
     }
 
     // INCREMENT
@@ -39,8 +39,12 @@ class CartManager: ObservableObject {
             newItems.removeValue(forKey: item.id)
         }
 
-        items = newItems   // 🔥 important
+        items = newItems   
     }
+    
+    var cartCount: Int {
+            items.values.reduce(0) { $0 + $1.qty }
+        }
 
     // REMOVE
     func remove(_ item: FoodItems) {

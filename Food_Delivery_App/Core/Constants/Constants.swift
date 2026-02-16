@@ -35,6 +35,10 @@ struct Constants{
     static let likedIconString="heart"
     static let historyIconString="clock.arrow.circlepath"
     static let moreIconString="ellipsis"
+    static let ordersString = "Orders"
+    static let ordersIconString = "bag.fill"
+    
+    
     
     
     

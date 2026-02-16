@@ -15,41 +15,44 @@ struct ItemCard: View {
         
         ZStack(alignment: .top) {
             
-           
-            VStack(spacing: 20) {
+            VStack(spacing: 12) {
                 
-                Spacer().frame(height: 70)
+                Spacer().frame(height: 55)
                 
                 Text(item.name)
-                    .font(.title2)
-                    .fontWeight(.regular)
+                    .font(.title3)
+                    .fontWeight(.medium)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                     .frame(maxWidth: 130)
                     .foregroundStyle(.black)
                 
                 Text("₹\(item.price, specifier: "%.0f")")
-                    .font(.title2)
+                    .font(.title3)
                     .fontWeight(.bold)
-                    .foregroundColor(.orange)
+                    .foregroundColor(AppColors.primary)
             }
-            .padding()
-            .frame(width: 190, height: 230)
-            .background(Color.white).opacity(0.85)
-            .cornerRadius(30)
-            .shadow(color: Color.gray.opacity(0.20), radius: 8, x: 0, y: 6)
+            .padding(.horizontal, 12)
+            .padding(.bottom, 18)
+            .frame(width: 180, height: 210)
+            .background(Color.white.opacity(0.7))
+            .cornerRadius(28)
+            .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 6)
             
             
-          
             AsyncImage(url: URL(string: item.image)) { img in
-                img.resizable().scaledToFill()
+                img
+                    .resizable()
+                    .scaledToFill()
             } placeholder: {
                 ProgressView()
             }
-            .frame(width: 120, height: 120)
+            .frame(width: 110, height: 110)
             .clipShape(Circle())
-            .offset(y: -35)
+            .offset(y: -30)
+            
         }
-        .padding(.top, 40)
+        
     }
 }
+
