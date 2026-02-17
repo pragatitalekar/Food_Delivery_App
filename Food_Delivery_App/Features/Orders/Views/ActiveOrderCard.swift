@@ -32,7 +32,7 @@ struct ActiveOrderCard: View {
                 .foregroundColor(.blue)
             
             ProgressView(value: progress)
-                .tint(.green) // GREEN PROGRESS
+                .tint(.green) 
         }
         .padding()
         .background(Color.white)
