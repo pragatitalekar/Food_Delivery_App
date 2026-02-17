@@ -12,7 +12,7 @@ struct AuthView: View {
     var body: some View {
         ZStack {
 
-            AppColors.lightBackground
+            Color(uiColor: .systemGroupedBackground)
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
@@ -23,19 +23,22 @@ struct AuthView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 150, height: 150)
-                        .padding(.top, 150)
+                        .padding(.top, 100)
 
                     Spacer()
 
-                    HStack(spacing: 80) {
+                    HStack {
+                        Spacer()
                         tabItem(title: "Login", tab: .login)
+                        Spacer()
                         tabItem(title: "Sign-up", tab: .signup)
+                        Spacer()
                     }
                     .padding(.bottom, 20)
                 }
                 .frame(maxWidth: .infinity)
-                .frame(height: 450)
-                .background(AppColors.white)
+                .frame(height: 380)
+                .background(Color(uiColor: .systemBackground))
                 .clipShape(
                     RoundedCorner(radius: 40, corners: [.bottomLeft, .bottomRight])
                 )
@@ -70,3 +73,6 @@ struct AuthView: View {
         }
     }
 }
+
+
+
