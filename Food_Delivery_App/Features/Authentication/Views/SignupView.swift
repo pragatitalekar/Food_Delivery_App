@@ -29,7 +29,7 @@ struct SignupView: View {
                     .background(AppColors.primary)
                     .cornerRadius(30)
             }
-            .padding(.top, 10)
+            .padding()
 
             if !vm.errorMessage.isEmpty {
                 Text(vm.errorMessage)
@@ -58,7 +58,7 @@ struct SignupView: View {
 
             Text(title)
                 .font(.system(size: 16, weight: .medium))
-                .foregroundColor(.gray)   
+                .foregroundColor(AppColors.textSecondary)
 
             if secure {
                 SecureField("", text: text)
@@ -71,7 +71,7 @@ struct SignupView: View {
 
             Divider()
                 .frame(height: 1.2)
-                .background(Color.gray.opacity(0.4))
+                .background(AppColors.divider)
         }
     }
 }
