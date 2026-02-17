@@ -1,22 +1,16 @@
-//
-//  CheckoutView.swift
-//  Food_Delivery_App
-//
-//  Created by rentamac on 2/6/26.
-//
-
-
-
 import SwiftUI
 
 struct CheckoutView: View {
+    
+    @EnvironmentObject var cart: CartManager
+    @EnvironmentObject var orders: OrderManager
     
     var address: String
     var deliveryType: String
     var paymentType: String
     
     var onCancel: () -> Void
-    var onProceed: () -> Void
+    var onSuccess: () -> Void   
     
     var body: some View {
         VStack(spacing: 20) {
@@ -32,11 +26,17 @@ struct CheckoutView: View {
                     price: address
                 )
 
-                
                 Divider()
                 
                 noteRow(
-                    title: "Payment Method",
+                    title: "RECIPIENT ",
+                    price: deliveryType
+                )
+
+                Divider()
+                
+                noteRow(
+                    title: "PAYMENT METHOD",
                     price: paymentType.capitalized
                 )
             }
@@ -47,11 +47,10 @@ struct CheckoutView: View {
                 }
                 .foregroundColor(.secondary)
 
-                
                 Spacer()
                 
                 Button {
-                    onProceed()
+                    placeOrder()
                 } label: {
                     Text("Proceed")
                         .fontWeight(.semibold)
@@ -65,7 +64,6 @@ struct CheckoutView: View {
         }
         .padding(20)
         .background(Color(.systemBackground))
-
         .cornerRadius(20)
         .padding(.horizontal, 40)
     }
@@ -80,8 +78,22 @@ struct CheckoutView: View {
                 .font(.subheadline)
                 .fontWeight(.medium)
                 .foregroundColor(.primary)
-
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+   
+    private func placeOrder() {
+        
+        guard !address.isEmpty else { return }
+        
+        orders.placeOrder(
+            items: cart.items.values.map { $0.item },
+            total: cart.total
+        )
+        
+        cart.items.removeAll()
+        
+        onSuccess()
     }
 }

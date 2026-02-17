@@ -5,8 +5,6 @@
 //  Created by rentamac on 2/6/26.
 //
 
-
-
 import SwiftUI
 
 struct AddressView: View {
@@ -17,6 +15,7 @@ struct AddressView: View {
     @StateObject private var viewModel = AddressViewModel()
     
     @State private var selectedDelivery: DeliveryType = .door
+    @State private var showAddressAlert = false   // NEW
     
     enum DeliveryType: String {
         case door
@@ -35,7 +34,6 @@ struct AddressView: View {
             
             VStack(spacing: 32) {
                 
-                
                 Text("Delivery")
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -43,7 +41,6 @@ struct AddressView: View {
                 
                 
                 VStack(alignment: .leading, spacing: 16) {
-                    
                     
                     HStack {
                         
@@ -53,14 +50,12 @@ struct AddressView: View {
                         
                         Spacer()
                         
-                        
                         NavigationLink {
                             AddressListView()
                                 .onDisappear {
                                     viewModel.load()
                                 }
                         } label: {
-
                             Text("Change")
                                 .font(.footnote)
                                 .foregroundColor(.orange)
@@ -111,15 +106,10 @@ struct AddressView: View {
                         .font(.subheadline)
                         .fontWeight(.medium)
                     
-                    
                     CardView {
-                        
                         VStack(spacing: 16) {
-                            
                             deliveryRow(title: "Door delivery", type: .door)
-                            
                             Divider()
-                            
                             deliveryRow(title: "Pick up", type: .pickup)
                         }
                     }
@@ -130,46 +120,34 @@ struct AddressView: View {
                 
                 
                 HStack {
-                    
                     Text("Total")
-
-                
-                    
                     Spacer()
-                    
                     Text("₹\(cart.total, specifier: "%.0f")")
-
                 }
                 .font(.title2)
                 
                 
-                NavigationLink {
-                    PaymentView()
+                // PAYMENT BUTTON WITH ALERT CHECK
+                Button {
+                    if defaultAddress == nil {
+                        showAddressAlert = true
+                    }
                 } label: {
                     
-                    Text("Proceed to payment")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.orange)
-                        .foregroundColor(.white)
-                        .cornerRadius(30)
-                }
-                
-                
-                Button("Checkout") {
-                    
-                    guard defaultAddress != nil else {
-                        return
+                    NavigationLink(destination: PaymentView()) {
+                        Text("Proceed to payment")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.orange)
+                            .foregroundColor(.white)
+                            .cornerRadius(30)
                     }
-                    
-                    orders.placeOrder(
-                        items: cart.items.values.map { $0.item },
-                        total: cart.total
-                    )
-                    
-                    cart.items.removeAll()
+                    .disabled(defaultAddress == nil)
                 }
+                
+                
+              
             }
             .padding(.horizontal, 26)
             .padding(.bottom)
@@ -178,6 +156,14 @@ struct AddressView: View {
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 viewModel.load()
+            }
+            
+            // ALERT
+            .alert("Address Required",
+                   isPresented: $showAddressAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Please select or add an address before proceeding.")
             }
         }
     }
@@ -194,10 +180,8 @@ struct AddressView: View {
                   : "circle")
             .foregroundColor(.orange)
             
-            
             Text(title)
                 .font(.footnote)
-            
             
             Spacer()
         }
@@ -211,10 +195,7 @@ struct AddressView: View {
 
 
 #Preview {
-    
     AddressView()
         .environmentObject(CartManager())
         .environmentObject(OrderManager())
-    
 }
-

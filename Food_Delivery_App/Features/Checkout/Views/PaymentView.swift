@@ -8,12 +8,14 @@ import SwiftUI
 struct PaymentView: View {
     
     @EnvironmentObject var cart: CartManager
+    @Environment(\.dismiss) private var dismiss
     
     @StateObject private var vm = PaymentViewModel()
     @StateObject private var addressVM = AddressViewModel()
     
     @State private var selectedMethod: PaymentMethod?
     @State private var orderNote = false
+    @State private var showPaymentAlert = false
     
     private var defaultAddress: UserAddress? {
         addressVM.addresses.first(where: { $0.isDefault })
@@ -32,20 +34,18 @@ struct PaymentView: View {
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    
+                    // MARK: - PAYMENT METHODS
                     VStack(alignment: .leading, spacing: 12) {
                         
                         Text("Payment method")
                             .font(.subheadline)
                             .fontWeight(.medium)
                         
-                        
                         CardView {
                             
                             VStack(spacing: 16) {
                                 
                                 if vm.methods.isEmpty {
-                                    
                                     Text("No payment methods added")
                                         .foregroundColor(.gray)
                                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -60,9 +60,7 @@ struct PaymentView: View {
                                 NavigationLink {
                                     PaymentMethodView()
                                 } label: {
-                                    
                                     HStack {
-                                        
                                         Image(systemName: "plus.circle.fill")
                                             .foregroundColor(.orange)
                                         
@@ -78,26 +76,24 @@ struct PaymentView: View {
                         }
                     }
                     
-                    
                     Spacer()
                     
-                    
+                    // MARK: - TOTAL
                     HStack {
-                        
                         Text("Total")
-                        
                         Spacer()
-                        
-
                         Text("₹\(cart.total, specifier: "%.0f")")
                     }
                     .font(.title2)
                     
-                    
+                    // MARK: - PROCEED BUTTON
                     Button {
+                        guard selectedMethod != nil else {
+                            showPaymentAlert = true
+                            return
+                        }
                         orderNote = true
                     } label: {
-                        
                         Text("Proceed to payment")
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
@@ -123,7 +119,7 @@ struct PaymentView: View {
                     addressVM.load()
                 }
                 
-                
+                // MARK: - CHECKOUT POPUP
                 if orderNote {
                     
                     Color.black.opacity(0.4)
@@ -132,7 +128,6 @@ struct PaymentView: View {
                             orderNote = false
                         }
                     
-                    
                     CheckoutView(
                         address: defaultAddress?.street ?? "No Address",
                         deliveryType: defaultAddress?.fullName ?? "",
@@ -140,16 +135,24 @@ struct PaymentView: View {
                         onCancel: {
                             orderNote = false
                         },
-                        onProceed: {
+                        onSuccess: {
                             orderNote = false
+                            dismiss()   // ← REDIRECT TO HOME
                         }
                     )
                 }
+            }
+            // MARK: - ALERT
+            .alert("Select Payment Method", isPresented: $showPaymentAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Please select a card or payment method before proceeding.")
             }
         }
     }
     
     
+    // MARK: - PAYMENT ROW
     private func paymentRow(method: PaymentMethod) -> some View {
         
         HStack {
@@ -160,7 +163,6 @@ struct PaymentView: View {
                   : "circle")
                 .foregroundColor(.orange)
             
-            
             Image(systemName:
                     method.type == "Card"
                   ? "creditcard.fill"
@@ -169,7 +171,6 @@ struct PaymentView: View {
                 .padding(8)
                 .background(method.type == "Card" ? Color.orange : Color.pink)
                 .cornerRadius(12)
-            
             
             VStack(alignment: .leading) {
                 
@@ -190,6 +191,7 @@ struct PaymentView: View {
     }
     
     
+    // MARK: - DISPLAY SELECTED METHOD
     private func selectedMethodDisplay() -> String {
         
         guard let method = selectedMethod else {
@@ -200,13 +202,13 @@ struct PaymentView: View {
     }
     
     
+    // MARK: - MASK CARD NUMBER
     private func maskedNumber(_ number: String) -> String {
         
         guard number.count > 4 else { return number }
         return "**** \(number.suffix(4))"
     }
 }
-
 
 #Preview {
     PaymentView()
