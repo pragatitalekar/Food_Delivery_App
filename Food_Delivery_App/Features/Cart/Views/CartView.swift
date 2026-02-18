@@ -4,6 +4,7 @@
 //
 //  Created by rentamac on 2/8/26.
 //
+//
 import SwiftUI
 
 struct CartView: View {
@@ -14,7 +15,8 @@ struct CartView: View {
         VStack {
 
             List {
-                ForEach(uniqueItems, id: \.id) { item in
+                ForEach(cart.items) { cartItem in
+                    let item = cartItem.item
 
                     HStack(spacing: 12) {
 
@@ -39,24 +41,29 @@ struct CartView: View {
 
                         Spacer()
 
-                        HStack {
+                        HStack(spacing: 14) {
+
                             Button {
                                 cart.decrement(item)
                             } label: {
                                 Image(systemName: "minus.circle.fill")
+                                    .font(.title2)
                             }
 
-                            Text("\(cart.quantity(of: item))")
-                                .frame(width: 24)
+                            Text("\(cartItem.qty)")
+                                .frame(width: 30)
 
                             Button {
                                 cart.increment(item)
                             } label: {
                                 Image(systemName: "plus.circle.fill")
+                                    .font(.title2)
                             }
                         }
                         .foregroundColor(.orange)
                     }
+
+                    // FAV
                     .swipeActions(edge: .leading, allowsFullSwipe: false) {
                         Button {
                             cart.toggleFavourite(item)
@@ -68,6 +75,8 @@ struct CartView: View {
                         }
                         .tint(.pink)
                     }
+
+                    // DELETE
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button(role: .destructive) {
                             cart.remove(item)
@@ -77,10 +86,8 @@ struct CartView: View {
                     }
                 }
             }
-            .id(cart.items.count)
 
-
-         
+            // TOTAL
             HStack {
                 Text("Total")
                 Spacer()
@@ -88,8 +95,6 @@ struct CartView: View {
             }
             .font(.title2)
             .padding()
-
-            
 
             NavigationLink {
                 AddressView()
@@ -100,24 +105,20 @@ struct CartView: View {
                     .background(.orange)
                     .foregroundColor(.white)
                     .cornerRadius(20)
+                    .padding(.horizontal)
             }
         }
         .navigationTitle("Cart")
         .background(Color(.systemGray6))
     }
-
-    var uniqueItems: [FoodItems] {
-        cart.items.values.map { $0.item }
-    }
 }
-
-
-
 
 #Preview {
     CartView()
         .environmentObject(CartManager())
 }
+
+
 
 
 

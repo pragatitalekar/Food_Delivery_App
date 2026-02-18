@@ -21,7 +21,7 @@ struct DetailView: View {
                 ScrollView {
                     VStack(spacing: 0) {
 
-                      
+                        // IMAGE CAROUSEL
                         TabView(selection: $selectedIndex) {
                             ForEach(images.indices, id: \.self) { index in
                                 AsyncImage(url: URL(string: images[index])) { img in
@@ -39,7 +39,7 @@ struct DetailView: View {
                         .tabViewStyle(.page(indexDisplayMode: .never))
                         .padding(.top, 20)
 
-                      
+                        // DOT INDICATOR
                         HStack(spacing: 6) {
                             ForEach(images.indices, id: \.self) { index in
                                 Circle()
@@ -49,7 +49,7 @@ struct DetailView: View {
                         }
                         .padding(.top, 8)
 
-                       
+                        // NAME & PRICE
                         VStack(spacing: 8) {
                             Text(item.name)
                                 .font(.title2)
@@ -62,7 +62,7 @@ struct DetailView: View {
                         }
                         .padding(.top, 30)
 
-                      
+                        // INFO
                         VStack(alignment: .leading, spacing: 20) {
 
                             VStack(alignment: .leading, spacing: 6) {
@@ -90,9 +90,9 @@ struct DetailView: View {
                     }
                 }
 
-              
+                // ADD TO CART BUTTON
                 Button {
-                    cart.add(item)
+                    cart.increment(item)   // ✅ FIXED
                     showPopup()
                 } label: {
                     Text("Add to cart")
@@ -107,7 +107,7 @@ struct DetailView: View {
                 .padding(.bottom)
             }
 
-           
+            // FLOATING CART POPUP
             if showCartPopup {
                 VStack {
                     Spacer()
@@ -133,7 +133,7 @@ struct DetailView: View {
                 .animation(.easeInOut, value: showCartPopup)
             }
 
-           
+            // NAVIGATION LINK
             NavigationLink(destination: CartView(), isActive: $goToCart) {
                 EmptyView()
             }
@@ -150,8 +150,8 @@ struct DetailView: View {
             }
         }
     }
-    
 
+    // POPUP ANIMATION
     func showPopup() {
         withAnimation { showCartPopup = true }
 
@@ -160,5 +160,3 @@ struct DetailView: View {
         }
     }
 }
-
-

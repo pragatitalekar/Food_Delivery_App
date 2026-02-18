@@ -2,67 +2,57 @@ import SwiftUI
 import Combine
 
 class CartManager: ObservableObject {
-
-    @Published var items: [String: (item: FoodItems, qty: Int)] = [:]
+    
+    @Published var items: [CartItem] = []
     @Published var favourites: Set<String> = []
-
+    
     private let persistence = PersistenceService.shared
-
+    
     init() {
         favourites = persistence.loadFavourites()
     }
-
-    // ADD
-    func add(_ item: FoodItems) {
-        var newItems = items
-        if let existing = newItems[item.id] {
-            newItems[item.id] = (item, existing.qty + 1)
+    
+    // ADD / INCREMENT
+    func increment(_ food: FoodItems) {
+        if let index = items.firstIndex(where: { $0.id == food.id }) {
+            items[index].qty += 1
         } else {
-            newItems[item.id] = (item, 1)
+            let newItem = CartItem(id: food.id, item: food, qty: 1)
+            items.append(newItem)
         }
-        items = newItems
-    }
-
-    // INCREMENT
-    func increment(_ item: FoodItems) {
-        add(item)
-    }
-
-    // DECREMENT
-    func decrement(_ item: FoodItems) {
-        var newItems = items
-        guard let existing = newItems[item.id] else { return }
-
-        if existing.qty > 1 {
-            newItems[item.id] = (item, existing.qty - 1)
-        } else {
-            newItems.removeValue(forKey: item.id)
-        }
-
-        items = newItems   
     }
     
-    var cartCount: Int {
-            items.values.reduce(0) { $0 + $1.qty }
+    // DECREMENT
+    func decrement(_ food: FoodItems) {
+        guard let index = items.firstIndex(where: { $0.id == food.id }) else { return }
+        
+        if items[index].qty > 1 {
+            items[index].qty -= 1
+        } else {
+            items.remove(at: index)
         }
-
+    }
+    
     // REMOVE
-    func remove(_ item: FoodItems) {
-        var newItems = items
-        newItems.removeValue(forKey: item.id)
-        items = newItems
+    func remove(_ food: FoodItems) {
+        items.removeAll { $0.id == food.id }
     }
-
+    
     // QUANTITY
-    func quantity(of item: FoodItems) -> Int {
-        items[item.id]?.qty ?? 0
+    func quantity(of food: FoodItems) -> Int {
+        items.first(where: { $0.id == food.id })?.qty ?? 0
     }
-
+    
     // TOTAL
     var total: Double {
-        items.values.reduce(0) { $0 + ($1.item.price * Double($1.qty)) }
+        items.reduce(0) { $0 + ($1.item.price * Double($1.qty)) }
     }
-
+    
+    // COUNT
+    var cartCount: Int {
+        items.reduce(0) { $0 + $1.qty }
+    }
+    
     // FAVOURITES
     func toggleFavourite(_ item: FoodItems) {
         if favourites.contains(item.id) {
@@ -72,13 +62,12 @@ class CartManager: ObservableObject {
         }
         persistence.saveFavourites(favourites)
     }
-
-    func removeFavourite(_ item: FoodItems) {
-        favourites.remove(item.id)
-        persistence.saveFavourites(favourites)
-    }
-
+    
     func isFavourite(_ item: FoodItems) -> Bool {
         favourites.contains(item.id)
+    }
+    func removeFavourite(_ item: FoodItems) {
+    favourites.remove(item.id)
+    persistence.saveFavourites(favourites)
     }
 }
