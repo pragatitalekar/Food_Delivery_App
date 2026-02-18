@@ -14,7 +14,36 @@ struct HomeView: View {
     
     var body: some View {
         
+<<<<<<< HEAD
         ZStack {
+=======
+        TabView {
+            NavigationStack {
+                homeMainContent
+            }
+            .tabItem {
+                Image(systemName: Constants.homeIconString)
+            }
+            NavigationStack {
+                FavouriteView()
+            }
+            .tabItem {
+                Image(systemName: Constants.likedIconString)
+            }
+            NavigationStack {
+                ProfileView()
+            }
+            .tabItem {
+                Image(systemName: Constants.profileIconString)
+            }
+            NavigationStack {
+                OrdersView()
+            }
+            .tabItem {
+                Image(systemName: Constants.ordersIconString)
+            }
+            
+>>>>>>> 6512372 (added firebase for both cart and favourite)
             
             TabView {
                 
