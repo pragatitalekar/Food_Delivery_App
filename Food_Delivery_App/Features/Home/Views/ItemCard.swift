@@ -34,12 +34,7 @@ struct ItemCard: View {
             .cornerRadius(24)
             .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 5)
             
-<<<<<<< HEAD
-            
-            // IMAGE
-=======
-           
->>>>>>> 6512372 (added firebase for both cart and favourite)
+
             AsyncImage(url: URL(string: item.image)) { img in
                 img
                     .resizable()

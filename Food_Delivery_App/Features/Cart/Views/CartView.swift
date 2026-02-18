@@ -57,20 +57,21 @@ struct CartView: View {
                     }
                 }
             }
-            .id(cart.items.count)
+            .listStyle(.plain)
 
-
-         
+            // Total
             HStack {
                 Text("Total")
+                    .font(.headline)
+
                 Spacer()
+
                 Text("₹\(cart.total, specifier: "%.0f")")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .foregroundColor(.orange)
             }
-            .font(.title2)
-            .padding()
-
-            
-
+            .padding(.horizontal)
 
             NavigationLink {
                 AddressView()
@@ -81,13 +82,11 @@ struct CartView: View {
                     .padding()
                     .background(Color.orange)
                     .foregroundColor(.white)
-                    .cornerRadius(20)
-
+                    .cornerRadius(14)
             }
             .padding(.horizontal)
         }
         .navigationTitle("Cart")
-        .background(Color(.systemGray6))
         .onAppear {
             cart.loadCart()
         }
@@ -100,11 +99,3 @@ struct CartView: View {
             .map { $0.item }
     }
 }
-
-#Preview {
-    CartView()
-        .environmentObject(CartManager())
-}
-
-
-

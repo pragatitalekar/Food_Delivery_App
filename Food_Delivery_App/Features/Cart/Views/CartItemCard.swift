@@ -61,11 +61,9 @@ struct CartItemCard: View {
             .background(Color.orange)
             .clipShape(Capsule())
         }
-        .frame(width: 150)
-        .background(.white)
-        .cornerRadius(15)
-        .shadow(radius: 3)
-        .background(Color(.systemGray6))
-
+        .padding()
+        .background(Color.white)
+        .cornerRadius(18)
+        .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 4)
     }
 }
