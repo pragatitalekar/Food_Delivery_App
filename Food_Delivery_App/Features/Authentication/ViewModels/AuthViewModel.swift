@@ -14,8 +14,9 @@ final class AuthViewModel: ObservableObject {
 
     @Published var email: String = ""
     @Published var password: String = ""
-    @Published var isLoggedIn: Bool = false
     @Published var errorMessage: String = ""
+
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
 
     func login() {
         Auth.auth().signIn(withEmail: email, password: password) { _, error in
@@ -28,6 +29,7 @@ final class AuthViewModel: ObservableObject {
             }
         }
     }
+
     
     func resetPassword() {
            guard !email.isEmpty else {
