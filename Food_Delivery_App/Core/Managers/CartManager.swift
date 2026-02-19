@@ -1,73 +1,157 @@
 import SwiftUI
 import Combine
 
-class CartManager: ObservableObject {
-    
-    @Published var items: [CartItem] = []
-    @Published var favourites: Set<String> = []
-    
-    private let persistence = PersistenceService.shared
-    
-    init() {
-        favourites = persistence.loadFavourites()
+final class CartManager: ObservableObject {
+
+    // MARK: - Cart State (Firebase)
+    @Published var items: [String: (item: FoodItems, qty: Int)] = [:]
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String?
+
+    // MARK: - Favourites (Firebase)
+    @Published var favouriteItems: [FavouriteItem] = []
+
+    // Derived favourite IDs (single source of truth)
+    var favourites: Set<String> {
+        Set(favouriteItems.map { $0.id })
     }
-    
-    // ADD / INCREMENT
-    func increment(_ food: FoodItems) {
-        if let index = items.firstIndex(where: { $0.id == food.id }) {
-            items[index].qty += 1
-        } else {
-            let newItem = CartItem(id: food.id, item: food, qty: 1)
-            items.append(newItem)
+
+    private let cartService = CartService.shared
+    private let favouriteService = FavouriteService.shared
+
+    // MARK: - INIT
+    init() {}
+
+    // MARK: - LOAD CART
+    func loadCart() {
+        isLoading = true
+        errorMessage = nil
+
+        cartService.fetchCartItems { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+
+                switch result {
+                case .success(let data):
+                    self?.items = Dictionary(
+                        uniqueKeysWithValues: data.map {
+                            ($0.0.id, (item: $0.0, qty: $0.1))
+                        }
+                    )
+
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
         }
     }
-    
-    // DECREMENT
-    func decrement(_ food: FoodItems) {
-        guard let index = items.firstIndex(where: { $0.id == food.id }) else { return }
-        
-        if items[index].qty > 1 {
-            items[index].qty -= 1
-        } else {
-            items.remove(at: index)
+
+    // MARK: - ADD / INCREMENT
+    func add(_ item: FoodItems) {
+        increment(item)
+    }
+
+    func increment(_ item: FoodItems) {
+        cartService.addToCart(item: item) { [weak self] result in
+            DispatchQueue.main.async {
+                if case .failure(let error) = result {
+                    self?.errorMessage = error.localizedDescription
+                } else {
+                    self?.loadCart()
+                }
+            }
         }
     }
-    
-    // REMOVE
-    func remove(_ food: FoodItems) {
-        items.removeAll { $0.id == food.id }
+
+    // MARK: - DECREMENT (minus button)
+    func decrement(_ item: FoodItems) {
+        cartService.decrementItem(itemId: item.id) { [weak self] result in
+            DispatchQueue.main.async {
+                if case .failure(let error) = result {
+                    self?.errorMessage = error.localizedDescription
+                } else {
+                    self?.loadCart()
+                }
+            }
+        }
     }
-    
-    // QUANTITY
-    func quantity(of food: FoodItems) -> Int {
-        items.first(where: { $0.id == food.id })?.qty ?? 0
+
+    // MARK: - REMOVE (🗑 DELETE — HARD DELETE)
+    func remove(_ item: FoodItems) {
+        cartService.deleteItem(itemId: item.id) { [weak self] result in
+            DispatchQueue.main.async {
+                if case .failure(let error) = result {
+                    self?.errorMessage = error.localizedDescription
+                } else {
+                    self?.loadCart()
+                }
+            }
+        }
     }
-    
-    // TOTAL
-    var total: Double {
-        items.reduce(0) { $0 + ($1.item.price * Double($1.qty)) }
+
+    // MARK: - QUANTITY
+    func quantity(of item: FoodItems) -> Int {
+        items[item.id]?.qty ?? 0
     }
-    
-    // COUNT
+
+    // MARK: - CART COUNT
     var cartCount: Int {
-        items.reduce(0) { $0 + $1.qty }
+        items.values.reduce(0) { $0 + $1.qty }
     }
-    
-    // FAVOURITES
+
+    // MARK: - TOTAL PRICE
+    var total: Double {
+        items.values.reduce(0) {
+            $0 + ($1.item.price * Double($1.qty))
+        }
+    }
+
+    // MARK: - FAVOURITES (Firebase)
+
+    func loadFavourites() {
+        favouriteService.fetchFavouriteItems { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let items):
+                    self?.favouriteItems = items
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+
     func toggleFavourite(_ item: FoodItems) {
         if favourites.contains(item.id) {
-            favourites.remove(item.id)
+            removeFavourite(item)
         } else {
-            favourites.insert(item.id)
+            addFavourite(item)
         }
-        persistence.saveFavourites(favourites)
     }
-    
+
     func isFavourite(_ item: FoodItems) -> Bool {
         favourites.contains(item.id)
     }
+
     func removeFavourite(_ item: FoodItems) {
-    favourites.remove(item.id)
-    persistence.saveFavourites(favourites)
+        favouriteService.removeFavourite(itemId: item.id) { [weak self] _ in
+            self?.loadFavourites()
+        }
+    }
+
+    // MARK: - ADD FAVOURITE (validated)
+    private func addFavourite(_ item: FoodItems) {
+        guard
+            !item.image.isEmpty,
+            let url = URL(string: item.image),
+            url.scheme == "https"
+        else {
+            print("❌ Invalid image URL for favourite:", item.image)
+            return
+        }
+
+        favouriteService.addFavourite(item: item) { [weak self] _ in
+            self?.loadFavourites()
+        }
     }
 }

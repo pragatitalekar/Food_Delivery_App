@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseCore
+
 @main
 struct Food_Delivery_Mini_AppApp: App {
     
@@ -19,9 +20,11 @@ struct Food_Delivery_Mini_AppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            SplashView()
+            
+            RootView()
                 .environmentObject(cartManager)
                 .environmentObject(Orders)
         }
     }
 }
+

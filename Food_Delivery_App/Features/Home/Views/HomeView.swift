@@ -24,7 +24,7 @@ struct HomeView: View {
                 .tag(TabType.home)
                 
                 NavigationStack {
-                    FavouriteView(allItems: vm.allItems)
+                    FavouriteView()
                 }
                 .tag(TabType.favourites)
                 

@@ -10,7 +10,7 @@ struct CheckoutView: View {
     var paymentType: String
     
     var onCancel: () -> Void
-    var onSuccess: () -> Void   
+    var onSuccess: () -> Void
     
     var body: some View {
         VStack(spacing: 20) {
@@ -84,16 +84,16 @@ struct CheckoutView: View {
     
    
     private func placeOrder() {
-
+        
         guard !address.isEmpty else { return }
-
+        
         orders.placeOrder(
-            items: cart.items.map { $0.item },
+            items: cart.items.values.map { $0.item },
             total: cart.total
         )
-
+        
         cart.items.removeAll()
-
+        
         onSuccess()
     }
 }

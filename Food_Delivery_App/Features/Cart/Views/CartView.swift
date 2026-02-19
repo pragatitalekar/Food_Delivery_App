@@ -1,10 +1,3 @@
-//
-//  CartView.swift
-//  Food_Delivery_App
-//
-//  Created by rentamac on 2/8/26.
-//
-//
 import SwiftUI
 
 struct CartView: View {
@@ -12,58 +5,36 @@ struct CartView: View {
     @EnvironmentObject var cart: CartManager
 
     var body: some View {
-        VStack {
+        VStack(spacing: 12) {
+
+            Text("swipe on an item to delete")
+                .font(.caption)
+                .foregroundColor(.gray)
 
             List {
-                ForEach(cart.items) { cartItem in
-                    let item = cartItem.item
+                ForEach(cartItems) { item in
 
-                    HStack(spacing: 12) {
+                    NavigationLink {
+                        DetailView(item: item)
+                    } label: {
 
-                        AsyncImage(url: URL(string: item.image)) { img in
-                            img.resizable().scaledToFill()
-                        } placeholder: {
-                            ProgressView()
-                        }
-                        .frame(width: 60, height: 60)
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle().stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                        )
-
-                        VStack(alignment: .leading) {
-                            Text(item.name)
-                                .font(.headline)
-
-                            Text("₹\(item.price, specifier: "%.0f")")
-                                .foregroundColor(.orange)
-                        }
-
-                        Spacer()
-
-                        HStack(spacing: 14) {
-
-                            Button {
-                                cart.decrement(item)
-                            } label: {
-                                Image(systemName: "minus.circle.fill")
-                                    .font(.title2)
-                            }
-
-                            Text("\(cartItem.qty)")
-                                .frame(width: 30)
-
-                            Button {
+                        CartItemCard(
+                            item: item,
+                            quantity: cart.quantity(of: item),
+                            onIncrement: {
                                 cart.increment(item)
-                            } label: {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.title2)
+                            },
+                            onDecrement: {
+                                cart.decrement(item)
                             }
-                        }
-                        .foregroundColor(.orange)
+                        )
                     }
+                    .buttonStyle(.plain)                 
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
 
-                    // FAV
+                    // ❤️ Favourite (RIGHT swipe)
                     .swipeActions(edge: .leading, allowsFullSwipe: false) {
                         Button {
                             cart.toggleFavourite(item)
@@ -76,49 +47,55 @@ struct CartView: View {
                         .tint(.pink)
                     }
 
-                    // DELETE
-                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    // 🗑 HARD DELETE (LEFT swipe)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         Button(role: .destructive) {
-                            cart.remove(item)
+                            cart.remove(item)   // MUST be hard delete
                         } label: {
                             Label("Delete", systemImage: "trash")
                         }
                     }
                 }
             }
+            .listStyle(.plain)
 
-            // TOTAL
+            // Total
             HStack {
                 Text("Total")
+                    .font(.headline)
+
                 Spacer()
+
                 Text("₹\(cart.total, specifier: "%.0f")")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .foregroundColor(.orange)
             }
-            .font(.title2)
-            .padding()
+            .padding(.horizontal)
 
             NavigationLink {
                 AddressView()
             } label: {
                 Text("Complete Order")
-                    .padding()
+                    .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
-                    .background(.orange)
+                    .padding()
+                    .background(Color.orange)
                     .foregroundColor(.white)
-                    .cornerRadius(20)
-                    .padding(.horizontal)
+                    .cornerRadius(14)
             }
+            .padding(.horizontal)
         }
         .navigationTitle("Cart")
-        .background(Color(.systemGray6))
+        .onAppear {
+            cart.loadCart()
+        }
+    }
+
+    // ✅ Stable ordering (VERY important)
+    var cartItems: [FoodItems] {
+        cart.items.values
+            .sorted { $0.item.name < $1.item.name }
+            .map { $0.item }
     }
 }
-
-#Preview {
-    CartView()
-        .environmentObject(CartManager())
-}
-
-
-
-
-
