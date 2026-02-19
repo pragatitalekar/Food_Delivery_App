@@ -10,6 +10,8 @@ import FirebaseAuth
 struct SideMenuView: View {
     @Binding var showSideMenu: Bool
     @State private var showingLogoutAlert = false
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
+
     
     var body: some View {
         ZStack(alignment: .leading) {
@@ -62,11 +64,15 @@ struct SideMenuView: View {
     private func handleSignOut() {
         do {
             try Auth.auth().signOut()
-            showSideMenu = false
-        } catch let error {
-            print("Error signing out: \(error.localizedDescription)")
+            
+            isLoggedIn = false
+            
+        } catch {
+            print(error.localizedDescription)
         }
     }
+
+
 }
 
 struct MenuRow<Destination: View>: View {

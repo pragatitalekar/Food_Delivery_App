@@ -4,6 +4,8 @@ import Combine
 struct LoginView: View {
 
     @StateObject private var vm = AuthViewModel()
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+
 
     var body: some View {
         VStack(spacing: 40) {
@@ -25,6 +27,10 @@ struct LoginView: View {
 
             Button {
                 vm.login()
+                
+                if vm.errorMessage.isEmpty {
+                    isLoggedIn = true
+                }
             } label: {
                 Text("Login")
                     .foregroundColor(AppColors.white)
@@ -40,12 +46,6 @@ struct LoginView: View {
                     .foregroundColor(AppColors.error)
             }
 
-            NavigationLink(
-                destination: MainTabView(),
-                isActive: $vm.isLoggedIn
-            ) {
-                EmptyView()
-            }
         }
         .padding(.horizontal, 30)
         .padding(.top, 40)    
