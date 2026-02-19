@@ -3,8 +3,69 @@ import SwiftUI
 struct FavouriteView: View {
 
     @EnvironmentObject var cart: CartManager
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    
+    @State private var showAuth = false
 
     var body: some View {
+
+        Group {
+
+          
+            if !isLoggedIn {
+
+                VStack(spacing: 24) {
+
+                    Spacer()
+
+                    Image(systemName: "heart.slash")
+                        .font(.system(size: 70))
+                        .foregroundColor(.gray.opacity(0.6))
+
+                    Text("No favourites yet")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+
+                    Text("Login to save your favourite food")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+
+                    Button {
+                        showAuth = true
+                    } label: {
+                        Text("Login / Sign-up")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(AppColors.primary)
+                            .foregroundColor(.white)
+                            .cornerRadius(14)
+                    }
+                    .padding(.horizontal, 30)
+
+                    Spacer()
+                }
+                .sheet(isPresented: $showAuth) {
+                    AuthView {
+                        showAuth = false
+                        isLoggedIn = true
+                    }
+                }
+            }
+
+            // ✅ LOGGED IN UI (your original grid)
+            else {
+                favouritesGrid
+            }
+        }
+        .navigationTitle("Favourites")
+        .background(Color(.systemGray6))
+    }
+}
+
+private extension FavouriteView {
+
+    var favouritesGrid: some View {
         ScrollView {
             LazyVGrid(
                 columns: [
@@ -32,9 +93,6 @@ struct FavouriteView: View {
                 }
             }
             .padding()
-
         }
-        .navigationTitle("Favourites")
-        .background(Color(.systemGray6))
     }
 }

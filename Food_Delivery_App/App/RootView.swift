@@ -1,36 +1,34 @@
-//
-//  RootView.swift
-//  Food_Delivery_App
-//
-//  Created by rentamac on 2/18/26.
-//
-
 import SwiftUI
 import FirebaseAuth
 
 struct RootView: View {
-    
-    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
-    
+
+    @State private var showSplash = true
+    @State private var showStartupAuth = false
+
     var body: some View {
-        
         Group {
-            if isLoggedIn {
-                MainTabView()
-            } else {
+            if showSplash {
                 SplashView()
+
+            } else if showStartupAuth {
+                AuthView {
+                    showStartupAuth = false   // ⭐ after first login
+                }
+
+            } else {
+                MainTabView()   // ⭐ Root never depends on isLoggedIn
             }
         }
         .onAppear {
-            checkLoginState()
+            startAppFlow()
         }
     }
-    
-    private func checkLoginState() {
-        if Auth.auth().currentUser != nil {
-            isLoggedIn = true
-        } else {
-            isLoggedIn = false
+
+    private func startAppFlow() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            showStartupAuth = Auth.auth().currentUser == nil
+            showSplash = false
         }
     }
 }

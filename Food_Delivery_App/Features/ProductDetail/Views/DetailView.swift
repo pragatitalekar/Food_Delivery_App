@@ -5,6 +5,11 @@ struct DetailView: View {
     let item: FoodItems
     @EnvironmentObject var cart: CartManager
 
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+
+    @State private var showLoginAlert = false
+    @State private var showAuth = false
+
     @State private var selectedIndex = 0
     @State private var showCartPopup = false
     @State private var goToCart = false
@@ -21,7 +26,6 @@ struct DetailView: View {
                 ScrollView {
                     VStack(spacing: 0) {
 
-                        // IMAGE CAROUSEL
                         TabView(selection: $selectedIndex) {
                             ForEach(images.indices, id: \.self) { index in
                                 AsyncImage(url: URL(string: images[index])) { img in
@@ -39,7 +43,6 @@ struct DetailView: View {
                         .tabViewStyle(.page(indexDisplayMode: .never))
                         .padding(.top, 20)
 
-                        // DOT INDICATOR
                         HStack(spacing: 6) {
                             ForEach(images.indices, id: \.self) { index in
                                 Circle()
@@ -49,7 +52,6 @@ struct DetailView: View {
                         }
                         .padding(.top, 8)
 
-                        // NAME & PRICE
                         VStack(spacing: 8) {
                             Text(item.name)
                                 .font(.title2)
@@ -62,7 +64,6 @@ struct DetailView: View {
                         }
                         .padding(.top, 30)
 
-                        // INFO
                         VStack(alignment: .leading, spacing: 20) {
 
                             VStack(alignment: .leading, spacing: 6) {
@@ -78,7 +79,7 @@ struct DetailView: View {
                                 Text("About food")
                                     .font(.headline)
 
-                                Text("Fresh and tasty food prepared with quality ingredients. Perfect for lunch and dinner cravings.")
+                                Text("Fresh and tasty food prepared with quality ingredients.")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                             }
@@ -90,10 +91,14 @@ struct DetailView: View {
                     }
                 }
 
-                // ADD TO CART BUTTON
+                // Add to cart guarded
                 Button {
-                    cart.increment(item)   // ✅ FIXED
-                    showPopup()
+                    if isLoggedIn {
+                        cart.increment(item)
+                        showPopup()
+                    } else {
+                        showLoginAlert = true
+                    }
                 } label: {
                     Text("Add to cart")
                         .font(.headline)
@@ -107,7 +112,7 @@ struct DetailView: View {
                 .padding(.bottom)
             }
 
-            // FLOATING CART POPUP
+            // Floating cart popup
             if showCartPopup {
                 VStack {
                     Spacer()
@@ -133,25 +138,77 @@ struct DetailView: View {
                 .animation(.easeInOut, value: showCartPopup)
             }
 
-            // NAVIGATION LINK
             NavigationLink(destination: CartView(), isActive: $goToCart) {
                 EmptyView()
             }
+
+            // ⭐ LOGIN POPUP (colored button)
+            if showLoginAlert {
+                Color.black.opacity(0.35)
+                    .ignoresSafeArea()
+
+                VStack(spacing: 18) {
+
+                    Text("Login Required")
+                        .font(.headline)
+
+                    Text("Please login to continue")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+
+                    Button {
+                        showLoginAlert = false
+                        showAuth = true
+                    } label: {
+                        Text("Login / Sign-up")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(AppColors.primary)
+                            .foregroundColor(.white)
+                            .cornerRadius(14)
+                    }
+
+                    Button("Cancel") {
+                        showLoginAlert = false
+                    }
+                    .foregroundColor(.gray)
+
+                }
+                .padding(24)
+                .background(Color(.systemBackground))
+                .cornerRadius(20)
+                .padding(40)
+                .transition(.scale)
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
+
+        // Favourite guarded
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    cart.toggleFavourite(item)
+                    if isLoggedIn {
+                        cart.toggleFavourite(item)
+                    } else {
+                        showLoginAlert = true
+                    }
                 } label: {
                     Image(systemName: cart.isFavourite(item) ? "heart.fill" : "heart")
                         .foregroundColor(.red)
                 }
             }
         }
+
+        // Auth sheet
+        .sheet(isPresented: $showAuth) {
+            AuthView {
+                showAuth = false
+                isLoggedIn = true
+            }
+        }
     }
 
-    // POPUP ANIMATION
     func showPopup() {
         withAnimation { showCartPopup = true }
 

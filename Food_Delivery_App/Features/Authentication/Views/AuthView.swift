@@ -4,6 +4,7 @@ import Combine
 struct AuthView: View {
 
     @State private var selectedTab: Tab = .login
+    var onLoginSuccess: (() -> Void)? = nil
 
     enum Tab {
         case login, signup
@@ -45,10 +46,11 @@ struct AuthView: View {
                 .ignoresSafeArea(edges: .top)
 
                 if selectedTab == .login {
-                    LoginView()
+                    LoginView(onLoginSuccess: onLoginSuccess)
                 } else {
-                    SignupView()
+                    SignupView(onLoginSuccess: onLoginSuccess)
                 }
+
 
                 Spacer()
             }
