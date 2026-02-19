@@ -2,6 +2,9 @@ import SwiftUI
 import Combine
 
 struct LoginView: View {
+    var onLoginSuccess: (() -> Void)?
+    @Environment(\.dismiss) var dismiss
+
 
     @StateObject private var vm = AuthViewModel()
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
@@ -26,11 +29,15 @@ struct LoginView: View {
             }
 
             Button {
-                vm.login()
-                
-                if vm.errorMessage.isEmpty {
-                    isLoggedIn = true
+                vm.login { success in
+                    print("LOGIN SUCCESS:", success)
+                    if success {
+                        print("CALLING NAVIGATION")
+                        onLoginSuccess?()
+                        dismiss()
+                    }
                 }
+
             } label: {
                 Text("Login")
                     .foregroundColor(AppColors.white)

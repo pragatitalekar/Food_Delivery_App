@@ -9,10 +9,71 @@ import SwiftUI
 
 struct ProfileView: View {
     
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    
     @StateObject private var vm = ProfileViewModel()
     @State private var showEditSheet = false
+    @State private var showAuth = false
     
     var body: some View {
+        
+        Group {
+            
+            
+            if !isLoggedIn {
+                
+                VStack(spacing: 24) {
+                    
+                    Spacer()
+                    
+                    Image(systemName: "person.crop.circle.badge.exclam")
+                        .font(.system(size: 70))
+                        .foregroundColor(.gray.opacity(0.6))
+                    
+                    Text("You are not logged in")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                    
+                    Text("Login to view and manage your profile")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    Button {
+                        showAuth = true
+                    } label: {
+                        Text("Login / Sign-up")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(AppColors.primary)
+                            .foregroundColor(.white)
+                            .cornerRadius(14)
+                    }
+                    .padding(.horizontal, 30)
+                    
+                    Spacer()
+                }
+                .sheet(isPresented: $showAuth) {
+                    AuthView {
+                        showAuth = false
+                        isLoggedIn = true
+                    }
+                }
+            }
+            
+            // ✅ LOGGED IN UI
+            else {
+                profileContent
+            }
+        }
+        .navigationTitle("My profile")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private extension ProfileView {
+    
+    var profileContent: some View {
         
         VStack(spacing: 0) {
             
@@ -35,13 +96,12 @@ struct ProfileView: View {
                             )
                         }
                         
-                    
                         NavigationLink {
                             HistoryView()
                         } label: {
                             ProfileMenuRow(
                                 title: "Order History",
-                                icon: "clock.fill"       
+                                icon: "clock.fill"
                             )
                         }
                         
@@ -74,13 +134,10 @@ struct ProfileView: View {
                 .padding(.bottom, 20)
             }
             
-            
             VStack {
-                
                 Button {
                     vm.saveProfile()
                 } label: {
-                    
                     Text("Update")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.white)
@@ -95,8 +152,6 @@ struct ProfileView: View {
             .background(AppColors.background)
         }
         .background(AppColors.background.ignoresSafeArea())
-        .navigationTitle("My profile")
-        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showEditSheet) {
             EditProfileSheet(vm: vm)
         }

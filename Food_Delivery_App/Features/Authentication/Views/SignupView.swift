@@ -3,6 +3,8 @@ import Combine
 
 struct SignupView: View {
 
+    var onLoginSuccess: (() -> Void)?
+
     @StateObject private var vm = AuthViewModel()
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
 
@@ -22,10 +24,11 @@ struct SignupView: View {
             .frame(height: 5)
 
             Button {
-                vm.signup()
-                
-                if vm.errorMessage.isEmpty {
-                    isLoggedIn = true
+                vm.signup { success in
+                    if success {
+                        isLoggedIn = true
+                        onLoginSuccess?()
+                    }
                 }
             } label: {
 
