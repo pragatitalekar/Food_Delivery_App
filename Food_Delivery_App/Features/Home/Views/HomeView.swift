@@ -10,67 +10,39 @@ struct HomeView: View {
     @EnvironmentObject var orderManager: OrderManager
     
     @State private var selectedCategory: CategoryType = .meals
-    @State private var showSuccessPopup = false
+    @State private var selectedTab: TabType = .home
     
     var body: some View {
         
-        ZStack {
+        ZStack(alignment: .bottom) {
             
-            TabView {
+            TabView(selection: $selectedTab) {
                 
                 NavigationStack {
                     homeMainContent
                 }
-                .tabItem {
-                    Label("", systemImage: "house")
-                }
+                .tag(TabType.home)
                 
                 NavigationStack {
                     FavouriteView()
                 }
-                .tabItem {
-                    Label("", systemImage: "heart")
-                }
+                .tag(TabType.favourites)
                 
                 NavigationStack {
                     ProfileView()
                 }
-                .tabItem {
-                    Label("", systemImage: "person")
-                }
+                .tag(TabType.profile)
                 
                 NavigationStack {
                     OrdersView()
                 }
-                .tabItem {
-                    Label("", systemImage: "bag")
-                }
+                .tag(TabType.orders)
             }
-            .tint(.orange)
+            .tabViewStyle(.page(indexDisplayMode: .never))
             .background(Color(.systemGray6).ignoresSafeArea())
+            
+            CustomBottomBar(selectedTab: $selectedTab)
         }
-        
-        .overlay {
-            if vm.showNoInternet {
-                NoInternetView {
-                    vm.fetchAll()
-                }
-            }
-        }
-        
-        .overlay {
-            if showSuccessPopup {
-                OrderSuccessPopup(show: $showSuccessPopup)
-            }
-        }
-        
-        .overlay(alignment: .bottom) {
-            if !orderManager.activeOrders.isEmpty {
-                ActiveOrderCard(order: orderManager.activeOrders.first!)
-                    .padding(.bottom, 55)
-            }
-        }
-        
         .onAppear {
             if vm.allItems.isEmpty {
                 vm.fetchAll()
@@ -86,14 +58,12 @@ struct HomeView: View {
             
             ScrollView(.vertical, showsIndicators: false) {
                 
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 18) {
                     
                     // HEADER
                     HStack {
                         Button {
-                            withAnimation(.spring()) {
-                                showSideMenu = true
-                            }
+                            withAnimation(.spring()) { showSideMenu = true }
                         } label: {
                             Image(systemName: "line.3.horizontal")
                                 .font(.title2)
@@ -111,45 +81,57 @@ struct HomeView: View {
                                     .foregroundColor(.black)
                                 
                                 if cart.cartCount > 0 {
-                                    BadgeView(count: cart.cartCount)
-                                        .offset(x: 10, y: -10)
+                                    Text("\(cart.cartCount)")
+                                        .font(.caption2)
+                                        .foregroundColor(.white)
+                                        .padding(5)
+                                        .background(Color.orange)
+                                        .clipShape(Circle())
+                                        .offset(x: 8, y: -8)
                                 }
                             }
                         }
                     }
+                    .padding(.bottom, 6)
                     
                     // TITLE
-                    Text("Delicious\nFood For You")
-                        .font(.largeTitle)
-                        .bold()
+                    Text("Delicious\nfood for you")
+                        .font(.system(size: 34, weight: .bold))
+                        .lineSpacing(3)
+                        .padding(.top, 6)
                     
                     // SEARCH
                     NavigationLink {
                         SearchView(homeVM: vm)
                     } label: {
-                        HStack {
+                        HStack(spacing: 12) {
                             Image(systemName: "magnifyingglass")
+                                .foregroundColor(.gray)
                             Text("Search")
+                                .foregroundColor(.gray)
                             Spacer()
                         }
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(15)
-                        .foregroundColor(.black)
+                        .padding(.horizontal, 18)
+                        .frame(height: 46)
+                        .background(Color(.systemGray5))
+                        .cornerRadius(25)
                     }
+                    .padding(.top, 4)
                     
                     // CATEGORY BAR
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 24) {
+                        HStack(spacing: 22) {
                             ForEach(CategoryType.allCases, id: \.self) { category in
                                 VStack(spacing: 6) {
                                     Button {
-                                        withAnimation(.easeInOut(duration: 0.25)) {
+                                        withAnimation(.easeInOut) {
                                             selectedCategory = category
                                             proxy.scrollTo(category, anchor: .top)
                                         }
                                     } label: {
                                         Text(category.rawValue)
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
                                             .foregroundColor(selectedCategory == category ? .orange : .gray)
                                     }
                                     
@@ -157,14 +139,15 @@ struct HomeView: View {
                                         .fill(Color.orange)
                                         .frame(height: 3)
                                         .opacity(selectedCategory == category ? 1 : 0)
-                                        .matchedGeometryEffect(id: "underline", in: underlineAnimation)
+                                      //  .matchedGeometryEffect(id: "underline", in: underlineAnimation)
                                 }
                             }
                         }
+                        .padding(.top, 6)
                     }
                     
                     // SECTIONS
-                    categorySection(title: "Meals", category: .meals)
+                    categorySection(title: "Foods", category: .meals)
                         .id(CategoryType.meals)
                     
                     categorySection(title: "Drinks", category: .drinks)
@@ -176,21 +159,9 @@ struct HomeView: View {
                     categorySection(title: "Desserts", category: .desserts)
                         .id(CategoryType.desserts)
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 20)
-                .padding(.bottom, orderManager.activeOrders.isEmpty ? 90 : 100)
-                
-                // AUTO UNDERLINE MOVE
-                .onPreferenceChange(CategoryOffsetKey.self) { values in
-                    
-                    let sorted = values.sorted { abs($0.value) < abs($1.value) }
-                    
-                    if let nearest = sorted.first?.key {
-                        if selectedCategory != nearest {
-                            selectedCategory = nearest
-                        }
-                    }
-                }
+                .padding(.horizontal, 28)
+                .padding(.top, 18)
+                .padding(.bottom, 150)
             }
         }
         .background(Color(.systemGray6))
@@ -202,7 +173,7 @@ struct HomeView: View {
         
         let items = vm.allItems.filter { $0.category == category }
         
-        return VStack(alignment: .leading, spacing: 10) {
+        return VStack(alignment: .leading, spacing: 12) {
             
             HStack {
                 Text(title)
@@ -211,14 +182,15 @@ struct HomeView: View {
                 
                 Spacer()
                 
-                NavigationLink("See more") {
+                NavigationLink("see more") {
                     CategoryListView(items: items)
                 }
+                .font(.footnote)
                 .foregroundColor(.orange)
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 30) {
+                HStack(spacing: 26) {
                     ForEach(items.prefix(6)) { item in
                         NavigationLink {
                             DetailView(item: item)
@@ -227,23 +199,8 @@ struct HomeView: View {
                         }
                     }
                 }
-                .padding(.vertical, 20)
+                .padding(.vertical, 16)
             }
         }
-        .background(
-            GeometryReader { geo in
-                Color.clear.preference(
-                    key: CategoryOffsetKey.self,
-                    value: [category: geo.frame(in: .global).minY]
-                )
-            }
-        )
-    }
-}
-struct CategoryOffsetKey: PreferenceKey {
-    static var defaultValue: [CategoryType: CGFloat] = [:]
-    
-    static func reduce(value: inout [CategoryType: CGFloat], nextValue: () -> [CategoryType: CGFloat]) {
-        value.merge(nextValue(), uniquingKeysWith: { $1 })
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TabType {
+enum TabType: Hashable {
     case home
     case favourites
     case profile

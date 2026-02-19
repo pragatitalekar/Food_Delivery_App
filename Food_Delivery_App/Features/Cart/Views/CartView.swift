@@ -29,7 +29,7 @@ struct CartView: View {
                             }
                         )
                     }
-                    .buttonStyle(.plain)                 // 🔑 critical
+                    .buttonStyle(.plain)                 
                     .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)

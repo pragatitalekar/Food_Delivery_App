@@ -5,6 +5,7 @@
 //  Created by rentamac on 2/11/26.
 //
 
+
 import SwiftUI
 
 struct CustomBottomBar: View {
@@ -13,27 +14,30 @@ struct CustomBottomBar: View {
 
     var body: some View {
         HStack {
-            tabButton(icon: "house", tab: .home)
+            tab(icon: "house.fill", tab: .home)
             Spacer()
-            tabButton(icon: "heart", tab: .favourites)
+            tab(icon: "heart.fill", tab: .favourites)
             Spacer()
-            tabButton(icon: "person", tab: .profile)
+            tab(icon: "person.fill", tab: .profile)
             Spacer()
-            tabButton(icon: "clock", tab: .orders)
+            tab(icon: "clock.fill", tab: .orders)
         }
         .padding(.horizontal, 30)
         .padding(.vertical, 14)
         .background(Color(.systemGray6))
+        .cornerRadius(28)
+        .shadow(color: .black.opacity(0.08), radius: 10, y: 5)
+        .padding(.horizontal, 24)
+        .padding(.bottom, 10)
     }
 
-    func tabButton(icon: String, tab: TabType) -> some View {
+    func tab(icon: String, tab: TabType) -> some View {
         Button {
             selectedTab = tab
         } label: {
             Image(systemName: icon)
                 .font(.title3)
-                .foregroundColor(selectedTab == tab ? AppColors.primary : .gray)
+                .foregroundColor(selectedTab == tab ? .orange : .gray)
         }
     }
 }
-

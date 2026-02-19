@@ -10,7 +10,7 @@ struct CheckoutView: View {
     var paymentType: String
     
     var onCancel: () -> Void
-    var onSuccess: () -> Void   
+    var onSuccess: () -> Void
     
     var body: some View {
         VStack(spacing: 20) {
