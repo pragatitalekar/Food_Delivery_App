@@ -26,7 +26,7 @@ struct HomeView: View {
                 }
                 
                 NavigationStack {
-                    FavouriteView(allItems: vm.allItems)
+                    FavouriteView()
                 }
                 .tabItem {
                     Label("", systemImage: "heart")

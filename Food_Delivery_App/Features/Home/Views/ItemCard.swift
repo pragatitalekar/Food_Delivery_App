@@ -4,6 +4,7 @@ struct ItemCard: View {
     
     let item: FoodItems
     
+    
     var body: some View {
         
         ZStack {
@@ -33,8 +34,7 @@ struct ItemCard: View {
             .cornerRadius(24)
             .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 5)
             
-            
-            // IMAGE
+
             AsyncImage(url: URL(string: item.image)) { img in
                 img
                     .resizable()
