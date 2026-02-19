@@ -47,7 +47,7 @@ struct ItemCard: View {
             .background(
                 Circle().fill(Color.white)
             )
-            .shadow(radius: 4)
+            
             .offset(y: -75)   // balanced offset
         }
         .frame(width: 165, height: 230)

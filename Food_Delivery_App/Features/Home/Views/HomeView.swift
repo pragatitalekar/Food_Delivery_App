@@ -10,60 +10,39 @@ struct HomeView: View {
     @EnvironmentObject var orderManager: OrderManager
     
     @State private var selectedCategory: CategoryType = .meals
-    @State private var showSuccessPopup = false
     @State private var selectedTab: TabType = .home
     
     var body: some View {
         
         ZStack(alignment: .bottom) {
-
-        TabView(selection: $selectedTab) {
-
-        NavigationStack {
-        homeMainContent
-        }
-        .tag(TabType.home)
-
-        NavigationStack {
-        FavouriteView(allItems: vm.allItems)
-        }
-        .tag(TabType.favourites)
-
-        NavigationStack {
-        ProfileView()
-        }
-        .tag(TabType.profile)
-
-        NavigationStack {
-        OrdersView()
-        }
-        .tag(TabType.orders)
-        }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .background(Color(.systemGray6).ignoresSafeArea())
-
-        CustomBottomBar(selectedTab: $selectedTab)
-        }
-        
-        .overlay {
-            if vm.showNoInternet {
-                NoInternetView { vm.fetchAll() }
+            
+            TabView(selection: $selectedTab) {
+                
+                NavigationStack {
+                    homeMainContent
+                }
+                .tag(TabType.home)
+                
+                NavigationStack {
+                    FavouriteView(allItems: vm.allItems)
+                }
+                .tag(TabType.favourites)
+                
+                NavigationStack {
+                    ProfileView()
+                }
+                .tag(TabType.profile)
+                
+                NavigationStack {
+                    OrdersView()
+                }
+                .tag(TabType.orders)
             }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .background(Color(.systemGray6).ignoresSafeArea())
+            
+            CustomBottomBar(selectedTab: $selectedTab)
         }
-        
-        .overlay {
-            if showSuccessPopup {
-                OrderSuccessPopup(show: $showSuccessPopup)
-            }
-        }
-        
-        .overlay(alignment: .bottom) {
-            if let order = orderManager.activeOrders.first {
-                ActiveOrderCard(order: order)
-                    .padding(.bottom, 95)
-            }
-        }
-        
         .onAppear {
             if vm.allItems.isEmpty {
                 vm.fetchAll()
@@ -102,7 +81,12 @@ struct HomeView: View {
                                     .foregroundColor(.black)
                                 
                                 if cart.cartCount > 0 {
-                                    BadgeView(count: cart.cartCount)
+                                    Text("\(cart.cartCount)")
+                                        .font(.caption2)
+                                        .foregroundColor(.white)
+                                        .padding(5)
+                                        .background(Color.orange)
+                                        .clipShape(Circle())
                                         .offset(x: 8, y: -8)
                                 }
                             }
@@ -140,7 +124,7 @@ struct HomeView: View {
                             ForEach(CategoryType.allCases, id: \.self) { category in
                                 VStack(spacing: 6) {
                                     Button {
-                                        withAnimation(.easeInOut(duration: 0.25)) {
+                                        withAnimation(.easeInOut) {
                                             selectedCategory = category
                                             proxy.scrollTo(category, anchor: .top)
                                         }
@@ -155,7 +139,7 @@ struct HomeView: View {
                                         .fill(Color.orange)
                                         .frame(height: 3)
                                         .opacity(selectedCategory == category ? 1 : 0)
-                                        .matchedGeometryEffect(id: "underline", in: underlineAnimation)
+                                      //  .matchedGeometryEffect(id: "underline", in: underlineAnimation)
                                 }
                             }
                         }
@@ -164,13 +148,20 @@ struct HomeView: View {
                     
                     // SECTIONS
                     categorySection(title: "Foods", category: .meals)
+                        .id(CategoryType.meals)
+                    
                     categorySection(title: "Drinks", category: .drinks)
+                        .id(CategoryType.drinks)
+                    
                     categorySection(title: "Snacks", category: .snacks)
+                        .id(CategoryType.snacks)
+                    
                     categorySection(title: "Desserts", category: .desserts)
+                        .id(CategoryType.desserts)
                 }
                 .padding(.horizontal, 28)
                 .padding(.top, 18)
-                .padding(.bottom, 150) // space for bottom bar
+                .padding(.bottom, 150)
             }
         }
         .background(Color(.systemGray6))
