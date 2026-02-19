@@ -37,5 +37,4 @@ struct FavouriteView: View {
         .navigationTitle("Favourites")
         .background(Color(.systemGray6))
     }
-
 }

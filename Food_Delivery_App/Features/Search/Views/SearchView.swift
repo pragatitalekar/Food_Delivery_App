@@ -65,20 +65,55 @@ struct SearchView: View {
             }
 
             // MARK: - Results Grid
+            let leftColumnItems = vm.results.enumerated().filter { $0.offset % 2 == 0 }.map { $0.element }
+            let rightColumnItems = vm.results.enumerated().filter { $0.offset % 2 != 0 }.map { $0.element }
+            
+//           ScrollView {
+//                LazyVGrid(columns: columns, spacing: 20) {
+//                    ForEach(vm.results) { item in
+//                        NavigationLink {
+//                            DetailView(item: item)
+//                        } label: {
+//                            ItemCard(item: item)
+//                        }
+//                        .buttonStyle(.plain)
+//                    }
+//                }
+//                    .padding(.vertical, 25)
+//            }
+            
             ScrollView {
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(vm.results) { item in
-                        NavigationLink {
-                            DetailView(item: item)
-                        } label: {
-                            SearchGridCard(item: item)
+                HStack(alignment: .top, spacing: 16) {
+
+                    LazyVStack(spacing: 20) {
+                        ForEach(leftColumnItems) { item in
+                            NavigationLink {
+                                DetailView(item: item)
+                            } label: {
+                                ItemCard(item: item)
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.vertical,5)
                         }
-                        .buttonStyle(.plain)
                     }
+
+                    LazyVStack(spacing: 20) {
+                        ForEach(rightColumnItems) { item in
+                            NavigationLink {
+                                DetailView(item: item)
+                            } label: {
+                                ItemCard(item: item)
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.vertical,5)
+                        }
+                    }
+                    .padding(.vertical, 55)
                 }
                 .padding(.horizontal)
-                .padding(.bottom, 20)
+                .padding(.vertical, 25)
             }
+
 
             Spacer()
         }
