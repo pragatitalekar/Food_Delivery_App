@@ -11,6 +11,7 @@ struct SideMenuView: View {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
 
     var body: some View {
+
         ZStack(alignment: .leading) {
 
             AppColors.primary
@@ -21,38 +22,49 @@ struct SideMenuView: View {
                 Spacer().frame(height: 100)
 
                 Group {
-                    MenuRow(icon: "person.crop.circle.fill",
-                            title: "Profile",
-                            destination: ProfileView(),
-                            showSideMenu: $showSideMenu)
+
+                    MenuRow(
+                        icon: "person.crop.circle.fill",
+                        title: "Profile",
+                        destination: ProfileView(),
+                        showSideMenu: $showSideMenu
+                    )
 
                     MenuDivider()
 
-                    MenuRow(icon: "clock.arrow.circlepath",
-                            title: "Order History",
-                            destination: HistoryView(),
-                            showSideMenu: $showSideMenu)
+                    MenuRow(
+                        icon: "clock.arrow.circlepath",
+                        title: "Order History",
+                        destination: HistoryView(),
+                        showSideMenu: $showSideMenu
+                    )
 
                     MenuDivider()
 
-                    MenuRow(icon: "percent",
-                            title: "offer and promo",
-                            destination: OffersView(),
-                            showSideMenu: $showSideMenu)
+                    MenuRow(
+                        icon: "percent",
+                        title: "Offer and Promo",
+                        destination: OffersView(),
+                        showSideMenu: $showSideMenu
+                    )
 
                     MenuDivider()
 
-                    MenuRow(icon: "doc.text.fill",
-                            title: "Privacy policy",
-                            destination: PrivacyView(),
-                            showSideMenu: $showSideMenu)
+                    MenuRow(
+                        icon: "doc.text.fill",
+                        title: "Privacy Policy",
+                        destination: PrivacyView(),
+                        showSideMenu: $showSideMenu
+                    )
 
                     MenuDivider()
 
-                    MenuRow(icon: "lock.fill",
-                            title: "Security",
-                            destination: SecurityView(),
-                            showSideMenu: $showSideMenu)
+                    MenuRow(
+                        icon: "lock.fill",
+                        title: "Security",
+                        destination: SecurityView(),
+                        showSideMenu: $showSideMenu
+                    )
                 }
 
                 Spacer()
@@ -68,7 +80,7 @@ struct SideMenuView: View {
                 } label: {
                     HStack(spacing: 12) {
 
-                        Text(isLoggedIn ? "Sign-out" : "Sign-in")
+                        Text(isLoggedIn ? "Sign Out" : "Sign In")
                             .font(.system(size: 18, weight: .medium))
 
                         Image(systemName: isLoggedIn ? "arrow.right" : "person.fill")
@@ -91,8 +103,6 @@ struct SideMenuView: View {
             }
             .padding(.leading, 35)
         }
-
-     
         .sheet(isPresented: $showAuth) {
             AuthView {
                 showAuth = false
@@ -104,10 +114,8 @@ struct SideMenuView: View {
     private func handleSignOut() {
         do {
             try Auth.auth().signOut()
-
             isLoggedIn = false
             showSideMenu = false
-
         } catch {
             print("Sign out error:", error.localizedDescription)
         }
@@ -124,9 +132,12 @@ struct MenuRow<Destination: View>: View {
     @Binding var showSideMenu: Bool
 
     var body: some View {
+
         NavigationLink {
             destination
-                .onAppear { showSideMenu = false }
+                .onAppear {
+                    showSideMenu = false
+                }
         } label: {
             HStack(spacing: 16) {
 
@@ -153,5 +164,12 @@ struct MenuDivider: View {
             .frame(height: 1)
             .frame(width: 130)
             .padding(.leading, 38)
+    }
+}
+
+
+#Preview {
+    NavigationStack {
+        SideMenuView(showSideMenu: .constant(false))
     }
 }

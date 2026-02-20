@@ -10,53 +10,48 @@ import SwiftUI
 struct OrderSuccessPopup: View {
     
     @Binding var show: Bool
+    var onOpenOrder: () -> Void
     
     var body: some View {
         if show {
-            ZStack {
+            VStack {
+                Spacer()
                 
-                // Background Dim
-                Color.black.opacity(0.35)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        show = false
-                    }
-                
-                VStack {
-                    Spacer()   // pushes popup to bottom
+                VStack(spacing: 16) {
                     
-                    VStack(spacing: 16) {
-                        
-                        Capsule()
-                            .frame(width: 40, height: 5)
-                            .foregroundColor(.gray.opacity(0.4))
-                        
-                        Image(systemName: "checkmark.circle.fill")
-                            .resizable()
-                            .frame(width: 55, height: 55)
-                            .foregroundColor(.green)
-                        
-                        Text("Order Placed Successfully 🎉")
-                            .font(.headline)
-                        
-                        Text("Your food is being prepared")
-                            .foregroundColor(.gray)
-                        
-                        Button("Track Order") {
-                            show = false
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.orange)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
+                    Capsule()
+                        .frame(width: 40, height: 5)
+                        .foregroundColor(.gray.opacity(0.4))
+                    
+                    Image(systemName: "checkmark.circle.fill")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.green)
+                    
+                    Text("Order Placed Successfully 🎉")
+                        .font(.headline)
+                    
+                    Text("Your food is being prepared")
+                        .foregroundColor(.gray)
+                    
+                    Button {
+                        show = false
+                        onOpenOrder()
+                    } label: {
+                        Text("View Order Details")
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.orange)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
                     }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(25)
-                    .shadow(radius: 12)
-                    .padding()
                 }
+                .padding()
+                .background(Color.white)
+                .cornerRadius(25)
+                .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
+                .padding(.horizontal)
+                .padding(.bottom, 90)   // 👈 Above bottom tab
             }
             .transition(.move(edge: .bottom))
             .animation(.easeInOut, value: show)
