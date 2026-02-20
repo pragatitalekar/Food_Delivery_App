@@ -2,8 +2,6 @@
 //  ProfileView.swift
 //  Food_Delivery_App
 //
-//  Created by Bhaswanth on 2/6/26.
-//
 
 import SwiftUI
 
@@ -35,13 +33,12 @@ struct ProfileView: View {
                             )
                         }
                         
-                    
                         NavigationLink {
                             HistoryView()
                         } label: {
                             ProfileMenuRow(
                                 title: "Order History",
-                                icon: "clock.fill"       
+                                icon: "clock.fill"
                             )
                         }
                         
@@ -74,7 +71,6 @@ struct ProfileView: View {
                 .padding(.bottom, 20)
             }
             
-            
             VStack {
                 
                 Button {
@@ -87,11 +83,11 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                         .background(AppColors.primary)
-                        .cornerRadius(14)
+                        .cornerRadius(30)
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 12)
+            .padding(.vertical, 72)
             .background(AppColors.background)
         }
         .background(AppColors.background.ignoresSafeArea())
@@ -118,7 +114,6 @@ struct PersonalDetailsCard: View {
         VStack(alignment: .leading, spacing: 18) {
             
             HStack {
-                
                 Text("Personal details")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundColor(AppColors.textPrimary)
@@ -132,11 +127,9 @@ struct PersonalDetailsCard: View {
                 .foregroundColor(AppColors.primary)
             }
             
-            
             HStack(alignment: .center, spacing: 16) {
                 
                 ZStack {
-                    
                     RoundedRectangle(cornerRadius: 16)
                         .fill(AppColors.primary.opacity(0.1))
                         .frame(width: 80, height: 80)
@@ -145,7 +138,6 @@ struct PersonalDetailsCard: View {
                         .font(.system(size: 34))
                         .foregroundColor(AppColors.primary)
                 }
-                
                 
                 VStack(alignment: .leading, spacing: 6) {
                     
@@ -174,12 +166,8 @@ struct PersonalDetailsCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.systemBackground))
         .cornerRadius(18)
-        .shadow(
-            color: Color.black.opacity(0.05),
-            radius: 8,
-            x: 0,
-            y: 4
-        )
+        .shadow(color: AppColors.shadow
+                , radius: 8, x: 0, y: 4)
     }
 }
 
@@ -197,16 +185,13 @@ struct ProfileMenuRow: View {
             Image(systemName: icon)
                 .font(.system(size: 17))
                 .foregroundColor(AppColors.primary)
-                .frame(width: 24, alignment: .center)
-            
+                .frame(width: 24)
             
             Text(title)
                 .font(.system(size: 15, weight: .medium))
                 .foregroundColor(AppColors.textPrimary)
             
-            
             Spacer()
-            
             
             Image(systemName: "chevron.right")
                 .font(.system(size: 13, weight: .semibold))
@@ -221,7 +206,6 @@ struct ProfileMenuRow: View {
 }
 
 
-
 struct EditProfileSheet: View {
     
     @ObservedObject var vm: ProfileViewModel
@@ -232,7 +216,6 @@ struct EditProfileSheet: View {
         NavigationStack {
             
             Form {
-                
                 Section("Personal Information") {
                     
                     TextField("Name", text: $vm.name)
@@ -252,9 +235,7 @@ struct EditProfileSheet: View {
             .navigationTitle("Edit Profile")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                
                 ToolbarItem(placement: .confirmationAction) {
-                    
                     Button("Done") {
                         dismiss()
                     }
@@ -263,13 +244,9 @@ struct EditProfileSheet: View {
         }
         .background(Color(.systemGray6))
     }
-        
 }
 
-
-
 #Preview {
-    
     NavigationStack {
         ProfileView()
     }

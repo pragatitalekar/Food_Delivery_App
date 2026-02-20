@@ -2,35 +2,73 @@
 //  SideMenuView.swift
 //  Food_Delivery_App
 //
-//  Created by Bhaswanth on 2/6/26.
-//
+
 import SwiftUI
 import FirebaseAuth
 
 struct SideMenuView: View {
+    
     @Binding var showSideMenu: Bool
+ 
+    
     @State private var showingLogoutAlert = false
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
-
     
     var body: some View {
+        
         ZStack(alignment: .leading) {
+            
             AppColors.primary
                 .ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
+                
                 Spacer().frame(height: 100)
                 
                 Group {
-                    MenuRow(icon: "person.crop.circle.fill", title: "Profile", destination: ProfileView(), showSideMenu: $showSideMenu)
+                    
+                    MenuRow(
+                        icon: "person.crop.circle.fill",
+                        title: "Profile",
+                        destination: ProfileView(),
+                        showSideMenu: $showSideMenu
+                    )
+                    
                     MenuDivider()
-                    MenuRow(icon: "clock.arrow.circlepath", title: "Order History", destination: HistoryView(), showSideMenu: $showSideMenu)
+                    
+                    MenuRow(
+                        icon: "clock.arrow.circlepath",
+                        title: "Order History",
+                        destination: HistoryView(),
+                        showSideMenu: $showSideMenu
+                    )
+                    
                     MenuDivider()
-                    MenuRow(icon: "percent", title: "offer and promo", destination: OffersView(), showSideMenu: $showSideMenu)
+                    
+                    MenuRow(
+                        icon: "percent",
+                        title: "offer and promo",
+                        destination: OffersView(),
+                        showSideMenu: $showSideMenu
+                    )
+                    
                     MenuDivider()
-                    MenuRow(icon: "doc.text.fill", title: "Privacy policy", destination: PrivacyView(), showSideMenu: $showSideMenu)
+                    
+                    MenuRow(
+                        icon: "doc.text.fill",
+                        title: "Privacy policy",
+                        destination: PrivacyView(),
+                        showSideMenu: $showSideMenu
+                    )
+                    
                     MenuDivider()
-                    MenuRow(icon: "lock.fill", title: "Security", destination: SecurityView(), showSideMenu: $showSideMenu)
+                    
+                    MenuRow(
+                        icon: "lock.fill",
+                        title: "Security",
+                        destination: SecurityView(),
+                        showSideMenu: $showSideMenu
+                    )
                 }
                 
                 Spacer()
@@ -49,10 +87,13 @@ struct SideMenuView: View {
                 }
                 .padding(.bottom, 50)
                 .alert("Sign Out", isPresented: $showingLogoutAlert) {
+                    
                     Button("Cancel", role: .cancel) { }
+                    
                     Button("Sign Out", role: .destructive) {
                         handleSignOut()
                     }
+                    
                 } message: {
                     Text("Are you sure you want to sign out of your account?")
                 }
@@ -64,29 +105,32 @@ struct SideMenuView: View {
     private func handleSignOut() {
         do {
             try Auth.auth().signOut()
-            
             isLoggedIn = false
-            
         } catch {
             print(error.localizedDescription)
         }
     }
-
-
 }
 
+
+
 struct MenuRow<Destination: View>: View {
+    
     var icon: String
     var title: String
     var destination: Destination
     @Binding var showSideMenu: Bool
     
     var body: some View {
+        
         NavigationLink {
             destination
-                .onAppear { showSideMenu = false }
+                .onAppear {
+                    showSideMenu = false
+                }
         } label: {
             HStack(spacing: 16) {
+                
                 Image(systemName: icon)
                     .font(.system(size: 20))
                     .frame(width: 24)
@@ -102,6 +146,7 @@ struct MenuRow<Destination: View>: View {
     }
 }
 
+
 struct MenuDivider: View {
     var body: some View {
         Rectangle()
@@ -112,8 +157,13 @@ struct MenuDivider: View {
     }
 }
 
+
+
 #Preview {
     NavigationStack {
-        SideMenuView(showSideMenu: .constant(false))
+        SideMenuView(
+            showSideMenu: .constant(false),
+           
+        )
     }
 }
