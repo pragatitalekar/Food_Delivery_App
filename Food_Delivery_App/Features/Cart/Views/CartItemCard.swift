@@ -25,13 +25,13 @@ struct CartItemCard: View {
             // Name + Price
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.name)
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.system(size: 18, weight: .semibold))
                     .lineLimit(1)
-                    .foregroundStyle(AppColors.textPrimary)
+                    .foregroundColor(AppColors.textPrimary)
 
                 Text("₹\(item.price, specifier: "%.0f")")
                     .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(.orange)
+                    .foregroundColor(AppColors.primary)
             }
 
             Spacer()
@@ -63,8 +63,10 @@ struct CartItemCard: View {
             .clipShape(Capsule())
         }
         .padding()
-        .background(Color.white)
+        .background(AppColors.background)
         .cornerRadius(18)
-        .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 4)
+        .shadow(color: AppColors.shadow
+                , radius: 8, x: 0, y: 4)
+        
     }
 }

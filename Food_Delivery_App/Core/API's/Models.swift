@@ -13,7 +13,7 @@ enum CategoryType: String, CaseIterable, Codable {
     case desserts = "Desserts"
 }
 
-struct FoodItems: Identifiable , Codable{
+struct FoodItems: Identifiable , Codable,Equatable{
     let id: String
     let name: String
     let image: String

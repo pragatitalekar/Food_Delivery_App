@@ -154,4 +154,19 @@ final class CartManager: ObservableObject {
             self?.loadFavourites()
         }
     }
+    // MARK: - CLEAR ENTIRE CART (after order success)
+    func clearCart(completion: @escaping () -> Void) {
+        
+        cartService.clearCart { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.items.removeAll()
+                    completion()
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
 }

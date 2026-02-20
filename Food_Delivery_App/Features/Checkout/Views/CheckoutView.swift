@@ -86,16 +86,18 @@ struct CheckoutView: View {
     }
     
     private func placeOrder() {
+
+    guard !address.isEmpty else { return }
+
+    orders.placeOrder(
+    items: cart.items.values.map { $0.item },
+    total: cart.total
+    )
+
+    
+    cart.clearCart {
+    showSuccess=true
+    }
         
-        guard !address.isEmpty else { return }
-        
-        orders.placeOrder(
-            items: cart.items.values.map { $0.item },
-            total: cart.total
-        )
-        
-        cart.items.removeAll()
-        
-        showSuccess = true
     }
 }

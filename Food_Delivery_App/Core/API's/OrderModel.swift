@@ -5,16 +5,14 @@
 //  Created by rentamac on 2/6/26.
 //
 import Foundation
-import Foundation
 
-struct Order: Identifiable, Codable {
+struct Order: Identifiable, Codable ,Equatable {
     
     var id: String
-    var items: [FoodItems]   
+    var items: [FoodItems]
     var total: Double
     var createdAt: Date
     var status: OrderStatus
-   
 }
 
 enum OrderStatus: String, Codable {
