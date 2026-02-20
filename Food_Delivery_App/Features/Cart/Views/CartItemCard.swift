@@ -27,6 +27,7 @@ struct CartItemCard: View {
                 Text(item.name)
                     .font(.system(size: 15, weight: .semibold))
                     .lineLimit(1)
+                    .foregroundStyle(AppColors.textPrimary)
 
                 Text("₹\(item.price, specifier: "%.0f")")
                     .font(.system(size: 14, weight: .bold))

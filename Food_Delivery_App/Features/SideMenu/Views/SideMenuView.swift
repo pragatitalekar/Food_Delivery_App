@@ -1,68 +1,64 @@
-//
-//  SideMenuView.swift
-//  Food_Delivery_App
-//
-
 import SwiftUI
 import FirebaseAuth
 
 struct SideMenuView: View {
-    
+
     @Binding var showSideMenu: Bool
- 
-    
+
     @State private var showingLogoutAlert = false
+    @State private var showAuth = false
+
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
-    
+
     var body: some View {
-        
+
         ZStack(alignment: .leading) {
-            
+
             AppColors.primary
                 .ignoresSafeArea()
-            
+
             VStack(alignment: .leading, spacing: 0) {
-                
+
                 Spacer().frame(height: 100)
-                
+
                 Group {
-                    
+
                     MenuRow(
                         icon: "person.crop.circle.fill",
                         title: "Profile",
                         destination: ProfileView(),
                         showSideMenu: $showSideMenu
                     )
-                    
+
                     MenuDivider()
-                    
+
                     MenuRow(
                         icon: "clock.arrow.circlepath",
                         title: "Order History",
                         destination: HistoryView(),
                         showSideMenu: $showSideMenu
                     )
-                    
+
                     MenuDivider()
-                    
+
                     MenuRow(
                         icon: "percent",
-                        title: "offer and promo",
+                        title: "Offer and Promo",
                         destination: OffersView(),
                         showSideMenu: $showSideMenu
                     )
-                    
+
                     MenuDivider()
-                    
+
                     MenuRow(
                         icon: "doc.text.fill",
-                        title: "Privacy policy",
+                        title: "Privacy Policy",
                         destination: PrivacyView(),
                         showSideMenu: $showSideMenu
                     )
-                    
+
                     MenuDivider()
-                    
+
                     MenuRow(
                         icon: "lock.fill",
                         title: "Security",
@@ -70,59 +66,73 @@ struct SideMenuView: View {
                         showSideMenu: $showSideMenu
                     )
                 }
-                
+
                 Spacer()
-                
+
+                // ⭐ SIGN IN / OUT BUTTON
                 Button {
-                    showingLogoutAlert = true
+                    if isLoggedIn {
+                        showingLogoutAlert = true
+                    } else {
+                        showSideMenu = false
+                        showAuth = true
+                    }
                 } label: {
                     HStack(spacing: 12) {
-                        Text("Sign-out")
+
+                        Text(isLoggedIn ? "Sign Out" : "Sign In")
                             .font(.system(size: 18, weight: .medium))
-                        
-                        Image(systemName: "arrow.right")
+
+                        Image(systemName: isLoggedIn ? "arrow.right" : "person.fill")
                             .font(.system(size: 18, weight: .semibold))
                     }
                     .foregroundColor(AppColors.white)
                 }
                 .padding(.bottom, 50)
                 .alert("Sign Out", isPresented: $showingLogoutAlert) {
-                    
+
                     Button("Cancel", role: .cancel) { }
-                    
+
                     Button("Sign Out", role: .destructive) {
                         handleSignOut()
                     }
-                    
+
                 } message: {
                     Text("Are you sure you want to sign out of your account?")
                 }
             }
             .padding(.leading, 35)
         }
+        .sheet(isPresented: $showAuth) {
+            AuthView {
+                showAuth = false
+                isLoggedIn = true
+            }
+        }
     }
-    
+
     private func handleSignOut() {
         do {
             try Auth.auth().signOut()
             isLoggedIn = false
+            showSideMenu = false
         } catch {
-            print(error.localizedDescription)
+            print("Sign out error:", error.localizedDescription)
         }
     }
 }
 
 
-
 struct MenuRow<Destination: View>: View {
-    
+
     var icon: String
     var title: String
     var destination: Destination
+
     @Binding var showSideMenu: Bool
-    
+
     var body: some View {
-        
+
         NavigationLink {
             destination
                 .onAppear {
@@ -130,11 +140,11 @@ struct MenuRow<Destination: View>: View {
                 }
         } label: {
             HStack(spacing: 16) {
-                
+
                 Image(systemName: icon)
                     .font(.system(size: 20))
                     .frame(width: 24)
-                
+
                 Text(title)
                     .font(.system(size: 18, weight: .medium))
             }
@@ -158,12 +168,8 @@ struct MenuDivider: View {
 }
 
 
-
 #Preview {
     NavigationStack {
-        SideMenuView(
-            showSideMenu: .constant(false),
-           
-        )
+        SideMenuView(showSideMenu: .constant(false))
     }
 }

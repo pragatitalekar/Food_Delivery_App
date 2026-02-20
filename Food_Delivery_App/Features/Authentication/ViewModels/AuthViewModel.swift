@@ -18,17 +18,22 @@ final class AuthViewModel: ObservableObject {
 
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
 
-    func login() {
+    func login(completion: @escaping (Bool) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { _, error in
+            
             DispatchQueue.main.async {
                 if let error = error {
                     self.errorMessage = error.localizedDescription
+                    completion(false)
                 } else {
+                    self.errorMessage = ""
                     self.isLoggedIn = true
+                    completion(true)   // ⭐ IMPORTANT
                 }
             }
         }
     }
+
 
     
     func resetPassword() {
@@ -46,13 +51,17 @@ final class AuthViewModel: ObservableObject {
            }
        }
 
-    func signup() {
+    func signup(completion: @escaping (Bool) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { _, error in
+            
             DispatchQueue.main.async {
                 if let error = error {
                     self.errorMessage = error.localizedDescription
+                    completion(false)
                 } else {
+                    self.errorMessage = ""
                     self.isLoggedIn = true
+                    completion(true)   // ⭐ IMPORTANT
                 }
             }
         }
