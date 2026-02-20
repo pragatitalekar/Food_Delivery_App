@@ -12,60 +12,64 @@ struct CheckoutView: View {
     var onCancel: () -> Void
     var onSuccess: () -> Void   
     
+    @State private var showSuccess = false
+    
     var body: some View {
-        VStack(spacing: 20) {
+        ZStack {
             
-            Text("Please note")
-                .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            VStack(spacing: 12) {
+            VStack(spacing: 20) {
                 
-                noteRow(
-                    title: "DELIVERY TO",
-                    price: address
-                )
+                Text("Please note")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                VStack(spacing: 12) {
+                    noteRow(title: "DELIVERY TO", price: address)
+                    Divider()
+                    noteRow(title: "RECIPIENT", price: deliveryType)
+                    Divider()
+                    noteRow(title: "PAYMENT METHOD", price: paymentType.capitalized)
+                }
+                
+                HStack {
+                    Button("Cancel") {
+                        onCancel()
+                    }
+                    .foregroundColor(.secondary)
 
-                Divider()
-                
-                noteRow(
-                    title: "RECIPIENT ",
-                    price: deliveryType
-                )
-
-                Divider()
-                
-                noteRow(
-                    title: "PAYMENT METHOD",
-                    price: paymentType.capitalized
-                )
+                    Spacer()
+                    
+                    Button {
+                        placeOrder()
+                    } label: {
+                        Text("Proceed")
+                            .fontWeight(.semibold)
+                            .padding(.horizontal, 28)
+                            .padding(.vertical, 12)
+                            .background(Color.orange)
+                            .foregroundColor(.white)
+                            .cornerRadius(20)
+                    }
+                }
             }
+            .padding(20)
+            .background(Color(.systemBackground))
+            .cornerRadius(20)
+            .padding(.horizontal, 40)
             
-            HStack {
-                Button("Cancel") {
-                    onCancel()
-                }
-                .foregroundColor(.secondary)
-
-                Spacer()
+            if showSuccess {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
                 
-                Button {
-                    placeOrder()
-                } label: {
-                    Text("Proceed")
-                        .fontWeight(.semibold)
-                        .padding(.horizontal, 28)
-                        .padding(.vertical, 12)
-                        .background(Color.orange)
-                        .foregroundColor(.white)
-                        .cornerRadius(20)
-                }
+                OrderSuccessView()
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            showSuccess = false
+                            onSuccess()
+                        }
+                    }
             }
         }
-        .padding(20)
-        .background(Color(.systemBackground))
-        .cornerRadius(20)
-        .padding(.horizontal, 40)
     }
     
     private func noteRow(title: String, price: String) -> some View {
@@ -77,12 +81,10 @@ struct CheckoutView: View {
             Text(price)
                 .font(.subheadline)
                 .fontWeight(.medium)
-                .foregroundColor(.primary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-   
     private func placeOrder() {
         
         guard !address.isEmpty else { return }
@@ -94,6 +96,6 @@ struct CheckoutView: View {
         
         cart.items.removeAll()
         
-        onSuccess()
+        showSuccess = true
     }
 }
