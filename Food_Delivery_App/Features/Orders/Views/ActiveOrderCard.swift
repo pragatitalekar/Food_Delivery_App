@@ -19,11 +19,12 @@ struct ActiveOrderCard: View {
             HStack {
                 Text("Order #\(order.id.prefix(5))")
                     .font(.headline)
+                    .foregroundStyle(AppColors.textPrimary)
                 
                 Spacer()
                 
                 Text("₹\(order.total, specifier: "%.0f")")
-                    .foregroundColor(.orange)
+                    .foregroundColor(AppColors.primary)
                     .bold()
             }
             
@@ -35,9 +36,9 @@ struct ActiveOrderCard: View {
                 .tint(.green) 
         }
         .padding()
-        .background(Color.white)
+        .background(AppColors.background)
         .cornerRadius(16)
-        .shadow(radius: 6)
+        .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
         .padding(.horizontal)
         .onAppear {
             updateProgress()
