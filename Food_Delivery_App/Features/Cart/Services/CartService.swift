@@ -169,5 +169,38 @@ final class CartService {
                     : completion(.failure(error!))
             }
     }
-
+    func clearCart(completion: @escaping (Result<Void, Error>) -> Void) {
+        
+        let db = Firestore.firestore()
+        
+        guard let userId = Auth.auth().currentUser?.uid else {
+            completion(.failure(NSError(domain: "User not logged in", code: 401)))
+            return
+        }
+        
+        db.collection("users")
+            .document(userId)
+            .collection("cart")
+            .getDocuments { snapshot, error in
+                
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                let batch = db.batch()
+                
+                snapshot?.documents.forEach { doc in
+                    batch.deleteDocument(doc.reference)
+                }
+                
+                batch.commit { error in
+                    if let error = error {
+                        completion(.failure(error))
+                    } else {
+                        completion(.success(()))
+                    }
+                }
+            }
+    }
 }
