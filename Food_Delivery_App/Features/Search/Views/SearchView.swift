@@ -14,17 +14,17 @@ struct SearchView: View {
     var body: some View {
         VStack(spacing: 0) {
 
-            // MARK: - Search Bar
+        
             HStack {
-                TextField("Search food or drink", text: $vm.searchText)
-                    .padding(10)
-                    .background(AppColors.divider.opacity(0.2))
-                    .cornerRadius(10)
+                TextField(" Search food or drink", text: $vm.searchText)
+                    .padding(12)
+                    .background(Color(.systemGray5))
+                    .cornerRadius(22)
                     .foregroundColor(AppColors.textPrimary)
             }
             .padding()
 
-            // MARK: - Category Filter
+           
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(CategoryType.allCases, id: \.self) { category in
@@ -56,7 +56,7 @@ struct SearchView: View {
                 .padding(.bottom, 8)
             }
 
-            // MARK: - Result Count
+       
             if !vm.searchText.isEmpty || vm.selectedCategory != nil {
                 Text("Found \(vm.results.count) results")
                     .font(.headline)
@@ -64,7 +64,7 @@ struct SearchView: View {
                     .padding(.vertical, 8)
             }
 
-            // MARK: - Results Grid
+        
             let leftColumnItems = vm.results.enumerated().filter { $0.offset % 2 == 0 }.map { $0.element }
             let rightColumnItems = vm.results.enumerated().filter { $0.offset % 2 != 0 }.map { $0.element }
             
@@ -117,7 +117,7 @@ struct SearchView: View {
 
             Spacer()
         }
-        .background(AppColors.background)
+        .background(Color(.systemGray6))
         .onAppear {
             vm.updateItems(homeVM.allItems)
         }

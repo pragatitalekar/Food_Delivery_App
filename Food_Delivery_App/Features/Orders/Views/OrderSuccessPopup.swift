@@ -51,7 +51,7 @@ struct OrderSuccessPopup: View {
                 .cornerRadius(25)
                 .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
                 .padding(.horizontal)
-                .padding(.bottom, 90)   // 👈 Above bottom tab
+                .padding(.bottom, 90)   
             }
             .transition(.move(edge: .bottom))
             .animation(.easeInOut, value: show)

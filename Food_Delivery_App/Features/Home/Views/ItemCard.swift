@@ -9,10 +9,10 @@ struct ItemCard: View {
         
         ZStack {
             
-            // CARD
+          
             VStack(spacing: 10) {
                 
-                Spacer().frame(height: 70) // space for image
+                Spacer().frame(height: 70)
                 
                 Text(item.name)
                     .font(.headline)
@@ -30,8 +30,8 @@ struct ItemCard: View {
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 14)
-            .frame(width: 165, height: 210)   // Slightly bigger
-            .background(AppColors.background)          // solid white
+            .frame(width: 165, height: 210)
+            .background(AppColors.background)
             .cornerRadius(24)
             .shadow(color: AppColors.shadow
                     , radius: 8, x: 0, y: 4)
@@ -52,7 +52,7 @@ struct ItemCard: View {
                 Circle().fill(Color.white)
             )
             
-            .offset(y: -75)   // balanced offset
+            .offset(y: -75)   
         }
         .frame(width: 165, height: 250)
     }

@@ -34,7 +34,7 @@ struct PaymentView: View {
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    // MARK: - PAYMENT METHODS
+             
                     VStack(alignment: .leading, spacing: 12) {
                         
                         Text("Payment method")
@@ -78,7 +78,7 @@ struct PaymentView: View {
                     
                     Spacer()
                     
-                    // MARK: - TOTAL
+               
                     HStack {
                         Text("Total")
                         Spacer()
@@ -86,7 +86,7 @@ struct PaymentView: View {
                     }
                     .font(.title2)
                     
-                    // MARK: - PROCEED BUTTON
+                 
                     Button {
                         guard selectedMethod != nil else {
                             showPaymentAlert = true
@@ -119,7 +119,7 @@ struct PaymentView: View {
                     addressVM.load()
                 }
                 
-                // MARK: - CHECKOUT POPUP
+            
                 if orderNote {
                     
                     Color.black.opacity(0.4)
@@ -142,7 +142,7 @@ struct PaymentView: View {
                     )
                 }
             }
-            // MARK: - ALERT
+         
             .alert("Select Payment Method", isPresented: $showPaymentAlert) {
                 Button("OK", role: .cancel) { }
             } message: {
@@ -152,7 +152,7 @@ struct PaymentView: View {
     }
     
     
-    // MARK: - PAYMENT ROW
+   
     private func paymentRow(method: PaymentMethod) -> some View {
         
         HStack {
@@ -191,7 +191,7 @@ struct PaymentView: View {
     }
     
     
-    // MARK: - DISPLAY SELECTED METHOD
+  
     private func selectedMethodDisplay() -> String {
         
         guard let method = selectedMethod else {
@@ -202,7 +202,7 @@ struct PaymentView: View {
     }
     
     
-    // MARK: - MASK CARD NUMBER
+  
     private func maskedNumber(_ number: String) -> String {
         
         guard number.count > 4 else { return number }

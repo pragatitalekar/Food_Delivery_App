@@ -25,7 +25,7 @@ class OrderManager: ObservableObject {
         timer?.invalidate()
     }
     
-    // MARK: PLACE ORDER
+ 
     
     func placeOrder(items: [FoodItems], total: Double) {
         
@@ -42,7 +42,7 @@ class OrderManager: ObservableObject {
         saveOrders()
     }
     
-    // MARK: CANCEL ORDER
+ 
     
     func cancelOrder(_ order: Order) {
         
@@ -55,7 +55,7 @@ class OrderManager: ObservableObject {
         saveOrders()
     }
     
-    // MARK: AUTO CHECK TIMER
+
     
     func startAutoCheck() {
         timer = Timer.scheduledTimer(withTimeInterval: 60,
@@ -63,8 +63,7 @@ class OrderManager: ObservableObject {
             self?.checkOrders()
         }
     }
-    
-    // MARK: CHECK ORDERS
+
     
     func checkOrders() {
         let now = Date()
@@ -76,7 +75,7 @@ class OrderManager: ObservableObject {
         completed.forEach { completeOrder($0) }
     }
     
-    // MARK: COMPLETE ORDER
+   
     
     func completeOrder(_ order: Order) {
         
@@ -89,7 +88,7 @@ class OrderManager: ObservableObject {
         saveOrders()
     }
     
-    // MARK: SAVE
+   
     
     func saveOrders() {
         
@@ -102,7 +101,7 @@ class OrderManager: ObservableObject {
         }
     }
     
-    // MARK: LOAD
+ 
     
     func loadOrders() {
         
@@ -117,7 +116,7 @@ class OrderManager: ObservableObject {
         }
     }
     
-    // MARK: REMOVE OLD HISTORY (90 DAYS)
+   
     
     func removeExpiredHistory() {
         
