@@ -13,7 +13,7 @@ struct OrderSuccessView: View {
     
     var body: some View {
         ZStack {
-            Color.white
+            AppColors.background
                 .ignoresSafeArea()
             
             VStack(spacing: 25) {
@@ -36,7 +36,7 @@ struct OrderSuccessView: View {
                 
                 Text("Your delicious food is being prepared 🍔")
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundColor(AppColors.textPrimary)
             }
         }
         .onAppear {

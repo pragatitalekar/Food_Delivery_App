@@ -127,7 +127,7 @@ struct AddressView: View {
                 .font(.title2)
                 
                 
-                // PAYMENT BUTTON WITH ALERT CHECK
+               
                 Button {
                     if defaultAddress == nil {
                         showAddressAlert = true
@@ -158,7 +158,7 @@ struct AddressView: View {
                 viewModel.load()
             }
             
-            // ALERT
+        
             .alert("Address Required",
                    isPresented: $showAddressAlert) {
                 Button("OK", role: .cancel) { }

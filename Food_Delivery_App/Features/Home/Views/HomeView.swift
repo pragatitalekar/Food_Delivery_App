@@ -75,13 +75,12 @@ struct HomeView: View {
         }
         }
     }
-    
-    // MARK: HOME CONTENT
+ 
     private var homeMainContent: some View {
         
         VStack(alignment: .leading, spacing: 18) {
             
-            // Hidden NavigationLink
+        
             NavigationLink(
                 destination: OrdersView(selectedTab: $selectedTab),
                 isActive: $goToOrders

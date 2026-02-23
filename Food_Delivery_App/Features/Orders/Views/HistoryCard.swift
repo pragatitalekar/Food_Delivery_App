@@ -15,7 +15,7 @@ struct HistoryCard: View {
         
         VStack(alignment: .leading, spacing: 14) {
             
-            // Header
+      
             HStack {
                 
                 VStack(alignment: .leading, spacing: 4) {

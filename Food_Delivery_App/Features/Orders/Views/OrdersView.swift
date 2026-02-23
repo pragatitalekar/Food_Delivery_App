@@ -14,7 +14,7 @@ struct OrdersView: View {
                 
                 Spacer()
                 
-                // CART ICON
+            
                 Image(systemName: "cart")
                     .resizable()
                     .scaledToFit()
@@ -30,13 +30,13 @@ struct OrdersView: View {
                     .onAppear {
                         animate = true
                     }
-                // TITLE
+             
                 Text("No orders yet")
                     .font(.title2)
                     .fontWeight(.bold)
                     .padding(.top, 20)
                 
-                // SUBTITLE
+              
                 Text("Hit the orange button down\nbelow to Create an order")
                     .multilineTextAlignment(.center)
                     .foregroundColor(.gray)
