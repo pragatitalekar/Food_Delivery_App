@@ -1,3 +1,4 @@
+
 //
 //  AuthViewModel.swift
 //  Food_Delivery_App
@@ -19,17 +20,43 @@ final class AuthViewModel: ObservableObject {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
 
     func login(completion: @escaping (Bool) -> Void) {
+
+        errorMessage = ""
+
         Auth.auth().signIn(withEmail: email, password: password) { _, error in
-            
+
             DispatchQueue.main.async {
-                if let error = error {
-                    self.errorMessage = error.localizedDescription
+
+                if let error = error as NSError? {
+
+                    switch AuthErrorCode(rawValue: error.code) {
+
+                    case .wrongPassword:
+                        self.errorMessage = "Incorrect password"
+
+                    case .userNotFound:
+                        self.errorMessage = "Account does not exist. Please sign up."
+
+                    case .invalidEmail:
+                        self.errorMessage = "Invalid email format"
+
+                    case .invalidCredential:
+                        self.errorMessage = "Incorrect email or password"
+
+                    case .networkError:
+                        self.errorMessage = "Network error. Please try again."
+
+                    default:
+                        self.errorMessage = "Login failed. Please try again."
+                    }
+
                     completion(false)
-                } else {
-                    self.errorMessage = ""
-                    self.isLoggedIn = true
-                    completion(true)   // ⭐ IMPORTANT
+                    return
                 }
+
+                self.errorMessage = ""
+                self.isLoggedIn = true
+                completion(true)
             }
         }
     }
@@ -52,18 +79,39 @@ final class AuthViewModel: ObservableObject {
        }
 
     func signup(completion: @escaping (Bool) -> Void) {
+
+        errorMessage = ""
+
         Auth.auth().createUser(withEmail: email, password: password) { _, error in
-            
+
             DispatchQueue.main.async {
-                if let error = error {
-                    self.errorMessage = error.localizedDescription
+
+                if let error = error as NSError? {
+
+                    switch AuthErrorCode(rawValue: error.code) {
+
+                    case .emailAlreadyInUse:
+                        self.errorMessage = "Email already registered. Please login."
+
+                    case .invalidEmail:
+                        self.errorMessage = "Invalid email format"
+
+                    case .weakPassword:
+                        self.errorMessage = "Password must be at least 6 characters"
+
+                    default:
+                        self.errorMessage = "Signup failed. Please try again."
+                    }
+
                     completion(false)
-                } else {
-                    self.errorMessage = ""
-                    self.isLoggedIn = true
-                    completion(true)   // ⭐ IMPORTANT
+                    return
                 }
+
+                self.errorMessage = ""
+                self.isLoggedIn = true
+                completion(true)
             }
         }
     }
 }
+

@@ -102,6 +102,23 @@ class OrderManager: ObservableObject {
     }
     
  
+    //  CLEAR ALL ORDERS ON LOGOUT
+   
+    func clearSession() {
+        
+        
+        timer?.invalidate()
+        timer = nil
+        
+      
+        activeOrders = []
+        historyOrders = []
+    }
+    func restoreSession() {
+    loadOrders()
+    startAutoCheck()
+    }
+    
     
     func loadOrders() {
         

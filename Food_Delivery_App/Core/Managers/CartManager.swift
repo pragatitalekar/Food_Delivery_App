@@ -98,6 +98,8 @@ final class CartManager: ObservableObject {
     var cartCount: Int {
         items.values.reduce(0) { $0 + $1.qty }
     }
+    
+  
 
     // MARK: - TOTAL PRICE
     var total: Double {
@@ -155,14 +157,16 @@ final class CartManager: ObservableObject {
         }
     }
     // MARK: - CLEAR ENTIRE CART (after order success)
-    func clearCart(completion: @escaping () -> Void) {
-        
+    func clearCart(completion: (() -> Void)? = nil) {
+
+        // ⭐ CLEAR LOCAL STATE FIRST (instant UI update)
+        items.removeAll()
+
         cartService.clearCart { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    self?.items.removeAll()
-                    completion()
+                    completion?()
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
                 }

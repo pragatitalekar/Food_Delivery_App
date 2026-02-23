@@ -22,7 +22,7 @@ struct CartView: View {
                 
             } else {
                 
-                // MARK: - CART LIST
+                
                 List {
                     ForEach(cartItems) { item in
                         
@@ -46,7 +46,7 @@ struct CartView: View {
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                         
-                        // ❤️ Favourite (Right Swipe)
+                        
                         .swipeActions(edge: .leading, allowsFullSwipe: false) {
                             Button {
                                 cart.toggleFavourite(item)
