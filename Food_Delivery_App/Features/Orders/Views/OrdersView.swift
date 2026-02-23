@@ -4,58 +4,66 @@ struct OrdersView: View {
     
     @EnvironmentObject var orders: OrderManager
     @Binding var selectedTab: TabType
-    
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     
-    @State private var animate = false
-    @State private var showLoginAlert = false
     @State private var showAuth = false
+    @State private var animate = false
     
     var body: some View {
         
         ZStack {
             
-            // ⭐ NOT LOGGED IN STATE (same behaviour as favourites)
-            if !isLoggedIn {
-                
-                VStack(spacing: 20) {
-                    
-                    Spacer()
-                    
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 60))
-                        .foregroundColor(.orange)
-                    
-                    Text("Login Required")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    
-                    Text("Please login to view your orders")
-                        .foregroundColor(.gray)
-                    
-                    Button {
-                        showAuth = true
-                    } label: {
-                        Text("Login / Sign-up")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 55)
-                            .background(AppColors.primary)
-                            .cornerRadius(30)
-                            .padding(.horizontal, 30)
-                    }
-                    
-                    Spacer()
-                }
-            }
+            Color(.systemGray6)
+                .ignoresSafeArea()
             
-            // ⭐ LOGGED IN STATE (your existing UI)
-            else {
+            Group {
                 
-                VStack {
+                // 🔐 NOT LOGGED IN
+                if !isLoggedIn {
                     
-                    if orders.activeOrders.isEmpty {
+                    VStack(spacing: 24) {
+                        
+                        Spacer()
+                        
+                        Image(systemName: "cart.badge.questionmark")
+                            .font(.system(size: 70))
+                            .foregroundColor(.gray.opacity(0.6))
+                        
+                        Text("No orders yet")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                        
+                        Text("Login to view your orders")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        
+                        Button {
+                            showAuth = true
+                        } label: {
+                            Text("Login / Sign-up")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(AppColors.primary)
+                                .foregroundColor(.white)
+                                .cornerRadius(14)
+                        }
+                        .padding(.horizontal, 30)
+                        
+                        Spacer()
+                    }
+                    .sheet(isPresented: $showAuth) {
+                        AuthView {
+                            showAuth = false
+                            isLoggedIn = true
+                        }
+                    }
+                }
+                
+                // 📦 LOGGED IN BUT EMPTY
+                else if orders.activeOrders.isEmpty {
+                    
+                    VStack(spacing: 20) {
                         
                         Spacer()
                         
@@ -64,23 +72,23 @@ struct OrdersView: View {
                             .scaledToFit()
                             .frame(width: 120, height: 120)
                             .foregroundColor(.orange)
-                            .scaleEffect(animate ? 1.1 : 0.9)
+                            .scaleEffect(animate ? 1.15 : 0.9)
                             .animation(
                                 Animation.easeInOut(duration: 1)
                                     .repeatForever(autoreverses: true),
                                 value: animate
                             )
-                            .onAppear { animate = true }
+                            .onAppear {
+                                animate = true
+                            }
                         
                         Text("No orders yet")
-                            .font(.title2)
+                            .font(.title3)
                             .fontWeight(.bold)
-                            .padding(.top, 20)
                         
-                        Text("Hit the orange button down\nbelow to Create an order")
+                        Text("Hit the orange button below\nto create an order")
                             .multilineTextAlignment(.center)
                             .foregroundColor(.gray)
-                            .padding(.top, 8)
                         
                         Spacer()
                         
@@ -96,95 +104,63 @@ struct OrdersView: View {
                                 .cornerRadius(30)
                                 .padding(.horizontal, 30)
                         }
-                        .padding(.bottom, 72)
-                        
-                    } else {
-                        
-                        List {
-                            ForEach(orders.activeOrders) { order in
-                                
-                                VStack(alignment: .leading, spacing: 10) {
-                                    
-                                    HStack {
-                                        Text("Order #\(order.id.prefix(5))")
-                                            .font(.headline)
-                                        
-                                        Spacer()
-                                        
-                                        Text("₹\(order.total, specifier: "%.0f")")
-                                            .foregroundColor(.orange)
-                                            .bold()
-                                    }
-                                    
-                                    Text("Preparing...")
-                                        .foregroundColor(.blue)
-                                    
-                                    Button("Cancel Order") {
-                                        orders.cancelOrder(order)
-                                    }
-                                    .padding(.vertical, 8)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.red.opacity(0.1))
-                                    .foregroundColor(.red)
-                                    .cornerRadius(10)
-                                }
-                                .padding()
-                                .background(Color(.systemGray6))
-                                .cornerRadius(15)
-                                .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
-                                .padding(.vertical, 6)
-                            }
-                        }
+                        .padding(.bottom, 100)
                     }
                 }
-            }
-            
-            // ⭐ LOGIN POPUP (same pattern as DetailView)
-            if showLoginAlert {
-                Color.black.opacity(0.35).ignoresSafeArea()
                 
-                VStack(spacing: 18) {
-                    
-                    Text("Login Required")
-                        .font(.headline)
-                    
-                    Text("Please login to continue")
-                        .foregroundColor(.gray)
-                    
-                    Button {
-                        showLoginAlert = false
-                        showAuth = true
-                    } label: {
-                        Text("Login / Sign-up")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(AppColors.primary)
-                            .foregroundColor(.white)
-                            .cornerRadius(14)
-                    }
-                    
-                    Button("Cancel") {
-                        showLoginAlert = false
-                    }
-                    .foregroundColor(.gray)
+                // ✅ HAS ACTIVE ORDERS
+                else {
+                    ordersList
                 }
-                .padding(24)
-                .background(Color(.systemBackground))
-                .cornerRadius(20)
-                .padding(40)
             }
         }
         .navigationTitle("Orders")
         .navigationBarTitleDisplayMode(.inline)
-        .background(Color(.systemGray6))
-        
-        // ⭐ AUTH SHEET
-        .sheet(isPresented: $showAuth) {
-            AuthView {
-                showAuth = false
-                isLoggedIn = true
-            }
-        }
     }
 }
 
+private extension OrdersView {
+    
+    var ordersList: some View {
+        
+        List {
+            ForEach(orders.activeOrders) { order in
+                
+                VStack(alignment: .leading, spacing: 10) {
+                    
+                    HStack {
+                        Text("Order #\(order.id.prefix(5))")
+                            .font(.headline)
+                        
+                        Spacer()
+                        
+                        Text("₹\(order.total, specifier: "%.0f")")
+                            .foregroundColor(.orange)
+                            .bold()
+                    }
+                    
+                    Text("Preparing...")
+                        .foregroundColor(.blue)
+                    
+                    Button("Cancel Order") {
+                        orders.cancelOrder(order)
+                    }
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.red.opacity(0.1))
+                    .foregroundColor(.red)
+                    .cornerRadius(10)
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(15)
+                .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .padding(.vertical, 50)
+            }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+    }
+}
