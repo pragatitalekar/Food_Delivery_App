@@ -16,6 +16,7 @@ struct HomeView: View {
     
     @EnvironmentObject var cart: CartManager
     @EnvironmentObject var orderManager: OrderManager
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     
     @State private var selectedCategory: CategoryType = .meals
     @State private var selectedTab: TabType = .home
@@ -69,7 +70,10 @@ struct HomeView: View {
         }
         }
         .overlay(alignment: .bottom) {
-        if !orderManager.activeOrders.isEmpty {
+        if isLoggedIn &&
+        !orderManager.activeOrders.isEmpty &&
+        (selectedTab == .home || selectedTab == .orders) {
+
         ActiveOrderCard(order: orderManager.activeOrders.first!)
         .padding(.bottom, 90)
         }
@@ -119,13 +123,13 @@ struct HomeView: View {
                                 .padding(5)
                                 .background(Color.orange)
                                 .clipShape(Circle())
-                                .offset(x: 8, y: -8)
+                                .offset(x: 8, y: -5)
                         }
                     }
                 }
             }
             .padding(.horizontal, 28)
-            .padding(.top, 18)
+            .padding(.top, 20)
             
             Text("Delicious\nfood for you")
                 .font(.system(size: 34, weight: .bold))

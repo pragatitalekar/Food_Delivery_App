@@ -6,6 +6,7 @@
 //
 //
 //  MainTabView.swift
+//  Food_Delivery_App
 //
 
 import SwiftUI
@@ -26,7 +27,7 @@ struct MainTabView: View {
                 
                 ZStack(alignment: .leading) {
                     
-                    Color(.systemBackground)
+                    Color(.systemGray6)
                         .ignoresSafeArea()
                     
                     // SIDE MENU
@@ -37,8 +38,9 @@ struct MainTabView: View {
                     // HOME VIEW
                     HomeView(showSideMenu: $showSideMenu)
                         .navigationBarBackButtonHidden(true)
-                        .frame(width: width)
-                        .background(Color.white)
+                        .frame(width: width, height: proxy.size.height)
+                        .ignoresSafeArea()
+                        // ❌ removed .background(Color.white)
                         .clipShape(
                             RoundedRectangle(
                                 cornerRadius: showSideMenu ? 40 : 0
@@ -60,7 +62,6 @@ struct MainTabView: View {
                         )
                         .gesture(sideMenuGesture)
                     
-                    // TAP TO CLOSE AREA
                     if showSideMenu {
                         Color.black.opacity(0.001)
                             .ignoresSafeArea()
@@ -73,10 +74,11 @@ struct MainTabView: View {
                     }
                 }
             }
+            .frame(width: width, height: proxy.size.height)
         }
+        .ignoresSafeArea()
     }
     
-    // SIDE MENU DRAG GESTURE
     var sideMenuGesture: some Gesture {
         DragGesture()
             .updating($dragOffset) { value, state, _ in

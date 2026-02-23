@@ -51,6 +51,8 @@ struct ProfileView: View {
                     
                     Spacer()
                 }
+                .padding(.top, 16)
+                .padding(.bottom, 16)
                 .sheet(isPresented: $showAuth) {
                     AuthView {
                         showAuth = false
@@ -143,13 +145,16 @@ private extension ProfileView {
                         .frame(height: 50)
                         .background(AppColors.primary)
                         .cornerRadius(30)
+                        .padding()
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 72)
+            .padding(.vertical, 100)
             .background(AppColors.background)
         }
         .background(AppColors.background.ignoresSafeArea())
+        .padding(.top, 40)
+        .padding(.bottom, 16)
         .sheet(isPresented: $showEditSheet) {
             EditProfileSheet(vm: vm)
         }
