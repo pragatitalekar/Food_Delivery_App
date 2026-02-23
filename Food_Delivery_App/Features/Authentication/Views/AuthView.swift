@@ -4,6 +4,7 @@ import Combine
 struct AuthView: View {
 
     @State private var selectedTab: Tab = .login
+
     var onLoginSuccess: (() -> Void)? = nil
 
     enum Tab {
@@ -75,6 +76,4 @@ struct AuthView: View {
         }
     }
 }
-
-
 

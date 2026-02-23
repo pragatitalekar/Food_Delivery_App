@@ -4,11 +4,15 @@ import FirebaseAuth
 struct SideMenuView: View {
 
     @Binding var showSideMenu: Bool
+    @EnvironmentObject var cart: CartManager
+    @EnvironmentObject var orders: OrderManager
+    
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
 
     @State private var showingLogoutAlert = false
     @State private var showAuth = false
 
-    @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
+
 
     var body: some View {
 
@@ -107,6 +111,7 @@ struct SideMenuView: View {
             AuthView {
                 showAuth = false
                 isLoggedIn = true
+                orders.restoreSession()
             }
         }
     }
@@ -114,6 +119,8 @@ struct SideMenuView: View {
     private func handleSignOut() {
         do {
             try Auth.auth().signOut()
+            orders.clearSession()
+            cart.clearCart{}
             isLoggedIn = false
             showSideMenu = false
         } catch {
@@ -173,3 +180,5 @@ struct MenuDivider: View {
         SideMenuView(showSideMenu: .constant(false))
     }
 }
+
+
