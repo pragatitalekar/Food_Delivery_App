@@ -28,7 +28,8 @@ final class AuthService {
                 "name": "",
                 "phone": "",
                 "address": "",
-                "createdAt": Timestamp()
+                "createdAt": Timestamp(),
+                "isActive": true
             ]
 
             Firestore.firestore()
