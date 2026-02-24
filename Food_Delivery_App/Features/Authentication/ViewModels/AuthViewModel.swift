@@ -10,6 +10,7 @@
 import SwiftUI
 import Combine
 import FirebaseAuth
+import FirebaseFirestore
 
 final class AuthViewModel: ObservableObject {
 
@@ -22,6 +23,18 @@ final class AuthViewModel: ObservableObject {
     func login(completion: @escaping (Bool) -> Void) {
 
         errorMessage = ""
+
+        guard !email.isEmpty, !password.isEmpty else {
+            errorMessage = "Email and Password cannot be empty"
+            completion(false)
+            return
+        }
+
+        guard isValidEmail(email) else {
+            errorMessage = "Please enter a valid email address"
+            completion(false)
+            return
+        }
 
         Auth.auth().signIn(withEmail: email, password: password) { _, error in
 
@@ -54,11 +67,57 @@ final class AuthViewModel: ObservableObject {
                     return
                 }
 
-                self.errorMessage = ""
-                self.isLoggedIn = true
-                completion(true)
+                guard let uid = Auth.auth().currentUser?.uid else {
+                    self.errorMessage = "User not found"
+                    completion(false)
+                    return
+                }
+
+                Firestore.firestore()
+                    .collection("users")
+                    .document(uid)
+                    .getDocument { snapshot, _ in
+
+                        DispatchQueue.main.async {
+
+                            if let isActive = snapshot?.data()?["isActive"] as? Bool,
+                               isActive == false {
+
+                                self.errorMessage = "ACCOUNT_DEACTIVATED"
+                                completion(false)
+                                return
+                            }
+
+                            self.errorMessage = ""
+                            self.isLoggedIn = true
+                            completion(true)
+                        }
+                    }
             }
         }
+    }
+    
+    func reactivateAccount(completion: @escaping (Bool) -> Void) {
+        
+        guard let user = Auth.auth().currentUser else {
+            completion(false)
+            return
+        }
+        
+        Firestore.firestore()
+            .collection("users")
+            .document(user.uid)
+            .updateData(["isActive": true]) { error in
+                
+                DispatchQueue.main.async {
+                    if error == nil {
+                        self.isLoggedIn = true
+                        completion(true)
+                    } else {
+                        completion(false)
+                    }
+                }
+            }
     }
 
 
@@ -82,6 +141,24 @@ final class AuthViewModel: ObservableObject {
 
         errorMessage = ""
 
+        guard !email.isEmpty, !password.isEmpty else {
+            errorMessage = "Email and Password cannot be empty"
+            completion(false)
+            return
+        }
+
+        guard isValidEmail(email) else {
+            errorMessage = "Please enter a valid email address"
+            completion(false)
+            return
+        }
+
+        if let passwordError = passwordValidationError(password) {
+            errorMessage = passwordError
+            completion(false)
+            return
+        }
+
         Auth.auth().createUser(withEmail: email, password: password) { _, error in
 
             DispatchQueue.main.async {
@@ -97,7 +174,7 @@ final class AuthViewModel: ObservableObject {
                         self.errorMessage = "Invalid email format"
 
                     case .weakPassword:
-                        self.errorMessage = "Password must be at least 6 characters"
+                        self.errorMessage = "Password is too weak"
 
                     default:
                         self.errorMessage = "Signup failed. Please try again."
@@ -112,6 +189,36 @@ final class AuthViewModel: ObservableObject {
                 completion(true)
             }
         }
+    }
+    
+
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegex =
+        "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        return NSPredicate(format: "SELF MATCHES %@", emailRegex)
+            .evaluate(with: email)
+    }
+
+
+    private func passwordValidationError(_ password: String) -> String? {
+        
+        if password.count < 9 {
+            return "Password must be at least 9 characters long"
+        }
+        
+        let specialCharacterRegex = ".*[!@#$%^&*(),.?\":{}|<>].*"
+        if !NSPredicate(format: "SELF MATCHES %@", specialCharacterRegex)
+            .evaluate(with: password) {
+            return "Password must contain at least one special character (!@#$...)"
+        }
+        
+        let numberRegex = ".*[0-9].*"
+        if !NSPredicate(format: "SELF MATCHES %@", numberRegex)
+            .evaluate(with: password) {
+            return "Password must contain at least one number"
+        }
+        
+        return nil
     }
 }
 
