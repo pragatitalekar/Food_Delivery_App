@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,19 +16,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreenImage" translatesAutoresizingMaskIntoConstraints="NO" id="mGN-sX-vjQ">
-                                <rect key="frame" x="106.66666666666669" y="336" width="180" height="180"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AppLogo" translatesAutoresizingMaskIntoConstraints="NO" id="Fz8-VO-c1c">
+                                <rect key="frame" x="76.666666666666686" y="306" width="240" height="240"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="180" id="Pjl-cV-Bql"/>
-                                    <constraint firstAttribute="height" constant="180" id="y9E-Ko-NFg"/>
+                                    <constraint firstAttribute="width" constant="240" id="QAR-hW-Go8"/>
+                                    <constraint firstAttribute="height" constant="240" id="aRS-lr-1hv"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="LaunchBackground"/>
                         <constraints>
-                            <constraint firstItem="mGN-sX-vjQ" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="TNF-GQ-zBK"/>
-                            <constraint firstItem="mGN-sX-vjQ" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="huc-Ax-rhE"/>
+                            <constraint firstItem="Fz8-VO-c1c" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="oLF-yf-SmX"/>
+                            <constraint firstItem="Fz8-VO-c1c" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="p3C-GI-wOU"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -37,6 +38,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LaunchScreenImage" width="1024" height="1024"/>
+        <image name="AppLogo" width="1024" height="1024"/>
+        <namedColor name="LaunchBackground">
+            <color red="0.99999994039535522" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

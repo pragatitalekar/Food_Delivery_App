@@ -108,7 +108,7 @@ struct OrdersView: View {
                     }
                 }
                 
-                // ✅ HAS ACTIVE ORDERS
+              
                 else {
                     ordersList
                 }
