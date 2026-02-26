@@ -17,7 +17,9 @@ struct Order: Identifiable, Codable ,Equatable {
 }
 
 enum OrderStatus: String, Codable {
+    case accepted
     case preparing
+    case outForDelivery
     case delivered
     case cancelled
 }

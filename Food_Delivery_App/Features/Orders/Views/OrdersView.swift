@@ -1,3 +1,7 @@
+//
+//  OrdersView.swift
+//
+
 import SwiftUI
 
 struct OrdersView: View {
@@ -18,7 +22,8 @@ struct OrdersView: View {
             
             Group {
                 
-                // 🔐 NOT LOGGED IN
+                // MARK: - NOT LOGGED IN
+                
                 if !isLoggedIn {
                     
                     VStack(spacing: 24) {
@@ -56,13 +61,13 @@ struct OrdersView: View {
                         AuthView {
                             showAuth = false
                             isLoggedIn = true
-                            
                             orders.listenToOrders()
                         }
                     }
                 }
                 
-            
+                // MARK: - NO ACTIVE ORDERS
+                
                 else if orders.activeOrders.isEmpty {
                     
                     VStack(spacing: 20) {
@@ -76,8 +81,8 @@ struct OrdersView: View {
                             .foregroundColor(.orange)
                             .scaleEffect(animate ? 1.15 : 0.9)
                             .animation(
-                                Animation.easeInOut(duration: 1)
-                                    .repeatForever(autoreverses: true),
+                                .easeInOut(duration: 1)
+                                .repeatForever(autoreverses: true),
                                 value: animate
                             )
                             .onAppear {
@@ -110,7 +115,8 @@ struct OrdersView: View {
                     }
                 }
                 
-              
+                // MARK: - ORDERS LIST
+                
                 else {
                     ordersList
                 }
@@ -126,6 +132,8 @@ struct OrdersView: View {
     }
 }
 
+// MARK: - Orders List
+
 private extension OrdersView {
     
     var ordersList: some View {
@@ -133,38 +141,36 @@ private extension OrdersView {
         List {
             ForEach(orders.activeOrders) { order in
                 
-                VStack(alignment: .leading, spacing: 10) {
+                NavigationLink {
+                    OrderTrackingView(order: order)
+                } label: {
                     
-                    HStack {
-                        Text("Order #\(order.id.prefix(5))")
-                            .font(.headline)
+                    VStack(alignment: .leading, spacing: 10) {
                         
-                        Spacer()
+                        HStack {
+                            Text("Order #\(order.id.prefix(5))")
+                                .font(.headline)
+                            
+                            Spacer()
+                            
+                            Text("₹\(order.total, specifier: "%.0f")")
+                                .foregroundColor(.orange)
+                                .bold()
+                        }
                         
-                        Text("₹\(order.total, specifier: "%.0f")")
-                            .foregroundColor(.orange)
-                            .bold()
+                        Text("Tap to track delivery")
+                            .font(.subheadline)
+                            .foregroundColor(.blue)
                     }
-                    
-                    Text("Preparing...")
-                        .foregroundColor(.blue)
-                    
-                    Button("Cancel Order") {
-                        orders.cancelOrder(order)
-                    }
-                    .padding(.vertical, 8)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.red.opacity(0.1))
-                    .foregroundColor(.red)
-                    .cornerRadius(10)
+                    .padding()
+                    .background(AppColors.background)
+                    .cornerRadius(16)
+                    .shadow(radius: 5)
                 }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(15)
-                .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
+                .buttonStyle(.plain)
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
-                .padding(.vertical, 40)
+                .padding(.vertical, 60)
             }
         }
         .listStyle(.plain)

@@ -4,6 +4,9 @@
 //
 //  Created by rentamac on 2/15/26.
 //
+//
+//  OrderSuccessPopup.swift
+//
 
 import SwiftUI
 
@@ -12,7 +15,14 @@ struct OrderSuccessPopup: View {
     @Binding var show: Bool
     var onOpenOrder: () -> Void
     
+    // 🔥 30 min delivery time
+    private let deliveryDuration: TimeInterval = 1800
+    
+    @State private var remainingTime: TimeInterval = 1800
+    @State private var timer: Timer?
+    
     var body: some View {
+        
         if show {
             VStack {
                 Spacer()
@@ -34,7 +44,20 @@ struct OrderSuccessPopup: View {
                     Text("Your food is being prepared")
                         .foregroundColor(.gray)
                     
+                    // 🔥 Countdown Section
+                    
+                    HStack(spacing: 6) {
+                        Image(systemName: "clock.fill")
+                            .foregroundColor(.orange)
+                        
+                        Text(timeString)
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(.orange)
+                    }
+                    
                     Button {
+                        timer?.invalidate()
                         show = false
                         onOpenOrder()
                     } label: {
@@ -49,12 +72,43 @@ struct OrderSuccessPopup: View {
                 .padding()
                 .background(Color.white)
                 .cornerRadius(25)
-                .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
+                .shadow(color: AppColors.shadow,
+                        radius: 8, x: 0, y: 4)
                 .padding(.horizontal)
-                .padding(.bottom, 90)   
+                .padding(.bottom, 90)
             }
             .transition(.move(edge: .bottom))
             .animation(.easeInOut, value: show)
+            .onAppear {
+                startTimer()
+            }
+            .onDisappear {
+                timer?.invalidate()
+            }
         }
+    }
+    
+    
+    // MARK: - Timer Logic
+    
+    private func startTimer() {
+        
+        remainingTime = deliveryDuration
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            
+            if remainingTime > 0 {
+                remainingTime -= 1
+            } else {
+                timer?.invalidate()
+            }
+        }
+    }
+    
+    
+    private var timeString: String {
+        let minutes = Int(remainingTime) / 60
+        let seconds = Int(remainingTime) % 60
+        return String(format: "Arriving in %02d:%02d", minutes, seconds)
     }
 }
