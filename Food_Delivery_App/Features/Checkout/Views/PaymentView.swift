@@ -137,7 +137,7 @@ struct PaymentView: View {
                         },
                         onSuccess: {
                             orderNote = false
-                            dismiss()   // ← REDIRECT TO HOME
+                            dismiss()
                         }
                     )
                 }

@@ -31,7 +31,7 @@ class OrderManager: ObservableObject {
         
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        listener?.remove() // prevent duplicate listeners
+        listener?.remove() 
         
         listener = db.collection("users")
             .document(uid)
@@ -74,12 +74,27 @@ class OrderManager: ObservableObject {
                         )
                     }
                     
+                    var review: Review? = nil
+
+                    if let reviewData = data["review"] as? [String: Any],
+                        let rating = reviewData["rating"] as? Int,
+                        let comment = reviewData["comment"] as? String,
+                        let reviewTimestamp = reviewData["createdAt"] as? Timestamp {
+
+                        review = Review(
+                            rating: rating,
+                            comment: comment,
+                            createdAt: reviewTimestamp.dateValue()
+                        )
+                    }
+                    
                     let order = Order(
                         id: doc.documentID,
                         items: items,
                         total: total,
                         createdAt: timestamp.dateValue(),
-                        status: status
+                        status: status,
+                        review: review
                     )
                     
                     fetchedOrders.append(order)
@@ -94,7 +109,7 @@ class OrderManager: ObservableObject {
             }
     }
     
-    // MARK: - Place Order
+    
     
     func placeOrder(items: [FoodItems], total: Double) {
         
@@ -121,13 +136,13 @@ class OrderManager: ObservableObject {
             .addDocument(data: orderData)
     }
     
-    // MARK: - Cancel Order
+    
     
     func cancelOrder(_ order: Order) {
         updateStatus(order, status: .cancelled)
     }
     
-    // MARK: - Complete Order
+    
     
     func completeOrder(_ order: Order) {
         updateStatus(order, status: .delivered)
@@ -148,7 +163,6 @@ class OrderManager: ObservableObject {
     
     
 
-    // MARK: - Auto Delivery System
 
     func startAutoCheck() {
         timer?.invalidate()
@@ -171,5 +185,27 @@ class OrderManager: ObservableObject {
                 completeOrder(order)
             }
         }
+    }
+    
+    
+    func submitReview(for order: Order,
+                      rating: Int,
+                      comment: String) {
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        let reviewData: [String: Any] = [
+            "rating": rating,
+            "comment": comment,
+            "createdAt": Timestamp(date: Date())
+        ]
+        
+        db.collection("users")
+            .document(uid)
+            .collection("orders")
+            .document(order.id)
+            .updateData([
+                "review": reviewData
+            ])
     }
 }

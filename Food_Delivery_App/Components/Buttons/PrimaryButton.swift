@@ -12,7 +12,7 @@ struct PrimaryButton: View {
     
     var body: some View {
         Button(action: {
-            // TODO: Add your action here (e.g., save profile, confirm order)
+            
             print("\(title) button tapped")
         }) {
             Text(title)
