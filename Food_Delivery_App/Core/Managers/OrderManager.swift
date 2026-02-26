@@ -8,147 +8,168 @@
 
 import SwiftUI
 import Combine
+import FirebaseFirestore
+import FirebaseAuth
 
 class OrderManager: ObservableObject {
+    
+    private var timer: Timer?
     
     @Published var activeOrders: [Order] = []
     @Published var historyOrders: [Order] = []
     
-    private var timer: Timer?
+    private let db = Firestore.firestore()
+    private var listener: ListenerRegistration?
     
     init() {
-        loadOrders()
         startAutoCheck()
-    }
-    
-    deinit {
-        timer?.invalidate()
-    }
-    
- 
-    
-    func placeOrder(items: [FoodItems], total: Double) {
-        
-        let order = Order(
-            id: UUID().uuidString,
-            items: items,
-            total: total,
-            createdAt: Date(),
-            status: .preparing,
-            
-        )
-        
-        activeOrders.append(order)
-        saveOrders()
-    }
-    
- 
-    
-    func cancelOrder(_ order: Order) {
-        
-        guard let index = activeOrders.firstIndex(where: { $0.id == order.id }) else { return }
-        
-        var cancelled = activeOrders.remove(at: index)
-        cancelled.status = .cancelled
-        historyOrders.append(cancelled)
-        
-        saveOrders()
     }
     
 
     
+    func listenToOrders() {
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        listener?.remove() // prevent duplicate listeners
+        
+        listener = db.collection("users")
+            .document(uid)
+            .collection("orders")
+            .order(by: "createdAt", descending: true)
+            .addSnapshotListener { snapshot, error in
+                
+                guard let documents = snapshot?.documents else { return }
+                
+                var fetchedOrders: [Order] = []
+                
+                for doc in documents {
+                    
+                    let data = doc.data()
+                    
+                    guard
+                        let total = data["total"] as? Double,
+                        let timestamp = data["createdAt"] as? Timestamp,
+                        let statusRaw = data["status"] as? String,
+                        let status = OrderStatus(rawValue: statusRaw),
+                        let itemsArray = data["items"] as? [[String: Any]]
+                    else { continue }
+                    
+                    let items: [FoodItems] = itemsArray.compactMap { itemData in
+                        guard
+                            let id = itemData["id"] as? String,
+                            let name = itemData["name"] as? String,
+                            let image = itemData["image"] as? String,
+                            let price = itemData["price"] as? Double,
+                            let categoryRaw = itemData["category"] as? String,
+                            let category = CategoryType(rawValue: categoryRaw)
+                        else { return nil }
+                        
+                        return FoodItems(
+                            id: id,
+                            name: name,
+                            image: image,
+                            price: price,
+                            category: category
+                        )
+                    }
+                    
+                    let order = Order(
+                        id: doc.documentID,
+                        items: items,
+                        total: total,
+                        createdAt: timestamp.dateValue(),
+                        status: status
+                    )
+                    
+                    fetchedOrders.append(order)
+                }
+                
+                DispatchQueue.main.async {
+                    self.activeOrders = fetchedOrders.filter { $0.status == .preparing }
+                    self.historyOrders = fetchedOrders.filter { $0.status != .preparing }
+                    
+                    self.startAutoCheck()
+                }
+            }
+    }
+    
+    // MARK: - Place Order
+    
+    func placeOrder(items: [FoodItems], total: Double) {
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        let orderData: [String: Any] = [
+            "total": total,
+            "createdAt": Timestamp(date: Date()),
+            "status": OrderStatus.preparing.rawValue,
+            "items": items.map {
+                [
+                    "id": $0.id,
+                    "name": $0.name,
+                    "image": $0.image,
+                    "price": $0.price,
+                    "category": $0.category.rawValue
+                ]
+            }
+        ]
+        
+        db.collection("users")
+            .document(uid)
+            .collection("orders")
+            .addDocument(data: orderData)
+    }
+    
+    // MARK: - Cancel Order
+    
+    func cancelOrder(_ order: Order) {
+        updateStatus(order, status: .cancelled)
+    }
+    
+    // MARK: - Complete Order
+    
+    func completeOrder(_ order: Order) {
+        updateStatus(order, status: .delivered)
+    }
+    
+    private func updateStatus(_ order: Order, status: OrderStatus) {
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        db.collection("users")
+            .document(uid)
+            .collection("orders")
+            .document(order.id)
+            .updateData([
+                "status": status.rawValue
+            ])
+    }
+    
+    
+
+    // MARK: - Auto Delivery System
+
     func startAutoCheck() {
+        timer?.invalidate()
+        
         timer = Timer.scheduledTimer(withTimeInterval: 60,
                                      repeats: true) { [weak self] _ in
             self?.checkOrders()
         }
     }
 
-    
-    func checkOrders() {
+    private func checkOrders() {
+        
         let now = Date()
         
-        let completed = activeOrders.filter {
-            now.timeIntervalSince($0.createdAt) > 1800 // 30 mins
-        }
-        
-        completed.forEach { completeOrder($0) }
-    }
-    
-   
-    
-    func completeOrder(_ order: Order) {
-        
-        guard let index = activeOrders.firstIndex(where: { $0.id == order.id }) else { return }
-        
-        var finished = activeOrders.remove(at: index)
-        finished.status = .delivered
-        historyOrders.append(finished)
-        
-        saveOrders()
-    }
-    
-   
-    
-    func saveOrders() {
-        
-        if let data = try? JSONEncoder().encode(activeOrders) {
-            UserDefaults.standard.set(data, forKey: "activeOrders")
-        }
-        
-        if let data = try? JSONEncoder().encode(historyOrders) {
-            UserDefaults.standard.set(data, forKey: "historyOrders")
-        }
-    }
-    
- 
-    //  CLEAR ALL ORDERS ON LOGOUT
-   
-    func clearSession() {
-        
-        
-        timer?.invalidate()
-        timer = nil
-        
-      
-        activeOrders = []
-        historyOrders = []
-    }
-    func restoreSession() {
-    loadOrders()
-    startAutoCheck()
-    }
-    
-    
-    func loadOrders() {
-        
-        if let data = UserDefaults.standard.data(forKey: "activeOrders"),
-           let decoded = try? JSONDecoder().decode([Order].self, from: data) {
-            activeOrders = decoded
-        }
-        
-        if let data = UserDefaults.standard.data(forKey: "historyOrders"),
-           let decoded = try? JSONDecoder().decode([Order].self, from: data) {
-            historyOrders = decoded
-        }
-    }
-    
-   
-    
-    func removeExpiredHistory() {
-        
-        let calendar = Calendar.current
-        let now = Date()
-        
-        historyOrders.removeAll { order in
-            if let days = calendar.dateComponents([.day],
-                                                  from: order.createdAt,
-                                                  to: now).day {
-                return days > 90
+        for order in activeOrders {
+            
+            let elapsed = now.timeIntervalSince(order.createdAt)
+            
+            if elapsed > 1800 {   // 30 minutes
+                completeOrder(order)
             }
-            return false
         }
-        
-        saveOrders()
     }
 }

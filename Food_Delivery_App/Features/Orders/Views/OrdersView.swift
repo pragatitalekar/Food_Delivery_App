@@ -56,11 +56,13 @@ struct OrdersView: View {
                         AuthView {
                             showAuth = false
                             isLoggedIn = true
+                            
+                            orders.listenToOrders()
                         }
                     }
                 }
                 
-                // 📦 LOGGED IN BUT EMPTY
+            
                 else if orders.activeOrders.isEmpty {
                     
                     VStack(spacing: 20) {
@@ -116,6 +118,11 @@ struct OrdersView: View {
         }
         .navigationTitle("Orders")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            if isLoggedIn {
+                orders.listenToOrders()
+            }
+        }
     }
 }
 
