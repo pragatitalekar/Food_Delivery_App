@@ -89,15 +89,15 @@ struct CheckoutView: View {
 
     guard !address.isEmpty else { return }
 
-    orders.placeOrder(
-    items: cart.items.values.map { $0.item },
-    total: cart.total
-    )
+        orders.placeOrder(
+            items: cart.items.values.map { $0.item },
+            total: cart.total
+        )
 
-    
-    cart.clearCart {
-    showSuccess=true
-    }
+        
+        cart.clearCart {
+            showSuccess=true
+        }
         
     }
 }
