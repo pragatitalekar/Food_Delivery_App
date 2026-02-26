@@ -157,7 +157,7 @@ private extension OrdersView {
                 .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
-                .padding(.vertical, 50)
+                .padding(.vertical, 40)
             }
         }
         .listStyle(.plain)
