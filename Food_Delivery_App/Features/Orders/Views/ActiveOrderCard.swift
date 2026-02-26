@@ -50,8 +50,8 @@ struct ActiveOrderCard: View {
     }
     
     var statusText: String {
-        if progress < 0.3 { return "Restaurant accepted 🍽️" }
-        if progress < 0.7 { return "Preparing your food 👨‍🍳" }
+        if progress < 0.1 { return "Restaurant accepted 🍽️" }
+        if progress < 0.6 { return "Preparing your food 👨‍🍳" }
         if progress < 1.0 { return "Out for delivery 🚚" }
         return "Delivered 🎉"
     }

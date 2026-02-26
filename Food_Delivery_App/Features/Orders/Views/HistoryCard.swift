@@ -65,6 +65,10 @@ struct HistoryCard: View {
         switch order.status {
         case .cancelled:
             return .red
+        case .accepted:
+            return .blue
+        case .outForDelivery:
+            return .yellow
         case .preparing:
             return .orange
         case .delivered:
