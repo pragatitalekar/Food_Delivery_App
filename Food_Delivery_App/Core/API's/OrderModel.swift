@@ -13,6 +13,7 @@ struct Order: Identifiable, Codable ,Equatable {
     var total: Double
     var createdAt: Date
     var status: OrderStatus
+    var review: Review?
 }
 
 enum OrderStatus: String, Codable {
@@ -21,7 +22,11 @@ enum OrderStatus: String, Codable {
     case cancelled
 }
 
-
+struct Review: Codable, Equatable {
+    var rating: Int
+    var comment: String
+    var createdAt: Date
+}
 
 
 

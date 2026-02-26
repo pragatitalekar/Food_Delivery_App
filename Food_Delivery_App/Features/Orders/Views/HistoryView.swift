@@ -72,8 +72,6 @@ struct HistoryView: View {
         }
         .navigationTitle("History")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            orders.removeExpiredHistory()
-        }
+        
     }
 }

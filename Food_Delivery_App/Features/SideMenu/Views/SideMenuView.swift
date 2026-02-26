@@ -111,7 +111,7 @@ struct SideMenuView: View {
             AuthView {
                 showAuth = false
                 isLoggedIn = true
-                orders.restoreSession()
+                orders.listenToOrders()
             }
         }
     }
@@ -119,10 +119,14 @@ struct SideMenuView: View {
     private func handleSignOut() {
         do {
             try Auth.auth().signOut()
-            orders.clearSession()
-            cart.clearCart{}
+            
+            orders.activeOrders = []
+            orders.historyOrders = []
+            
+            cart.clearCart {}
             isLoggedIn = false
             showSideMenu = false
+            
         } catch {
             print("Sign out error:", error.localizedDescription)
         }
