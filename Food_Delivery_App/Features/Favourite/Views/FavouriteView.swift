@@ -6,61 +6,103 @@ struct FavouriteView: View {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     
     @State private var showAuth = false
+    @State private var animate = false
 
     var body: some View {
 
-        Group {
+        ZStack {
+         
+           
+            
+            Color(.systemGray6)
+                .ignoresSafeArea()
 
-          
-            if !isLoggedIn {
+            Group {
+                
+               
+               
+                if !isLoggedIn {
 
-                VStack(spacing: 24) {
+                    VStack(spacing: 24) {
 
-                    Spacer()
+                        Spacer()
 
-                    Image(systemName: "heart.slash")
-                        .font(.system(size: 70))
-                        .foregroundColor(.gray.opacity(0.6))
+                        Image(systemName: "heart.slash")
+                            .font(.system(size: 70))
+                            .foregroundColor(.gray.opacity(0.6))
 
-                    Text("No favourites yet")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-
-                    Text("Login to save your favourite food")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-
-                    Button {
-                        showAuth = true
-                    } label: {
-                        Text("Login / Sign-up")
+                        Text("No favourites yet")
+                            .font(.title3)
                             .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(AppColors.primary)
-                            .foregroundColor(.white)
-                            .cornerRadius(14)
-                    }
-                    .padding(.horizontal, 30)
 
-                    Spacer()
-                }
-                .sheet(isPresented: $showAuth) {
-                    AuthView {
-                        showAuth = false
-                        isLoggedIn = true
+                        Text("Login to save your favourite food")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+
+                        Button {
+                            showAuth = true
+                        } label: {
+                            Text("Login / Sign-up")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(AppColors.primary)
+                                .foregroundColor(.white)
+                                .cornerRadius(14)
+                        }
+                        .padding(.horizontal, 30)
+
+                        Spacer()
+                    }
+                    .sheet(isPresented: $showAuth) {
+                        AuthView {
+                            showAuth = false
+                            isLoggedIn = true
+                        }
                     }
                 }
-            }
 
-            // ✅ LOGGED IN UI (your original grid)
-            else {
-                favouritesGrid
+               
+                else if cart.favouriteItems.isEmpty {
+
+                    VStack(spacing: 20) {
+
+                        Spacer()
+
+                        Image(systemName: "heart")
+                            .font(.system(size: 80))
+                            .foregroundColor(.orange)
+                            .scaleEffect(animate ? 1.15 : 0.9)
+                            .animation(
+                                Animation.easeInOut(duration: 1)
+                                    .repeatForever(autoreverses: true),
+                                value: animate
+                            )
+                            .onAppear {
+                                animate = true
+                            }
+
+                        Text("No favourites added")
+                            .font(.title3)
+                            .fontWeight(.bold)
+
+                        Text("Tap the heart icon on food\nto save it here")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.gray)
+
+                        Spacer()
+                    }
+                }
+
+                
+                else {
+                    favouritesGrid
+                }
             }
         }
-        .navigationTitle("Favourites")
-        .background(Color(.systemGray6))
+       
     }
+        
 }
 
 private extension FavouriteView {
@@ -69,10 +111,10 @@ private extension FavouriteView {
         ScrollView {
             LazyVGrid(
                 columns: [
-                    GridItem(.flexible(), spacing: 40),
-                    GridItem(.flexible(), spacing: 40)
+                    GridItem(.flexible(), spacing: 15),
+                    GridItem(.flexible(), spacing: 15)
                 ],
-                spacing: 40
+                spacing: 20
             ) {
                 ForEach(cart.favouriteItems) { fav in
                     VStack(spacing: 8) {
@@ -81,7 +123,7 @@ private extension FavouriteView {
                             DetailView(item: fav.foodItem)
                         } label: {
                             ItemCard(item: fav.foodItem)
-                                .frame(width: 165, height: 250)
+                                .frame(height: 250)
                         }
                         .buttonStyle(.plain)
 
@@ -92,7 +134,8 @@ private extension FavouriteView {
                     }
                 }
             }
-            .padding()
+            .padding(.horizontal, 20)
+            .padding(.vertical, 100)
         }
     }
 }

@@ -108,7 +108,11 @@ struct OrdersView: View {
                     }
                 }
                 
+<<<<<<< HEAD
               
+=======
+                // ✅ HAS ACTIVE ORDERS
+>>>>>>> fabc4f6 (changed In orderview)
                 else {
                     ordersList
                 }
