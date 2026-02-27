@@ -14,21 +14,21 @@ struct CustomBottomBar: View {
 
     var body: some View {
         HStack {
-            tab(icon: "house.fill", tab: .home)
+            tab(icon: "house", tab: .home)
             Spacer()
-            tab(icon: "heart.fill", tab: .favourites)
+            tab(icon: "heart", tab: .favourites)
             Spacer()
-            tab(icon: "person.fill", tab: .profile)
+            tab(icon: "person", tab: .profile)
             Spacer()
-            tab(icon: "clock.fill", tab: .orders)
+            tab(icon: "clock", tab: .orders)
         }
         .padding(.horizontal, 30)
         .padding(.vertical, 14)
-        .background(Color(.systemGray6))
+        .background(Color(.systemGray6).opacity(0.85))
         .cornerRadius(28)
-        .shadow(color: .black.opacity(0.08), radius: 10, y: 5)
+        .shadow(color: Color(.systemGray6).opacity(0.04), radius: 10, y: 5)
         .padding(.horizontal, 24)
-        .padding(.bottom, 10)
+        .padding(.bottom, 20)
     }
 
     func tab(icon: String, tab: TabType) -> some View {
@@ -37,7 +37,9 @@ struct CustomBottomBar: View {
         } label: {
             Image(systemName: icon)
                 .font(.title3)
-                .foregroundColor(selectedTab == tab ? .orange : .gray)
+                .foregroundColor(selectedTab == tab ? AppColors.primary : Color(.systemGray))
+                
+                
         }
     }
 }

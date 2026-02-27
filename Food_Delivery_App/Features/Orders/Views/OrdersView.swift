@@ -111,7 +111,7 @@ struct OrdersView: View {
                                 .cornerRadius(30)
                                 .padding(.horizontal, 30)
                         }
-                        .padding(.bottom, 100)
+                        .padding(.bottom, 120)
                     }
                 }
                 

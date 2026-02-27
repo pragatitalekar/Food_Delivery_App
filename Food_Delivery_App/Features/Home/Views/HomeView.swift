@@ -128,8 +128,9 @@ struct HomeView: View {
                 }
             }
             .padding(.horizontal, 28)
-            .padding(.top, 20)
+            .padding(.top, 40)
             
+            Spacer(minLength: 5)
             Text("Delicious\nfood for you")
                 .font(.system(size: 34, weight: .bold))
                 .lineSpacing(3)
