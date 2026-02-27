@@ -63,7 +63,7 @@ struct ActiveOrderCard: View {
     }
     
     func updateProgress() {
-        let totalTime: Double = 1800
+        let totalTime: Double = 600    // 30mins
         let elapsed = Date().timeIntervalSince(order.createdAt)
         progress = min(elapsed / totalTime, 1.0)
     }
