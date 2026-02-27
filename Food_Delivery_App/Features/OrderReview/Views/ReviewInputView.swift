@@ -31,6 +31,7 @@ struct ReviewInputView: View {
             
             TextField("Write a review...", text: $comment)
                 .textFieldStyle(.roundedBorder)
+//                .background(Color(.gray))
             
             Button {
                 orders.submitReview(

@@ -105,10 +105,14 @@ private extension ProfileView {
                             )
                         }
                         
-                        ProfileMenuRow(
-                            title: "Pending reviews",
-                            icon: "star.fill"
-                        )
+                        NavigationLink {
+                            PendingReviewsView()
+                        } label: {
+                            ProfileMenuRow(
+                                title: "Pending reviews",
+                                icon: "star.fill"
+                            )
+                        }
                         
                         NavigationLink {
                             FAQView()

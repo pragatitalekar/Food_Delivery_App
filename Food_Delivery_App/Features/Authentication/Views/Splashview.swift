@@ -3,7 +3,7 @@ import Combine
 
 struct SplashView: View {
 
-    var onGetStarted: () -> Void   // ✅ callback
+    var onGetStarted: () -> Void   // callback
 
     var body: some View {
 
@@ -23,10 +23,10 @@ struct SplashView: View {
                             .fill(AppColors.white)
                             .frame(width: 64, height: 64)
 
-                        Image("logo")
+                        Image("AppLogo")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 36, height: 36)
+                            .frame(width: 50, height: 50)
                     }
 
                     Text("Food for\nEveryone")

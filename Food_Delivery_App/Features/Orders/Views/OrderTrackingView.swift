@@ -7,7 +7,7 @@ import SwiftUI
 struct OrderTrackingView: View {
     
     var order: Order
-    private let deliveryDuration: TimeInterval = 1800
+    private let deliveryDuration: TimeInterval = 600
     
     @EnvironmentObject var cart: CartManager
     @EnvironmentObject var orders: OrderManager
@@ -33,7 +33,7 @@ struct OrderTrackingView: View {
                 
                 VStack(alignment: .leading, spacing: 25) {
                     
-                    // MARK: - Order Summary
+                   
                     
                     VStack(alignment: .leading, spacing: 10) {
                         
@@ -119,8 +119,7 @@ struct OrderTrackingView: View {
                         .animation(.easeInOut(duration: 0.3), value: progress)
                     }
                     
-                    
-                    // MARK: - Timeline
+                 
                     
                     VStack(alignment: .leading, spacing: 20) {
                         
@@ -205,7 +204,7 @@ struct OrderTrackingView: View {
     }
     
     
-    // MARK: - Status Logic
+   
     
     var currentStatus: String {
         if progress < 0.3 { return "Restaurant accepted 🍽️" }
@@ -214,8 +213,7 @@ struct OrderTrackingView: View {
         return "Delivered 🎉"
     }
     
-    
-    // MARK: - Timer
+
     
     func startTimer() {
         updateValues()
@@ -242,7 +240,7 @@ struct OrderTrackingView: View {
 }
 
 
-// MARK: - Timeline Row
+
 
 struct TrackingRow: View {
     
@@ -280,7 +278,7 @@ struct TrackingRow: View {
 }
 
 
-// MARK: - Similar Food Card
+
 
 struct SimilarFoodCard: View {
     

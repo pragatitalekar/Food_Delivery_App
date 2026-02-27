@@ -167,7 +167,7 @@ class OrderManager: ObservableObject {
     func startAutoCheck() {
         timer?.invalidate()
         
-        timer = Timer.scheduledTimer(withTimeInterval: 60,
+        timer = Timer.scheduledTimer(withTimeInterval: 5,
                                      repeats: true) { [weak self] _ in
             self?.checkOrders()
         }
@@ -181,7 +181,7 @@ class OrderManager: ObservableObject {
             
             let elapsed = now.timeIntervalSince(order.createdAt)
             
-            if elapsed > 1800 {   // 30 minutes
+            if elapsed > 600 {   // 30 minutes
                 completeOrder(order)
             }
         }

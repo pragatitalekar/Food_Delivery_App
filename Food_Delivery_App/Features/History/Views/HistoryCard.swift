@@ -61,18 +61,18 @@ struct HistoryCard: View {
                         HStack(spacing: 8) {
 
                         Text("\(items.count)x")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.gray.opacity(0.15))
-                        .cornerRadius(8)
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.gray.opacity(0.15))
+                            .cornerRadius(8)
 
                         Text(item.name)
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .lineLimit(1)
-                        .foregroundColor(AppColors.textPrimary)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .lineLimit(1)
+                            .foregroundColor(AppColors.textPrimary)
                         }
 
                         Spacer()
@@ -129,16 +129,16 @@ struct HistoryCard: View {
     
     var statusColor: Color {
         switch order.status {
-        case .cancelled:
-            return .red
-        case .accepted:
-            return .blue
-        case .outForDelivery:
-            return .yellow
-        case .preparing:
-            return .orange
-        case .delivered:
-            return .green
+            case .cancelled:
+                return .red
+            case .accepted:
+                return .blue
+            case .outForDelivery:
+                return .yellow
+            case .preparing:
+                return .orange
+            case .delivered:
+                return .green
         }
     }
     

@@ -15,10 +15,10 @@ struct OrderSuccessPopup: View {
     @Binding var show: Bool
     var onOpenOrder: () -> Void
     
-    // 🔥 30 min delivery time
-    private let deliveryDuration: TimeInterval = 1800
+   
+    private let deliveryDuration: TimeInterval = 600
     
-    @State private var remainingTime: TimeInterval = 1800
+    @State private var remainingTime: TimeInterval = 600
     @State private var timer: Timer?
     
     var body: some View {
