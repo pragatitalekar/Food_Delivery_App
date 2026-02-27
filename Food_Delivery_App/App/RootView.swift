@@ -4,31 +4,34 @@ import FirebaseAuth
 struct RootView: View {
 
     @State private var showSplash = true
-    @State private var showStartupAuth = false
+    @State private var showAuth = false
 
     var body: some View {
-        Group {
-            if showSplash {
-                SplashView()
 
-            } else if showStartupAuth {
+        Group {
+
+            if showSplash {
+                SplashView {
+                    handleGetStarted()
+                }
+
+            } else if showAuth {
                 AuthView {
-                    showStartupAuth = false   // ⭐ after first login
+                    showAuth = false
                 }
 
             } else {
-                MainTabView()   // ⭐ Root never depends on isLoggedIn
+                MainTabView()
             }
-        }
-        .onAppear {
-            startAppFlow()
         }
     }
 
-    private func startAppFlow() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            showStartupAuth = Auth.auth().currentUser == nil
-            showSplash = false
+    private func handleGetStarted() {
+
+        if Auth.auth().currentUser == nil {
+            showAuth = true
         }
+
+        showSplash = false
     }
 }
