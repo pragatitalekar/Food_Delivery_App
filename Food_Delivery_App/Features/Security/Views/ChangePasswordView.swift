@@ -158,21 +158,35 @@ struct ChangePasswordView: View {
     }
 
     private func passwordValidationError(_ password: String) -> String? {
-
+        
         if password.count < 9 {
             return "Password must be at least 9 characters long"
         }
-
-        let specialRegex = ".*[!@#$%^&*(),.?\":{}|<>].*"
-        if password.range(of: specialRegex, options: .regularExpression) == nil {
-            return "Password must contain at least one special character"
+        
+        let uppercaseRegex = ".*[A-Z].*"
+        if !NSPredicate(format: "SELF MATCHES %@", uppercaseRegex)
+            .evaluate(with: password) {
+            return "Password must contain at least one uppercase letter"
         }
-
+        
+        let lowercaseRegex = ".*[a-z].*"
+        if !NSPredicate(format: "SELF MATCHES %@", lowercaseRegex)
+            .evaluate(with: password) {
+            return "Password must contain at least one lowercase letter"
+        }
+        
         let numberRegex = ".*[0-9].*"
-        if password.range(of: numberRegex, options: .regularExpression) == nil {
+        if !NSPredicate(format: "SELF MATCHES %@", numberRegex)
+            .evaluate(with: password) {
             return "Password must contain at least one number"
         }
-
+        
+        let specialCharacterRegex = ".*[!@#$%^&*(),.?\":{}|<>].*"
+        if !NSPredicate(format: "SELF MATCHES %@", specialCharacterRegex)
+            .evaluate(with: password) {
+            return "Password must contain at least one special character"
+        }
+        
         return nil
     }
 }
