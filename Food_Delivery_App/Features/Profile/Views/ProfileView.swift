@@ -154,9 +154,9 @@ private extension ProfileView {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 100)
-            .background(AppColors.background)
+            .background(Color(.systemGray6))
         }
-        .background(AppColors.background.ignoresSafeArea())
+        .background(Color(.systemGray6).ignoresSafeArea())
         .padding(.top, 40)
         .padding(.bottom, 16)
         .sheet(isPresented: $showEditSheet) {
