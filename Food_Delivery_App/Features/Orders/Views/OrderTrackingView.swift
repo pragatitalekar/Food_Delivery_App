@@ -3,6 +3,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct OrderTrackingView: View {
     
@@ -22,6 +23,20 @@ struct OrderTrackingView: View {
     
     @StateObject private var foodVM = SimilarFoodViewModel()
     
+    // MARK: MAP
+    
+    @State private var region = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 12.9716, longitude: 77.5946),
+        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+    )
+    
+    let restaurant = CLLocationCoordinate2D(latitude: 12.9718, longitude: 77.5930)
+    let customer = CLLocationCoordinate2D(latitude: 12.9745, longitude: 77.6010)
+    
+    @State private var rider = CLLocationCoordinate2D(latitude: 12.9718, longitude: 77.5930)
+    
+    @State private var route: MKRoute?
+    
     var body: some View {
         
         ZStack {
@@ -33,7 +48,20 @@ struct OrderTrackingView: View {
                 
                 VStack(alignment: .leading, spacing: 25) {
                     
-                   
+                    // MAP
+                    
+                    MapView(
+                        region: $region,
+                        rider: rider,
+                        restaurant: restaurant,
+                        customer: customer,
+                        route: route
+                    )
+                    .frame(height: 260)
+                    .cornerRadius(20)
+                    
+                    
+                    // ORDER SUMMARY
                     
                     VStack(alignment: .leading, spacing: 10) {
                         
@@ -69,7 +97,7 @@ struct OrderTrackingView: View {
                     .cornerRadius(16)
                     
                     
-                    
+                    // STATUS
                     
                     VStack(alignment: .leading, spacing: 12) {
                         
@@ -99,7 +127,7 @@ struct OrderTrackingView: View {
                     .cornerRadius(16)
                     
                     
-                  
+                    // CANCEL
                     
                     if order.status == .preparing {
                         
@@ -115,11 +143,10 @@ struct OrderTrackingView: View {
                                 .cornerRadius(14)
                         }
                         .disabled(progress > 0.6)
-                        .opacity(progress > 0.6 ? 0.5 : 1)
-                        .animation(.easeInOut(duration: 0.3), value: progress)
                     }
                     
-                 
+                    
+                    // TRACKING
                     
                     VStack(alignment: .leading, spacing: 20) {
                         
@@ -152,6 +179,7 @@ struct OrderTrackingView: View {
                     .cornerRadius(16)
                     
                     
+                    // SIMILAR FOOD
                     
                     Text("You may also like")
                         .font(.title3)
@@ -177,6 +205,8 @@ struct OrderTrackingView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             startTimer()
+            calculateRoute()
+            startMovement()
             foodVM.fetchSimilarFoods(for: order)
         }
         .onDisappear {
@@ -191,20 +221,16 @@ struct OrderTrackingView: View {
             
             Button("No", role: .cancel) { }
             
-        } message: {
-            Text("If cancelled now, your payment will be refunded instantly.")
         }
         .alert("Refund Processed 💸", isPresented: $showRefundAlert) {
             Button("OK") {
                 dismiss()
             }
-        } message: {
-            Text("₹\(order.total, specifier: "%.0f") has been refunded successfully.")
         }
     }
     
     
-   
+    // STATUS
     
     var currentStatus: String {
         if progress < 0.3 { return "Restaurant accepted 🍽️" }
@@ -213,7 +239,6 @@ struct OrderTrackingView: View {
         return "Delivered 🎉"
     }
     
-
     
     func startTimer() {
         updateValues()
@@ -226,9 +251,12 @@ struct OrderTrackingView: View {
         let elapsed = Date().timeIntervalSince(order.createdAt)
         remainingTime = max(deliveryDuration - elapsed, 0)
         progress = min(elapsed / deliveryDuration, 1.0)
-        
-        if remainingTime <= 0 {
-            timer?.invalidate()
+        if progress >= 1 {
+        timer?.invalidate()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        dismiss()
+        }
         }
     }
     
@@ -237,10 +265,180 @@ struct OrderTrackingView: View {
         let seconds = Int(remainingTime) % 60
         return String(format: "Arriving in %02d:%02d", minutes, seconds)
     }
+    
+    
+    func calculateRoute() {
+        
+        let request = MKDirections.Request()
+        
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: restaurant))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: customer))
+        request.transportType = .automobile
+        
+        let directions = MKDirections(request: request)
+        
+        directions.calculate { response, error in
+            
+            if let route = response?.routes.first {
+                self.route = route
+            }
+        }
+    }
+    
+    func startMovement() {
+        
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { timer in
+            
+            if progress >= 1 {
+                timer.invalidate()
+            }
+            
+            guard let polyline = route?.polyline else { return }
+            
+            let coords = polyline.coordinates()
+            
+           
+            if progress < 0.6 {
+                rider = restaurant
+                region.center = restaurant
+                return
+            }
+            
+            let deliveryProgress = (progress - 0.6) / 0.4
+            
+            let index = Int(deliveryProgress * Double(coords.count - 1))
+            
+            if index < coords.count {
+                rider = coords[index]
+                region.center = rider
+            }
+        }
+    }
 }
 
+////////////////////////////////////////////////////////////
+/// MAP VIEW
+////////////////////////////////////////////////////////////
 
+struct MapView: UIViewRepresentable {
+    
+    @Binding var region: MKCoordinateRegion
+    
+    var rider: CLLocationCoordinate2D
+    var restaurant: CLLocationCoordinate2D
+    var customer: CLLocationCoordinate2D
+    
+    var route: MKRoute?
+    
+    func makeUIView(context: Context) -> MKMapView {
+        
+        let map = MKMapView()
+        map.delegate = context.coordinator
+        
+        return map
+    }
+    
+    func updateUIView(_ map: MKMapView, context: Context) {
+        
+        map.setRegion(region, animated: true)
+        
+        map.removeAnnotations(map.annotations)
+        map.removeOverlays(map.overlays)
+        
+       
+        
+        let riderAnnotation = MKPointAnnotation()
+        riderAnnotation.coordinate = rider
+        riderAnnotation.title = "rider"
+        
+    
+        
+        let restaurantAnnotation = MKPointAnnotation()
+        restaurantAnnotation.coordinate = restaurant
+        restaurantAnnotation.title = "restaurant"
+        
+        let customerAnnotation = MKPointAnnotation()
+        customerAnnotation.coordinate = customer
+        customerAnnotation.title = "customer"
+        
+        map.addAnnotations([riderAnnotation, restaurantAnnotation, customerAnnotation])
+        
+        if let route = route {
+            map.addOverlay(route.polyline)
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+    
+    class Coordinator: NSObject, MKMapViewDelegate {
+        
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            
+            let identifier = "custom"
+            
+            var view = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+            
+            if view == nil {
+                view = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            }
+            
+            guard let title = annotation.title ?? "" else { return view }
+            
+            if title == "rider" {
+                view?.image = UIImage(systemName: "bicycle")
+            }
+            
+            if title == "restaurant" {
+                view?.image = UIImage(systemName: "fork.knife.circle.fill")
+            }
+            
+            if title == "customer" {
+                view?.image = UIImage(systemName: "house.circle.fill")
+            }
+            
+            return view
+        }
+        
+        func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+            
+            if let polyline = overlay as? MKPolyline {
+                
+                let renderer = MKPolylineRenderer(polyline: polyline)
+                renderer.strokeColor = UIColor.systemBlue
+                renderer.lineWidth = 6
+                
+                return renderer
+            }
+            
+            return MKOverlayRenderer()
+        }
+    }
+}
 
+////////////////////////////////////////////////////////////
+/// POLYLINE HELPER
+////////////////////////////////////////////////////////////
+
+extension MKPolyline {
+    
+    func coordinates() -> [CLLocationCoordinate2D] {
+        
+        var coords = [CLLocationCoordinate2D](
+            repeating: kCLLocationCoordinate2DInvalid,
+            count: pointCount
+        )
+        
+        getCoordinates(&coords, range: NSRange(location: 0, length: pointCount))
+        
+        return coords
+    }
+}
+
+////////////////////////////////////////////////////////////
+/// TRACKING ROW
+////////////////////////////////////////////////////////////
 
 struct TrackingRow: View {
     
@@ -277,8 +475,9 @@ struct TrackingRow: View {
     }
 }
 
-
-
+////////////////////////////////////////////////////////////
+/// SIMILAR FOOD CARD
+////////////////////////////////////////////////////////////
 
 struct SimilarFoodCard: View {
     
@@ -287,48 +486,7 @@ struct SimilarFoodCard: View {
     
     var body: some View {
         
-        ZStack {
-            
-            VStack(spacing: 10) {
-                
-                Spacer().frame(height: 70)
-                
-                Text(food.name)
-                    .font(.headline)
-                    .fontWeight(.medium)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .frame(maxWidth: 130)
-                    .foregroundColor(AppColors.textPrimary)
-                
-                Text("₹\(food.price, specifier: "%.0f")")
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .foregroundColor(AppColors.primary)
-                
-                Button {
-                    cart.add(food)
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "plus")
-                        Text("Add")
-                            .fontWeight(.semibold)
-                    }
-                    .font(.caption)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(AppColors.primary)
-                    .cornerRadius(20)
-                }
-                .padding(.top, 5)
-            }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 6)
-            .frame(width: 165, height: 210)
-            .background(AppColors.background)
-            .cornerRadius(24)
-            .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
+        VStack(spacing: 10) {
             
             AsyncImage(url: URL(string: food.image)) { img in
                 img.resizable().scaledToFill()
@@ -337,9 +495,30 @@ struct SimilarFoodCard: View {
             }
             .frame(width: 120, height: 120)
             .clipShape(Circle())
-            .background(Circle().fill(Color.white))
-            .offset(y: -75)
+            
+            Text(food.name)
+                .font(.headline)
+                .lineLimit(2)
+            
+            Text("₹\(food.price, specifier: "%.0f")")
+                .font(.title3)
+                .fontWeight(.bold)
+                .foregroundColor(AppColors.primary)
+            
+            Button {
+                cart.add(food)
+            } label: {
+                Text("Add")
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(AppColors.primary)
+                    .cornerRadius(20)
+            }
         }
-        .frame(width: 165, height: 280)
+        .frame(width: 160, height: 220)
+        .background(AppColors.background)
+        .cornerRadius(20)
+        .shadow(radius: 5)
     }
 }
