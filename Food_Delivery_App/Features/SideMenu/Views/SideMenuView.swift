@@ -30,7 +30,7 @@ struct SideMenuView: View {
                     MenuRow(
                         icon: "person.crop.circle.fill",
                         title: "Profile",
-                        destination: ProfileView(),
+                        destination: ProfileView(isFromTabBar: false),
                         showSideMenu: $showSideMenu
                     )
 
