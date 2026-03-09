@@ -40,7 +40,7 @@ struct HomeView: View {
                 .tag(TabType.favourites)
                 
                 NavigationStack {
-                    ProfileView()
+                    ProfileView(isFromTabBar: true)
                 }
                 .tag(TabType.profile)
                 

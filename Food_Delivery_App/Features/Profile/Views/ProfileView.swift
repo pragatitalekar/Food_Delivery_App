@@ -1,27 +1,22 @@
-//
-//  ProfileView.swift
-//  Food_Delivery_App
-//
-
 import SwiftUI
 
 struct ProfileView: View {
-    
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    
+    var isFromTabBar: Bool = false
     
     @StateObject private var vm = ProfileViewModel()
     @State private var showEditSheet = false
     @State private var showAuth = false
     
+    init(isFromTabBar: Bool = false) {
+        self.isFromTabBar = isFromTabBar
+    }
+    
     var body: some View {
-        
         Group {
-            
-            
             if !isLoggedIn {
-                
                 VStack(spacing: 24) {
-                    
                     Spacer()
                     
                     Image(systemName: "person.crop.circle.badge.exclam")
@@ -59,34 +54,26 @@ struct ProfileView: View {
                         isLoggedIn = true
                     }
                 }
-            }
-            
-            // ✅ LOGGED IN UI
-            else {
+            } else {
                 profileContent
             }
         }
         .navigationTitle("My profile")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(isFromTabBar)
     }
 }
 
 private extension ProfileView {
-    
     var profileContent: some View {
-        
         VStack(spacing: 0) {
-            
-            ScrollView {
-                
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 20) {
-                    
                     PersonalDetailsCard(vm: vm) {
                         showEditSheet = true
                     }
                     
                     VStack(spacing: 12) {
-                        
                         NavigationLink {
                             PaymentMethodView()
                         } label: {
@@ -134,7 +121,8 @@ private extension ProfileView {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 16)
+                
+                .padding(.top, isFromTabBar ? 90 : 10)
                 .padding(.bottom, 20)
             }
             
@@ -149,16 +137,14 @@ private extension ProfileView {
                         .frame(height: 50)
                         .background(AppColors.primary)
                         .cornerRadius(30)
-                        .padding()
                 }
+                .padding(.horizontal, 20)
+            
+                .padding(.bottom, isFromTabBar ? 110 : 20)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 100)
             .background(Color(.systemGray6))
         }
         .background(Color(.systemGray6).ignoresSafeArea())
-        .padding(.top, 40)
-        .padding(.bottom, 16)
         .sheet(isPresented: $showEditSheet) {
             EditProfileSheet(vm: vm)
         }
@@ -168,17 +154,12 @@ private extension ProfileView {
     }
 }
 
-
-
 struct PersonalDetailsCard: View {
-    
     @ObservedObject var vm: ProfileViewModel
     let onChangeTap: () -> Void
     
     var body: some View {
-        
         VStack(alignment: .leading, spacing: 18) {
-            
             HStack {
                 Text("Personal details")
                     .font(.system(size: 17, weight: .semibold))
@@ -194,7 +175,6 @@ struct PersonalDetailsCard: View {
             }
             
             HStack(alignment: .center, spacing: 16) {
-                
                 ZStack {
                     RoundedRectangle(cornerRadius: 16)
                         .fill(AppColors.primary.opacity(0.1))
@@ -206,7 +186,6 @@ struct PersonalDetailsCard: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 6) {
-                    
                     Text(vm.name.isEmpty ? "No name added" : vm.name)
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(AppColors.textPrimary)
@@ -224,30 +203,23 @@ struct PersonalDetailsCard: View {
                         .foregroundColor(AppColors.textSecondary)
                         .lineLimit(2)
                 }
-                
                 Spacer()
             }
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.systemBackground))
+        .background(AppColors.background)
         .cornerRadius(18)
-        .shadow(color: AppColors.shadow
-                , radius: 8, x: 0, y: 4)
+        .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
     }
 }
 
-
-
 struct ProfileMenuRow: View {
-    
     let title: String
     let icon: String
     
     var body: some View {
-        
         HStack(spacing: 14) {
-            
             Image(systemName: icon)
                 .font(.system(size: 17))
                 .foregroundColor(AppColors.primary)
@@ -266,24 +238,19 @@ struct ProfileMenuRow: View {
         .padding(.horizontal, 16)
         .frame(height: 52)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemBackground))
+        .background(AppColors.background)
         .cornerRadius(14)
     }
 }
 
-
 struct EditProfileSheet: View {
-    
     @ObservedObject var vm: ProfileViewModel
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        
         NavigationStack {
-            
             Form {
                 Section("Personal Information") {
-                    
                     TextField("Name", text: $vm.name)
                     
                     TextField("Email", text: $vm.email)
@@ -308,12 +275,11 @@ struct EditProfileSheet: View {
                 }
             }
         }
-        .background(Color(.systemGray6))
     }
 }
 
 #Preview {
     NavigationStack {
-        ProfileView()
+        ProfileView(isFromTabBar: false)
     }
 }
