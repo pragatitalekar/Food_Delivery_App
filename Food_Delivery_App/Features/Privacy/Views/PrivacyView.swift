@@ -65,7 +65,7 @@ struct PrivacyView: View {
             }
         }
         .navigationBarHidden(true)
-        .background(AppColors.background.ignoresSafeArea())
+        .background(Color(.systemGray6).ignoresSafeArea())
     }
 }
 

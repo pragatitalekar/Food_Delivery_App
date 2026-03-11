@@ -43,7 +43,7 @@ struct HistoryView: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .frame(height: 55)
-                            .background(Color.orange)
+                            .background(AppColors.primary)
                             .cornerRadius(30)
                             .padding(.horizontal, 30)
                     }

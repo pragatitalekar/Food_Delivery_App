@@ -44,7 +44,7 @@ struct OrderSuccessPopup: View {
                     Text("Your food is being prepared")
                         .foregroundColor(.gray)
                     
-                    // 🔥 Countdown Section
+                    // Countdown Section
                     
                     HStack(spacing: 6) {
                         Image(systemName: "clock.fill")
@@ -89,7 +89,7 @@ struct OrderSuccessPopup: View {
     }
     
     
-    // MARK: - Timer Logic
+    // timer
     
     private func startTimer() {
         

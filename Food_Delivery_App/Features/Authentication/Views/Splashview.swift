@@ -70,7 +70,7 @@ struct SplashView: View {
                 Spacer()
 
                 Button {
-                    onGetStarted()   // ✅ notify root
+                    onGetStarted()   //  notify root
                 } label: {
                     Text("Get started")
                         .foregroundColor(AppColors.primary)
