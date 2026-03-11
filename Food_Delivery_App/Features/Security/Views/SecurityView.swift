@@ -87,7 +87,7 @@ struct SecurityView: View {
                         }
                     }
                     
-                    VStack(alignment: .leading, spacing: 15) {
+                    VStack(alignment: .leading, spacing: 16) {
                         
                         Text("Appearance")
                             .font(.system(size: 18, weight: .semibold))
@@ -110,7 +110,7 @@ struct SecurityView: View {
             }
         }
         .navigationBarHidden(true)
-        .background(AppColors.background.ignoresSafeArea())
+        .background(Color(.systemGray6).ignoresSafeArea())
         .overlay(toastView, alignment: .top)
 
         .alert("Deactivate Account?", isPresented: $showDeactivateAlert) {
@@ -251,7 +251,7 @@ struct SecurityOptionRow: View {
         .padding(.vertical, 20)
         .background(Color(.systemBackground))
         .cornerRadius(15)
-        .shadow(color: AppColors.shadow, radius: 5, x: 0, y: 2)
+        .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
     }
 }
 

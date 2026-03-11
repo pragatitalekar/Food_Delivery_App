@@ -140,7 +140,7 @@ private extension ProfileView {
                 }
                 .padding(.horizontal, 20)
             
-                .padding(.bottom, isFromTabBar ? 110 : 20)
+                .padding(.bottom, isFromTabBar ? 120 : 20)
             }
             .background(Color(.systemGray6))
         }
@@ -210,7 +210,7 @@ struct PersonalDetailsCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(AppColors.background)
         .cornerRadius(18)
-        .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
+        .shadow(color: AppColors.shadow, radius: 6, x: 0, y: 4)
     }
 }
 
@@ -240,6 +240,7 @@ struct ProfileMenuRow: View {
         .frame(maxWidth: .infinity)
         .background(AppColors.background)
         .cornerRadius(14)
+        .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
     }
 }
 

@@ -123,8 +123,10 @@ struct AddressView: View {
                     Text("Total")
                     Spacer()
                     Text("₹\(cart.total, specifier: "%.0f")")
+                        .foregroundStyle(Color.orange)
                 }
-                .font(.title2)
+                .font(.title3)
+                .fontWeight(.bold)
                 
                 
                

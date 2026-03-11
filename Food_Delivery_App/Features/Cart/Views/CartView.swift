@@ -15,7 +15,7 @@ struct CartView: View {
                 .font(.caption)
                 .foregroundColor(.gray)
             
-            // MARK: - EMPTY STATE
+           
             if cart.items.isEmpty {
                 
                 EmptyCartView()
@@ -41,6 +41,7 @@ struct CartView: View {
                                 }
                             )
                         }
+                        .padding()
                         .buttonStyle(.plain)
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
@@ -59,7 +60,7 @@ struct CartView: View {
                             .tint(.pink)
                         }
                         
-                        // 🗑 Delete (Left Swipe)
+                      
                         .swipeActions(edge: .trailing, allowsFullSwipe:false) {
                             Button(role: .destructive) {
                                 cart.remove(item)
@@ -72,21 +73,19 @@ struct CartView: View {
                 .listStyle(.plain)
             }
             
-            // MARK: - TOTAL SECTION
+            
             HStack {
                 Text("Total")
-                    .font(.headline)
-                
                 Spacer()
-                
                 Text("₹\(cart.total, specifier: "%.0f")")
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .foregroundColor(.orange)
+                    .foregroundStyle(Color.orange)
+                    
             }
+            .font(.title3)
             .padding(.horizontal)
+            .fontWeight(.bold)
             
-            // MARK: - COMPLETE ORDER BUTTON
+            
             Button {
                 if cart.items.isEmpty {
                     showEmptyAlert = true
@@ -100,7 +99,7 @@ struct CartView: View {
                     .padding()
                     .background(cart.items.isEmpty ? Color.gray : Color.orange)
                     .foregroundColor(.white)
-                    .cornerRadius(14)
+                    .cornerRadius(30)
             }
             .padding(.horizontal)
             
@@ -122,9 +121,10 @@ struct CartView: View {
         } message: {
             Text("Please add items to your cart before completing the order.")
         }
+        .background(Color(.systemGray6))
     }
     
-    // MARK: - Stable Ordering
+    
     var cartItems: [FoodItems] {
         cart.items.values
             .sorted { $0.item.name < $1.item.name }

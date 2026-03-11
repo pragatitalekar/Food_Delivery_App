@@ -65,8 +65,7 @@ struct CartItemCard: View {
         .padding()
         .background(AppColors.background)
         .cornerRadius(18)
-        .shadow(color: AppColors.shadow
-                , radius: 8, x: 0, y: 4)
+        .shadow(color: AppColors.shadow, radius: 8, x: 0, y: 4)
         
     }
 }
